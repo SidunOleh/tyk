@@ -1,0 +1,167 @@
+<template>
+    <a-modal 
+        :title="title"
+        :open="open"
+        :footer="null"
+        @cancel="$emit('update:open', false)">
+
+        <a-form layout="vertical">
+
+            <a-form-item
+                label="E-mail"
+                :required="true"
+                has-feedback
+                :validate-status="errors['email'] ? 'error' : ''"
+                :help="errors.email">
+                <a-input
+                    placeholder="Введіть e-mail"
+                    v-model:value="data.email"/>
+            </a-form-item>
+
+            <a-form-item
+                label="Пароль"
+                :required="action == 'create'"
+                has-feedback
+                :validate-status="errors['password'] ? 'error' : ''"
+                :help="errors.password">
+                <a-flex
+                    :vertical="true" 
+                    :gap="5">
+                    <a-input-password
+                        placeholder="Введіть пароль"
+                        :visible="true"
+                        v-model:value="data.password"/>
+                    <a-button @click="generatePassword">
+                        Створити
+                    </a-button>
+                </a-flex>
+            </a-form-item>
+
+            <a-form-item 
+                label="Ім'я"
+                :required="true"
+                has-feedback
+                :validate-status="errors['name'] ? 'error' : ''"
+                :help="errors.name">
+                <a-input
+                    placeholder="Введіть ім'я"
+                    v-model:value="data.name"/>
+            </a-form-item>
+
+            <a-form-item 
+                label="Телефон"
+                has-feedback
+                :validate-status="errors['phone'] ? 'error' : ''"
+                :help="errors.phone">
+                <a-input
+                    placeholder="Введіть телефон"
+                    v-model:value="data.phone"/>
+            </a-form-item>
+
+            <a-form-item
+                label="Роль"
+                :required="true"
+                has-feedback
+                :validate-status="errors['role'] ? 'error' : ''"
+                :help="errors.role">
+                <a-select
+                    placeholder="Виберіть роль"
+                    :options="roleOptions"
+                    v-model:value="data.role"/>
+            </a-form-item>
+
+            <a-button
+                :loading="loading"
+                @click="action == 'create' ? create() : edit()">
+                Зберегти
+            </a-button>
+
+        </a-form>
+
+    </a-modal>
+</template>
+
+<script>
+import { message } from 'ant-design-vue'
+import usersApi from '../../api/users'
+
+export default {
+    props: [
+        'title',
+        'open',
+        'action',
+        'user',
+    ],
+    data() {
+        return {
+            data: {
+                email: '',
+                password: '',
+                name: '',
+                phone: '',
+                role: null,
+            },
+            errors: {},
+            roles: [
+               'адмін',
+               'диспетчер',
+            ],
+            loading: false,
+        }
+    },
+    computed: {
+        roleOptions() {
+            return this.roles.map(role => {
+                return {
+                    value: role,
+                }
+            })
+        },
+    },      
+    methods: {
+        generatePassword() {
+            this.data.password = Math.random().toString(36).substring(2)
+        },
+        async create() {
+            try {
+                this.loading = true
+                this.errors = {}
+                const res = await usersApi.create(this.data)
+                message.success(`Успішно створено. E-mail з доступами надіслано ${this.data.email}.`)
+                this.$emit('create')
+                this.$emit('update:open', false)
+            } catch (err) {
+                if (err?.response?.status == 422) {
+                    this.errors = err?.response?.data?.errors
+                } else {
+                    message.error(err?.response?.data?.message ?? err.message)
+                }
+            } finally {
+                this.loading = false
+            }
+        },
+        async edit() {
+            try {
+                this.loading = true
+                this.errors = {}
+                const res = await usersApi.edit(this.data.id, this.data)
+                message.success('Успішно збережено.')
+                this.$emit('edit')
+            } catch (err) {
+                if (err?.response?.status == 422) {
+                    this.errors = err?.response?.data?.errors
+                } else {
+                    message.error(err?.response?.data?.message ?? err.message)
+                }
+            } finally {
+                this.loading = false
+            }
+        },
+    },
+    mounted() {
+        if (this.user) {
+            this.data = JSON.parse(JSON.stringify(this.user))
+        }
+    },
+}
+</script>
