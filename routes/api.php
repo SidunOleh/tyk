@@ -10,6 +10,7 @@ use App\Http\Controllers\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Couriers\UpdateController as CouriersUpdateController;
+use App\Http\Controllers\Products\IndexController as ProductsIndexController;
 use App\Http\Controllers\Users\BulkDeleteController;
 use App\Http\Controllers\Users\DeleteController;
 use App\Http\Controllers\Users\IndexController;
@@ -64,5 +65,12 @@ Route::middleware(['auth:sanctum',])->group(function () {
             ->name('update');
         Route::delete('/{cash}', CashesDeleteController::class)
             ->name('delete');
+    });
+
+    Route::prefix('/products')
+        ->name('products.')
+        ->group(function () {
+        Route::get('/', ProductsIndexController::class)
+            ->name('index');
     });
 });

@@ -79,6 +79,19 @@ const routes = [{
         title: 'Кур\'єри',
     },
 }, {
+    path: '/products',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Products/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'products.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'products',
+        title: 'Товари',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

@@ -27,7 +27,16 @@
                         Кур'єри
                     </router-link>
                 </a-menu-item>
-                
+
+                <a-menu-item key="products">
+                    <template #icon>
+                        <ShopOutlined/>
+                    </template>
+                    <router-link :to="{name: 'products.index'}">
+                        Товари
+                    </router-link>
+                </a-menu-item>
+
                 <a-menu-item key="users">
                     <template #icon>
                         <UserOutlined/>
@@ -54,6 +63,7 @@ import {
   MenuFoldOutlined,
   DashboardOutlined,
   ShoppingCartOutlined,
+  ShopOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 
@@ -65,6 +75,7 @@ export default {
         DashboardOutlined,
         Logout,
         ShoppingCartOutlined,
+        ShopOutlined,
     },
     data() {
         return {
