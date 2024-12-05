@@ -22,10 +22,10 @@ jobs:
           sed -i 's/DB_DATABASE=/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
           sed -i 's/DB_USERNAME=/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-          sed -i 's/WC_URL=/WC_URL=${{ secrets.WC_URL }}/g' .env
+          sed -i 's/WC_URL=/WC_URL="${{ secrets.WC_URL }}"/g' .env
           sed -i 's/WC_KEY=/WC_KEY=${{ secrets.WC_KEY }}/g' .env
           sed -i 's/WC_SECRET=/WC_SECRET=${{ secrets.WC_SECRET }}/g' .env
-          sed -i 's/WC_VERSION=/WC_VERSION=${{ secrets.WC_VERSION }}/g' .env
+          sed -i 's/WC_VERSION=/WC_VERSION="${{ secrets.WC_VERSION }}"/g' .env
 
       - run: php artisan key:generate
 
