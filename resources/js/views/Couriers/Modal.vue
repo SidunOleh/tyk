@@ -25,7 +25,7 @@
                 :validate-status="errors['last_name'] ? 'error' : ''"
                 :help="errors.last_name">
                 <a-input
-                    placeholder="Введіть Прізвище"
+                    placeholder="Введіть прізвище"
                     v-model:value="data.last_name"/>
             </a-form-item>
 
@@ -46,7 +46,7 @@
                 :validate-status="errors['tg'] ? 'error' : ''"
                 :help="errors.tg">
                 <a-input
-                    placeholder="Введіть телефон"
+                    placeholder="Введіть телеграм"
                     v-model:value="data.tg"/>
             </a-form-item>
 
