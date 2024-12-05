@@ -19,21 +19,21 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="couriers">
-                    <template #icon>
-                        <ShoppingCartOutlined/>
-                    </template>
-                    <router-link :to="{name: 'couriers.index'}">
-                        Кур'єри
-                    </router-link>
-                </a-menu-item>
-
                 <a-menu-item key="products">
                     <template #icon>
                         <ShopOutlined/>
                     </template>
                     <router-link :to="{name: 'products.index'}">
                         Товари
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="couriers">
+                    <template #icon>
+                        <ShoppingCartOutlined/>
+                    </template>
+                    <router-link :to="{name: 'couriers.index'}">
+                        Кур'єри
                     </router-link>
                 </a-menu-item>
 
