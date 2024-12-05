@@ -18,7 +18,8 @@
                 bordered
                 :column="1">
                 <a-descriptions-item label="Назва">
-                    {{ record.name }}
+                    <div v-html="{{ record.name }}">
+                    </div>
                 </a-descriptions-item>
                 <a-descriptions-item label="Ціна">
                     <div v-html="record.price_html">
