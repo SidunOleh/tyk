@@ -12,7 +12,7 @@
 
             <img 
                 src="@img/logo.svg"
-                style="align-self: center; background: rgb(0 0 0); padding: 5px; border-radius: 5px; width: 150px;">
+                style="align-self: center; background: rgb(175 172 172); padding: 5px; border-radius: 5px; width: 150px;">
 
             <a-form layout="vertical">
 
