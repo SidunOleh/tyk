@@ -3,7 +3,7 @@
         :justify="'center'"
         :align="'center'"
         :gap="15"
-        style="padding: 15px; border-bottom: 1px solid whitesmoke;">
+        style="padding: 15px;">
         <div
             v-if="!collapsed" 
             class="user">
