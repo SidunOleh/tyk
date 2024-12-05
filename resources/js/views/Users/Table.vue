@@ -8,6 +8,7 @@
             total: data.meta?.total, 
             onChange: (page, size) => query.perpage = size
         }"
+        :bordered="true"
         :loading="loading"
         :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows}"
         @change="changeQuery">
@@ -155,9 +156,11 @@ export default {
                 },
                 {
                     key: 'edit',
+                    align: 'center',
                 },
                 {
                     key: 'delete',
+                    align: 'center',
                 },
             ],
             data: {},

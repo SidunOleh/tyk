@@ -8,6 +8,7 @@
             total: data.meta?.total, 
             onChange: (page, size) => query.perpage = size
         }"
+        :bordered="true"
         :loading="loading"
         :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows}"
         @change="changeQuery">

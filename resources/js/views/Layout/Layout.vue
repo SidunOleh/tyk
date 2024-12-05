@@ -49,9 +49,7 @@
         </a-layout-sider>
 
         <a-layout-content class="content" :style="{margin: '24px 16px', padding: '24px', background: '#fff',  'border-radius': '5px',}">
-            <div class="content-wrapper">
-                <slot></slot>
-            </div>
+            <slot></slot>
         </a-layout-content>
     </a-layout>
 </template>
@@ -90,11 +88,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-.content-wrapper {
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 5px;
-}
-</style>

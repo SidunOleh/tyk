@@ -9,6 +9,7 @@
             onChange: (page, size) => query.perpage = size
         }"
         :loading="loading"
+        :bordered="true"
         :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows}"
         @change="changeQuery">
 
@@ -182,12 +183,15 @@ export default {
                 },
                 {
                     key: 'cashes',
+                    align: 'center',
                 },
                 {
                     key: 'edit',
+                    align: 'center',
                 },
                 {
                     key: 'delete',
+                    align: 'center',
                 },
             ],
             data: {},
