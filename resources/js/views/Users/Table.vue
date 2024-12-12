@@ -13,6 +13,29 @@
         :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows}"
         @change="changeQuery">
 
+        <template #expandedRowRender="{ record }">
+            <a-descriptions 
+                style="margin-top: 10px;"
+                size="small"
+                bordered
+                :column="1">
+                <a-descriptions-item label="Ім'я">
+                    {{ record.name }}
+                </a-descriptions-item>
+                <a-descriptions-item label="Телефон">
+                    {{ record.phone }}
+                </a-descriptions-item>
+                <a-descriptions-item label="E-mail">
+                    {{ record.email }}
+                </a-descriptions-item>
+                <a-descriptions-item label="Категорії">
+                    <a-tag :bordered="false">
+                        {{ record.role }}
+                    </a-tag>
+                </a-descriptions-item>               
+            </a-descriptions>
+        </template>
+
         <template #title>
             <a-flex
                 :wrap="'wrap'"

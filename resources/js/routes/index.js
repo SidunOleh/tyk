@@ -92,6 +92,19 @@ const routes = [{
         title: 'Товари',
     },
 }, {
+    path: '/categories',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Categories/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'categories.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'categories',
+        title: 'Категорії',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>
@@ -110,7 +123,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-    document.title = `${to.meta.title} | Тук-Тук CRM`
+    document.title = `${to.meta.title} | Адмін Панель`
 
     if (!to.meta.public && !auth.isLogged()) {
         router.push({ name: 'login' })

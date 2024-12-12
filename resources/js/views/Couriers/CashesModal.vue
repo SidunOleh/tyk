@@ -14,11 +14,7 @@
                 <a-list-item>
                     <a-list-item-meta>
                         <template #title>
-                            <div 
-                                style="padding: 3px; border-radius: 5px;"
-                                :class="{red: item.returned < item.received}">
-                                {{ new Date(item.created_at).toLocaleString('uk-UA') }}
-                            </div>
+                            {{ new Date(item.created_at).toLocaleDateString('uk-UA') }}
                         </template>
 
                         <template #description>
@@ -88,20 +84,14 @@ export default {
         async add() {
             try {
                 this.loading = true
-
-                const item = {
+                const res = await api.create({
                     created_at: new Date(),
                     received: 0,
                     returned: 0,
                     courier_id: this.courier.id,
-                }
-            
-                const res = await api.create(item)
-                
+                })
                 this.data.unshift(res.cash)
-
                 message.success('Успішно додано.')
-
                 this.$emit('edit')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
@@ -118,7 +108,6 @@ export default {
                 }
 
                 message.success('Успішно збережено.')
-
                 this.$emit('edit')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
@@ -131,9 +120,7 @@ export default {
                 } 
 
                 this.data = this.data.filter(i => i != item)
-
                 message.success('Успішно видалено.')
-
                 this.$emit('edit')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
@@ -145,9 +132,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-.red {
-    background: #ff000026;
-}
-</style>

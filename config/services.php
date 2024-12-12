@@ -35,11 +35,4 @@ return [
         ],
     ],
 
-    'wc' => [
-        'url' => env('WC_URL'),
-        'key' => env('WC_KEY'),
-        'secret' => env('WC_SECRET'),
-        'version' => env('WC_VERSION'),
-    ],
-
 ];

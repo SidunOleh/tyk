@@ -90,7 +90,7 @@ export default {
         'title',
         'open',
         'action',
-        'user',
+        'item',
     ],
     data() {
         return {
@@ -159,8 +159,8 @@ export default {
         },
     },
     mounted() {
-        if (this.user) {
-            this.data = JSON.parse(JSON.stringify(this.user))
+        if (this.item) {
+            this.data = JSON.parse(JSON.stringify(this.item))
         }
     },
 }

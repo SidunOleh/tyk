@@ -68,6 +68,14 @@ function errorPopup(error) {
     })
 }
 
+function formatPrice(price) {
+    return new Intl.NumberFormat('uk-UA', {
+        style: 'currency',
+        currency: 'UAH',
+        trailingZeroDisplay: 'stripIfInteger'
+    }).format(price)
+}
+
 export {
     auth,
     hasRole,
@@ -75,4 +83,5 @@ export {
     successPopup,
     warningPopup,
     errorPopup,
+    formatPrice,
 }

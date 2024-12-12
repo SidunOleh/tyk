@@ -160,6 +160,12 @@ return [
         'tg' => 'телеграм',
         'vehicles' => 'транспорт',
         'received' => 'отримано',
-        'returned' => 'повернуто'
+        'returned' => 'повернуто',
+        'images' => 'зображення',
+        'description' => 'опис',
+        'categories' => 'категорії',
+        'price' => 'ціна',
+        'slug' => 'слаг',
+        'image' => 'фото',
     ],
 ];

@@ -19,14 +19,26 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="products">
+                <a-sub-menu>
                     <template #icon>
                         <ShopOutlined/>
                     </template>
-                    <router-link :to="{name: 'products.index'}">
-                        Товари
-                    </router-link>
-                </a-menu-item>
+                    <template #title>
+                        Магазин
+                    </template>
+
+                    <a-menu-item key="products">
+                        <router-link :to="{name: 'products.index'}">
+                            Товари
+                        </router-link>
+                    </a-menu-item>
+
+                    <a-menu-item key="categories">
+                        <router-link :to="{name: 'categories.index'}">
+                            Категорії
+                        </router-link>
+                    </a-menu-item>
+                </a-sub-menu>
 
                 <a-menu-item key="couriers">
                     <template #icon>

@@ -25,7 +25,7 @@
         title="Редагування кур'єра"
         v-model:open="edit.open"
         action="edit"
-        :user="edit.record"
+        :item="edit.record"
         @edit="$refs.table.updateData()"/>
 
     <CashesModal
