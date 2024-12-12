@@ -93,6 +93,8 @@
                 <a-image 
                     v-if="record.image"
                     :width="100" 
+                    :height="100"
+                    style="object-fit: cover;"
                     :src="record.image"/>
             </template>
 
