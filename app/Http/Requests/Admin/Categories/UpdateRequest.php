@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Categories;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -23,7 +24,14 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'slug' => 'required|string|unique:products,slug',
+            'slug' => [
+                'required',
+                'string',
+                Rule::unique('categories', 'slug')->ignore(request()
+                    ->route()
+                    ->parameter('category')
+                    ->id),
+            ],
             'image' => 'string|nullable',
             'description' => 'string|nullable',
             'parent_id' => 'exists:categories,id|nullable',
