@@ -169,7 +169,6 @@ export default {
         },
         makeCategoryOptions(categories, parent) {
             let options = []
-
             categories.forEach(category => {
                 if (category.parent_id === parent) {
                     options.push({
