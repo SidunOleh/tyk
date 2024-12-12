@@ -22,11 +22,7 @@ jobs:
           sed -i 's/DB_DATABASE=/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
           sed -i 's/DB_USERNAME=/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
           sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-          sed -i 's|SHOP_URL=|SHOP_URL="${{ secrets.SHOP_URL }}"|g' .env
-          sed -i 's/SHOP_USERNAME=/SHOP_USERNAME=${{ secrets.SHOP_USERNAME }}/g' .env
-          sed -i 's/SHOP_PASSWORD=/SHOP_PASSWORD=${{ secrets.SHOP_PASSWORD }}/g' .env
-          sed -i 's|SHOP_API_VERSION=|SHOP_API_VERSION="${{ secrets.SHOP_API_VERSION }}"|g' .env
-          sed -i 's|SHOP_WC_API_VERSION=|SHOP_WC_API_VERSION="${{ secrets.SHOP_WC_API_VERSION }}"|g' .env
+          sed -i 's/ADMIN_DOMAIN=/ADMIN_DOMAIN=${{ secrets.ADMIN_DOMAIN }}/g' .env
           sed -i 's/MAIL_HOST=/MAIL_HOST=${{ secrets.MAIL_HOST }}/g' .env
           sed -i 's/MAIL_PORT=/MAIL_PORT=${{ secrets.MAIL_PORT }}/g' .env
           sed -i 's/MAIL_USERNAME=/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g' .env
