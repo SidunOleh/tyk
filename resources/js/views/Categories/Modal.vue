@@ -153,9 +153,9 @@ export default {
                 this.loading = false
             }
         },
-        changeFileList(fileList) {
+        changeFileList(info) {
             const images = []
-            fileList.forEach(file => {
+            info.fileList.forEach(file => {
                 if (file.status == 'done') {
                     images.push(file.response.path)
                 }
