@@ -46,7 +46,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           source: './'
-          target: '/var/www/tyk-crm'
+          target: '/var/www/tyk'
 
       - uses: appleboy/ssh-action@master
         with:
@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-              cd /var/www/tyk-crm
+              cd /var/www/tyk
               chown -R www-data:www-data .
               find . -type d -exec chmod 755 {} \;
               chmod -R 775 storage bootstrap/cache
