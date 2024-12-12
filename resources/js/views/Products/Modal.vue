@@ -65,6 +65,7 @@
                     placeholder="Виберіть категорії"
                     :tree-data="categoryOptions"
                     :treeCheckStrictly="true"
+                    :value="data.categories"
                     @change="checked => data.categories = checked.map(i => i.value)"/>
             </a-form-item>
 
