@@ -14,7 +14,7 @@
                 <a-list-item>
                     <a-list-item-meta>
                         <template #title>
-                            {{ new Date(item.created_at).toLocaleDateString('uk-UA') }}
+                            {{ new Date(item.created_at).toLocaleDateString('uk-UA', {day: 'numeric', month: 'long', year:'numeric',}) }}
                         </template>
 
                         <template #description>

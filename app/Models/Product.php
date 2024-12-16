@@ -21,6 +21,10 @@ class Product extends Model
         'weight',
     ];
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);

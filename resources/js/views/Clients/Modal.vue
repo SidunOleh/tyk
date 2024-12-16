@@ -7,51 +7,31 @@
 
         <a-form layout="vertical">
 
-            <a-form-item
-                label="E-mail"
-                :required="true"
-                has-feedback
-                :validate-status="errors['email'] ? 'error' : ''"
-                :help="errors.email">
-                <a-input
-                    placeholder="Введіть e-mail"
-                    v-model:value="data.email"/>
-            </a-form-item>
-
-            <a-form-item
-                label="Пароль"
-                :required="action == 'create'"
-                has-feedback
-                :validate-status="errors['password'] ? 'error' : ''"
-                :help="errors.password">
-                <a-flex
-                    :vertical="true" 
-                    :gap="5">
-                    <a-input-password
-                        placeholder="Введіть пароль"
-                        :visible="true"
-                        v-model:value="data.password"/>
-                    <a-button 
-                        type="primary"
-                        @click="generatePassword">
-                        Створити
-                    </a-button>
-                </a-flex>
-            </a-form-item>
-
             <a-form-item 
                 label="Ім'я"
                 :required="true"
                 has-feedback
-                :validate-status="errors['name'] ? 'error' : ''"
-                :help="errors.name">
+                :validate-status="errors['first_name'] ? 'error' : ''"
+                :help="errors.first_name">
                 <a-input
                     placeholder="Введіть ім'я"
-                    v-model:value="data.name"/>
+                    v-model:value="data.first_name"/>
+            </a-form-item>
+
+            <a-form-item 
+                label="Прізвище"
+                :required="true"
+                has-feedback
+                :validate-status="errors['last_name'] ? 'error' : ''"
+                :help="errors.last_name">
+                <a-input
+                    placeholder="Введіть прізвище"
+                    v-model:value="data.last_name"/>
             </a-form-item>
 
             <a-form-item 
                 label="Телефон"
+                :required="true"
                 has-feedback
                 :validate-status="errors['phone'] ? 'error' : ''"
                 :help="errors.phone">
@@ -60,16 +40,38 @@
                     v-model:value="data.phone"/>
             </a-form-item>
 
-            <a-form-item
-                label="Роль"
+            <a-form-item 
+                label="Адреси"
                 :required="true"
                 has-feedback
-                :validate-status="errors['role'] ? 'error' : ''"
-                :help="errors.role">
-                <a-select
-                    placeholder="Виберіть роль"
-                    :options="roleOptions"
-                    v-model:value="data.role"/>
+                :validate-status="addressesErrors.length ? 'error' : ''"
+                :help="addressesErrors">
+                <a-flex
+                    :vertical="true"
+                    :gap="5">
+                    <a-flex 
+                        v-for="(address, i) in data.addresses"
+                        :gap="5"
+                        :align="'center'">
+                        <a-input
+                            placeholder="Введіть адресу"
+                            v-model:value="data.addresses[i]"/>
+                        <a-button
+                            danger
+                            type="text"
+                            size="small"
+                            @click="removeAddress(i)">
+                            X
+                        </a-button>
+                    </a-flex>
+
+                    <a-button 
+                        style="align-self: start;"
+                        type="primary"
+                        @click="addAddress">
+                        Додати адресу
+                    </a-button>
+                </a-flex>
             </a-form-item>
 
             <a-button
@@ -85,7 +87,7 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import usersApi from '../../api/users'
+import api from '../../api/clients'
 
 export default {
     props: [
@@ -97,40 +99,42 @@ export default {
     data() {
         return {
             data: {
-                email: '',
-                password: '',
-                name: '',
+                first_name: '',
+                last_name: '',
                 phone: '',
-                role: null,
+                addresses: [''],
             },
             errors: {},
-            roles: [
-               'адмін',
-               'диспетчер',
-            ],
             loading: false,
         }
-    },
+    }, 
     computed: {
-        roleOptions() {
-            return this.roles.map(role => {
-                return {
-                    value: role,
+        addressesErrors() {
+            const errors = []
+            for (const field in this.errors) {
+                if (field.search('addresses') == 0) {
+                    errors.push(this.errors[field])
                 }
-            })
+            }
+            return errors
         },
-    },      
+    },
     methods: {
-        generatePassword() {
-            this.data.password = Math.random().toString(36).substring(2)
+        addAddress() {
+            this.data.addresses.push('')
+        },
+        removeAddress(i) {
+            this.data.addresses = this.data
+                .addresses
+                .filter((address, index) => index != i)
         },
         async create() {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await usersApi.create(this.data)
-                message.success(`Успішно створено. E-mail з доступами надіслано ${this.data.email}.`)
-                this.$emit('create')
+                const res = await api.create(this.data)
+                message.success('Успішно створено.')
+                this.$emit('create', res.client)
                 this.$emit('update:open', false)
             } catch (err) {
                 if (err?.response?.status == 422) {
@@ -146,7 +150,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await usersApi.edit(this.data.id, this.data)
+                const res = await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {

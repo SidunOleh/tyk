@@ -53,30 +53,30 @@ const routes = [{
         title: 'Дашборд',
     }
 }, {
-    path: '/users',
+    path: '/clients',
     component: defineAsyncComponent({
         loader: () =>
-            import ('../views/Users/Index.vue'),
+            import ('../views/Clients/Index.vue'),
         loadingComponent: Loader,
     }),
-    name: 'users.index',
+    name: 'clients.index',
     meta: {
         roles: ['адмін', ],
-        key: 'users',
-        title: 'Користувачі',
+        key: 'clients',
+        title: 'Клієнти',
     },
 }, {
-    path: '/couriers',
+    path: '/orders',
     component: defineAsyncComponent({
         loader: () =>
-            import ('../views/Couriers/Index.vue'),
+            import ('../views/Orders/Index.vue'),
         loadingComponent: Loader,
     }),
-    name: 'couriers.index',
+    name: 'orders.index',
     meta: {
         roles: ['адмін', ],
-        key: 'couriers',
-        title: 'Кур\'єри',
+        key: 'orders',
+        title: 'Замовлення',
     },
 }, {
     path: '/products',
@@ -103,6 +103,32 @@ const routes = [{
         roles: ['адмін', ],
         key: 'categories',
         title: 'Категорії',
+    },
+}, {
+    path: '/couriers',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Couriers/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'couriers.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'couriers',
+        title: 'Кур\'єри',
+    },
+}, {
+    path: '/users',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Users/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'users.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'users',
+        title: 'Користувачі',
     },
 }, {
     path: '/:pathMatch(.*)*',

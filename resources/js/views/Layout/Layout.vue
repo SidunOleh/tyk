@@ -19,6 +19,24 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-menu-item key="clients">
+                    <template #icon>
+                        <WalletOutlined/>
+                    </template>
+                    <router-link :to="{name: 'clients.index'}">
+                        Клієнти
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="orders">
+                    <template #icon>
+                        <ShoppingCartOutlined/>
+                    </template>
+                    <router-link :to="{name: 'orders.index'}">
+                        Замовлення
+                    </router-link>
+                </a-menu-item>
+
                 <a-sub-menu>
                     <template #icon>
                         <ShopOutlined/>
@@ -42,7 +60,7 @@
 
                 <a-menu-item key="couriers">
                     <template #icon>
-                        <ShoppingCartOutlined/>
+                        <CarOutlined/>
                     </template>
                     <router-link :to="{name: 'couriers.index'}">
                         Кур'єри
@@ -62,8 +80,25 @@
 
         <a-layout-content class="content" :style="{margin: '24px 16px', padding: '24px', background: '#fff',  'border-radius': '5px',}">
             <slot></slot>
+
+            <a-float-button 
+                type="primary"
+                @click="order.create = true">
+                <template #icon>
+                    <PlusOutlined />
+                </template>
+
+                <template #tooltip>
+                    Створити замовлення
+                </template>
+            </a-float-button>
         </a-layout-content>
     </a-layout>
+
+    <CreateOrderModal
+        v-if="order.create"
+        title="Створення замовлення"
+        v-model:open="order.create"/>
 </template>
 
 <script>
@@ -74,8 +109,13 @@ import {
   DashboardOutlined,
   ShoppingCartOutlined,
   ShopOutlined,
+  PlusOutlined,
+  UserAddOutlined,
+  CarOutlined,
+  WalletOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
+import CreateOrderModal from '../Orders/Create/Modal.vue'
 
 export default {
     components: {
@@ -86,11 +126,19 @@ export default {
         Logout,
         ShoppingCartOutlined,
         ShopOutlined,
+        PlusOutlined,
+        UserAddOutlined,
+        CarOutlined,
+        WalletOutlined,
+        CreateOrderModal,
     },
     data() {
         return {
             selectedKeys: [],
             collapsed: true,
+            order: {
+                create: false,
+            },
         }
     },
     async mounted() {

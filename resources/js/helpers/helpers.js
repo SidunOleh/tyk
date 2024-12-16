@@ -76,6 +76,24 @@ function formatPrice(price) {
     }).format(price)
 }
 
+function serviceColor(service) {
+    switch (service) {
+        case 'Доставка їжі':
+            return 'orange'
+        case 'Кур\'єр':
+            return 'pink'
+        case 'Таксі':
+            return 'cyan'
+    }
+}
+
+function orderStatusColor(status) {
+    switch (status) {
+        case 'Створено':
+            return 'green'
+    }
+}
+
 export {
     auth,
     hasRole,
@@ -84,4 +102,6 @@ export {
     warningPopup,
     errorPopup,
     formatPrice,
+    serviceColor,
+    orderStatusColor,
 }

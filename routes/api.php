@@ -11,15 +11,19 @@ use App\Http\Controllers\Admin\Categories\GetAllController;
 use App\Http\Controllers\Admin\Categories\IndexController as CategoriesIndexController;
 use App\Http\Controllers\Admin\Categories\StoreController as CategoriesStoreController;
 use App\Http\Controllers\Admin\Categories\UpdateController as CategoriesUpdateController;
+use App\Http\Controllers\Admin\Clients\SearchController;
+use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController;
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Admin\Couriers\UpdateController as CouriersUpdateController;
 use App\Http\Controllers\Admin\Images\UploadController;
+use App\Http\Controllers\Admin\Orders\StoreController as OrdersStoreController;
 use App\Http\Controllers\Admin\Products\BulkDeleteController as ProductsBulkDeleteController;
 use App\Http\Controllers\Admin\Products\DeleteController as ProductsDeleteController;
 use App\Http\Controllers\Admin\Products\IndexController as ProductsIndexController;
+use App\Http\Controllers\Admin\Products\SearchController as ProductsSearchController;
 use App\Http\Controllers\Admin\Products\StoreController as ProductsStoreController;
 use App\Http\Controllers\Admin\Products\UpdateController as ProductsUpdateController;
 use App\Http\Controllers\Admin\Users\BulkDeleteController;
@@ -76,6 +80,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/products')->name('products.')->group(function () {
             Route::get('/', ProductsIndexController::class)
                 ->name('index');
+            Route::get('/search', ProductsSearchController::class)
+                ->name('search');
             Route::post('/', ProductsStoreController::class)
                 ->name('store');
             Route::put('/{product}', ProductsUpdateController::class)
@@ -104,6 +110,18 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/images')->name('images.')->group(function () {
             Route::post('/upload', UploadController::class)
                 ->name('upload');
+        });
+
+        Route::prefix('/clients')->name('clients.')->group(function () {
+            Route::get('/search', SearchController::class)
+                ->name('search');
+            Route::post('/', ClientsStoreController::class)
+                ->name('store');
+        });
+
+        Route::prefix('/orders')->name('orders.')->group(function () {
+            Route::post('/', OrdersStoreController::class)
+                ->name('store');
         });
     });
 });

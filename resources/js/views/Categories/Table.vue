@@ -14,18 +14,18 @@
         @change="changeQuery">
 
         <template #expandedRowRender="{ record }">
-            <a-image 
-                v-if="record.image"
-                :width="100" 
-                :height="100"
-                style="object-fit: cover;"
-                :src="record.image"/>
-
             <a-descriptions 
-                style="margin-top: 10px;"
                 size="small"
                 bordered
                 :column="1">
+                <a-descriptions-item label="Фото">
+                    <a-image 
+                        v-if="record.image"
+                        :width="100" 
+                        :height="100"
+                        style="object-fit: cover;"
+                        :src="record.image"/>
+                </a-descriptions-item>
                 <a-descriptions-item label="Назва">
                     {{ record.name }}
                 </a-descriptions-item>
