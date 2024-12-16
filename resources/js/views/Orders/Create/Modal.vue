@@ -41,7 +41,7 @@
 
             <OrdersList 
                 v-if="data.client_id"
-                :orders="selectedClient.orders"
+                :orders="selectedClient?.orders"
                 @repeat="repeatOrder"/>
 
             <a-form-item 
@@ -235,7 +235,7 @@ export default {
         },
         addClient(client) {
             this.clients.data = [client]
-            this.data.client = client.id
+            this.data.client_id = client.id
             this.clientsModal.open = false
         },
         repeatOrder(order) {
