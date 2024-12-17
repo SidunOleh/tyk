@@ -51,7 +51,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'details.order_items.min' => 'Замовлення повинно містити хоча б 1 елементів.',
-            'details.order_items.required_if' => 'Замовлення є обов\'язковим, коли сервіс є Доставка їжі.',
+            'details.order_items.required_if' => 'Замовлення є обов\'язковим, коли сервіс Доставка їжі.',
         ];
     }
 }
