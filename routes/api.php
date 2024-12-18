@@ -11,8 +11,12 @@ use App\Http\Controllers\Admin\Categories\GetAllController;
 use App\Http\Controllers\Admin\Categories\IndexController as CategoriesIndexController;
 use App\Http\Controllers\Admin\Categories\StoreController as CategoriesStoreController;
 use App\Http\Controllers\Admin\Categories\UpdateController as CategoriesUpdateController;
+use App\Http\Controllers\Admin\Clients\BulkDeleteController as ClientsBulkDeleteController;
+use App\Http\Controllers\Admin\Clients\DeleteController as ClientsDeleteController;
+use App\Http\Controllers\Admin\Clients\IndexController as ClientsIndexController;
 use App\Http\Controllers\Admin\Clients\SearchController;
 use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController;
+use App\Http\Controllers\Admin\Clients\UpdateController as ClientsUpdateController;
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
@@ -113,10 +117,18 @@ Route::domain(config('app.admin_domain'))->group(function () {
         });
 
         Route::prefix('/clients')->name('clients.')->group(function () {
+            Route::get('/', ClientsIndexController::class)
+                ->name('index');
             Route::get('/search', SearchController::class)
                 ->name('search');
             Route::post('/', ClientsStoreController::class)
                 ->name('store');
+            Route::put('/{client}', ClientsUpdateController::class)
+                ->name('update');
+            Route::delete('/bulk', ClientsBulkDeleteController::class)
+                ->name('bulk-delete');
+            Route::delete('/{client}', ClientsDeleteController::class)
+                ->name('delete');
         });
 
         Route::prefix('/orders')->name('orders.')->group(function () {

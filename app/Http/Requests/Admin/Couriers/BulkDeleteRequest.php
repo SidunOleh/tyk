@@ -23,7 +23,7 @@ class BulkDeleteRequest extends FormRequest
     {
         return [
             'ids' => 'required|array',
-            'ids.*' => 'exists:couriers,id',
+            'ids.*' => 'required|exists:couriers,id',
         ];
     }
 }

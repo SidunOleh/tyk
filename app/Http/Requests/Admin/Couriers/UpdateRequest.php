@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'phone' => 'required|string',
             'tg' => 'string|nullable',
             'vehicles' => 'required|array',
-            'vehicles.*' => 'string',
+            'vehicles.*' => 'required|string',
         ];
     }
 }

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->dateTime('time')->nullable();
             $table->text('notes')->nullable();
             $table->string('status');
+            $table->boolean('paid')->default(false);
+            $table->string('payment_method')->nullable();
 
             $table->unsignedBigInteger('details_id');
             $table->string('details_type');

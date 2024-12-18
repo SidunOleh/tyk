@@ -16,7 +16,9 @@ class ClientResource extends JsonResource
     public function toArray(Request $request): array
     {
         $orders = [];
-        foreach ($this->orders()->orderBy('created_at', 'DESC')->get() as $order) {
+        foreach ($this->orders()
+            ->orderBy('created_at', 'DESC')
+            ->get() as $order) {
             $orders[] = new OrderResource($order);
         }
 

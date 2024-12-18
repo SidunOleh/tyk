@@ -24,9 +24,9 @@ class StoreRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'phone' => 'required|string',
-            'addresses' => 'required|array',
-            'addresses.*' => 'string',
+            'phone' => 'required|string|unique:clients,phone',
+            'addresses' => 'required|array|min:1',
+            'addresses.*' => 'required|string',
         ];
     }
 }

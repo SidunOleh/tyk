@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Courier;
 
+use App\Models\Courier;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 

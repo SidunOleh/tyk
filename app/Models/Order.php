@@ -20,6 +20,8 @@ class Order extends Model
         'time',
         'notes',
         'status',
+        'paid',
+        'payment_method',
         'details_id',
         'details_type',
         'client_id',
@@ -31,7 +33,19 @@ class Order extends Model
         'bonuses' => 'float',
         'total' => 'float',
         'time' => 'datetime',
+        'paid' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (self $order) {
+            $order->updateAmount();
+        });
+
+        static::updated(function (self $order) {
+            $order->updateAmount();
+        });
+    }
 
     public function details(): MorphTo
     {
@@ -56,7 +70,7 @@ class Order extends Model
 
         $total = $subtotal + $this->shipping_price - $this->bonuses;
 
-        return $this->update([
+        return $this->updateQuietly([
             'subtotal' => $subtotal,
             'total' => $total,
         ]);

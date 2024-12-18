@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Products\UpdateRequest;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class UpdateController extends Controller
 {

@@ -30,7 +30,7 @@ class StoreRequest extends FormRequest
             'ingredients' => 'string|nullable',
             'weight' => 'string|nullable',
             'categories' => 'array',
-            'categories.*' => 'exists:categories,id',
+            'categories.*' => 'required|exists:categories,id',
         ];
     }
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Products;
+namespace App\Http\Controllers\Admin\Clients;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Client;
 
 class DeleteController extends Controller
 {
-    public function __invoke(Product $product)
+    public function __invoke(Client $client)
     {
-        $product->delete();
+        $client->delete();
 
         return response(['message' => 'OK',]);
     }

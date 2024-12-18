@@ -20,19 +20,24 @@
                 bordered
                 :column="1">
                 <a-descriptions-item label="Ім'я">
-                    {{ record.name }}
+                    {{ record.first_name }}
+                </a-descriptions-item>
+                <a-descriptions-item label="Прізвище">
+                    {{ record.last_name }}
                 </a-descriptions-item>
                 <a-descriptions-item label="Телефон">
                     {{ record.phone }}
                 </a-descriptions-item>
-                <a-descriptions-item label="E-mail">
-                    {{ record.email }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Роль">
-                    <a-tag :bordered="false">
-                        {{ record.role }}
+                <a-descriptions-item label="Адреси">
+                    <a-tag  
+                        v-for="address in record.addresses"
+                        :bordered="false">
+                        {{ address }}
                     </a-tag>
-                </a-descriptions-item>               
+                </a-descriptions-item>    
+                <a-descriptions-item label="Бонуси">
+                    {{ record.bonuses }}
+                </a-descriptions-item>           
             </a-descriptions>
         </template>
 
@@ -81,21 +86,23 @@
 
         <template #bodyCell="{column, record}">
 
-            <template v-if="column.key === 'email'">
-                {{ record.email }}
+            <template v-if="column.key === 'first_name'">
+                {{ record.first_name }}
             </template>
 
-            <template v-if="column.key === 'name'">
-                {{ record.name }}
+            <template v-if="column.key === 'last_name'">
+                {{ record.last_name }}
             </template>
 
             <template v-if="column.key === 'phone'">
                 {{ record.phone }}
             </template>
 
-            <template v-if="column.key === 'role'">
-                <a-tag :bordered="false">
-                    {{ record.role }}
+            <template v-if="column.key === 'addresses'">
+                <a-tag 
+                    v-for="address in record.addresses"
+                    :bordered="false">
+                    {{ address }}
                 </a-tag>
             </template>
 
@@ -139,7 +146,7 @@ import {
     EditOutlined,
     DeleteOutlined,
 } from '@ant-design/icons-vue'
-import api from '../../api/users'
+import api from '../../api/clients'
 import { confirmPopup, } from '../../helpers/helpers'
 
 export default {
@@ -152,7 +159,12 @@ export default {
             columns: [
                 {
                     title: 'Ім\'я',
-                    key: 'name',
+                    key: 'first_name',
+                    sorter: true,
+                },
+                {
+                    title: 'Прізвище',
+                    key: 'last_name',
                     sorter: true,
                 },
                 {
@@ -160,22 +172,8 @@ export default {
                     key: 'phone',
                 },
                 {
-                    title: 'E-mail',
-                    key: 'email',
-                },
-                {
-                    title: 'Роль',
-                    key: 'role',
-                    filters: [
-                        {
-                            text: 'адмін',
-                            value: 'адмін',
-                        },
-                        {
-                            text: 'диспетчер',
-                            value: 'диспетчер',
-                        },
-                    ],
+                    title: 'Адреси',
+                    key: 'addresses',
                 },
                 {
                     key: 'edit',
@@ -259,7 +257,7 @@ export default {
                 this.bulkAction == 'delete' && 
                 this.selected.length
             ) {
-                confirmPopup(this.bulkDelete, 'Ви впевнені що хочете видалити обраних користувачів?')
+                confirmPopup(this.bulkDelete, 'Ви впевнені що хочете видалити обраних клієнтів?')
             }
         },
     },

@@ -23,6 +23,21 @@ class OrderItem extends Model
         'amount' => 'float',
     ];
 
+    protected static function booted(): void
+    {
+        static::created(function (self $orderItem) {
+            $orderItem->order->updateAmount();
+        });
+
+        static::updated(function (self $orderItem) {
+            $orderItem->order->updateAmount();
+        });
+
+        static::deleted(function (self $orderItem) {
+            $orderItem->order->updateAmount();
+        });
+    }
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
