@@ -95,9 +95,10 @@
         </a-layout-content>
     </a-layout>
 
-    <CreateOrderModal
+    <OrderModal
         v-if="order.create"
         title="Створення замовлення"
+        action="create"
         v-model:open="order.create"/>
 </template>
 
@@ -115,7 +116,7 @@ import {
   WalletOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
-import CreateOrderModal from '../Orders/Create/Modal.vue'
+import OrderModal from '../Orders/Modal/Modal.vue'
 
 export default {
     components: {
@@ -130,7 +131,7 @@ export default {
         UserAddOutlined,
         CarOutlined,
         WalletOutlined,
-        CreateOrderModal,
+        OrderModal,
     },
     data() {
         return {

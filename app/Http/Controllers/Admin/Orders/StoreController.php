@@ -11,7 +11,7 @@ class StoreController extends Controller
 {
     public function __invoke(StoreRequest $request)
     {
-        $order = OrderService::make($request->service)->createByAdmin($request);
+        $order = OrderService::make($request->service)->create($request);
 
         return response(['order' => new OrderResource($order),]);
     }

@@ -131,33 +131,37 @@
                 </div>  
             </template>
 
-            <a-tooltip>
-                <template #title>
-                    Редагувати
-                </template>
-    
-                <template v-if="column.key === 'edit'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="this.$emit('edit', record)">
-                        <EditOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
-
-            <a-tooltip>
-                <template #title>
-                    Видалити
-                </template>
-    
-                <template v-if="column.key === 'delete'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.name}?`)">
-                        <DeleteOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
+            <template v-if="column.key === 'actions'">
+                <a-dropdown>
+                    <a 
+                        class="ant-dropdown-link" 
+                        @click.prevent>
+                        Дії
+                        <DownOutlined/>
+                    </a>
+                    <template #overlay>
+                        <a-menu>
+                            <a-menu-item @click="$emit('history', record)">
+                                <a href="javascript:;">
+                                    Історія
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item @click="$emit('edit', record)">
+                                <a href="javascript:;">
+                                    Редагувати
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item 
+                                danger
+                                @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.name}?`)">
+                                <a href="javascript:;">
+                                    Видалити
+                                </a>
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
+            </template>
 
         </template>
 
@@ -173,8 +177,7 @@ import {
     formatPrice, 
 } from '../../helpers/helpers'
 import {
-    EditOutlined,
-    DeleteOutlined,
+    DownOutlined,
 } from '@ant-design/icons-vue'
 
 export default {
@@ -182,8 +185,7 @@ export default {
         'categories',
     ],
     components: {
-        EditOutlined,
-        DeleteOutlined,
+        DownOutlined,
     },
     data() {
         return {
@@ -213,11 +215,7 @@ export default {
                     key: 'description',
                 },
                 {
-                    key: 'edit',
-                    align: 'center',
-                },
-                {
-                    key: 'delete',
+                    key: 'actions',
                     align: 'center',
                 },
             ],

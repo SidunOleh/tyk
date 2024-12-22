@@ -31,9 +31,7 @@
                         placeholder="Введіть пароль"
                         :visible="true"
                         v-model:value="data.password"/>
-                    <a-button 
-                        type="primary"
-                        @click="generatePassword">
+                    <a-button @click="generatePassword">
                         Створити
                     </a-button>
                 </a-flex>
@@ -43,11 +41,22 @@
                 label="Ім'я"
                 :required="true"
                 has-feedback
-                :validate-status="errors['name'] ? 'error' : ''"
-                :help="errors.name">
+                :validate-status="errors['first_name'] ? 'error' : ''"
+                :help="errors.first_name">
                 <a-input
                     placeholder="Введіть ім'я"
-                    v-model:value="data.name"/>
+                    v-model:value="data.first_name"/>
+            </a-form-item>
+
+            <a-form-item 
+                label="Прізвище"
+                :required="true"
+                has-feedback
+                :validate-status="errors['last_name'] ? 'error' : ''"
+                :help="errors.last_name">
+                <a-input
+                    placeholder="Введіть прізвище"
+                    v-model:value="data.last_name"/>
             </a-form-item>
 
             <a-form-item 
@@ -73,6 +82,7 @@
             </a-form-item>
 
             <a-button
+                type="primary"
                 :loading="loading"
                 @click="action == 'create' ? create() : edit()">
                 Зберегти
@@ -99,7 +109,8 @@ export default {
             data: {
                 email: '',
                 password: '',
-                name: '',
+                first_name: '',
+                last_name: '',
                 phone: '',
                 role: null,
             },

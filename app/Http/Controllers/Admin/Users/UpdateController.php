@@ -6,16 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\UpdateRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use App\Services\Users\UserService;
 
 class UpdateController extends Controller
 {
+    public function __construct(
+        public UserService $userService
+    )
+    {
+        
+    }
+
     public function __invoke(User $user, UpdateRequest $request)
     {
-        $user->update($request->except(['password',]));
-
-        if ($password = $request->password) {
-            $user->update(['password' => $password,]);
-        }
+        $this->userService->update($user, $request);
         
         return response(['user' => new UserResource($user),]);
     }

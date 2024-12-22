@@ -4,13 +4,20 @@ namespace App\Http\Controllers\Admin\Products;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Products\BulkDeleteRequest;
-use App\Models\Product;
+use App\Services\Products\ProductService;
 
 class BulkDeleteController extends Controller
 {
+    public function __construct(
+        public ProductService $productService
+    )
+    {
+        
+    }
+
     public function __invoke(BulkDeleteRequest $request)
     {
-        Product::destroy($request->ids);
+        $this->productService->bulkDelete($request->ids);
 
         return response(['message' => 'OK',]);
     }

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\History;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class OrderItem extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, History;
 
     protected $fillable = [
         'name',
@@ -23,18 +25,22 @@ class OrderItem extends Model
         'amount' => 'float',
     ];
 
+    protected $loggable = [
+        'quantity',
+    ];
+
     protected static function booted(): void
     {
         static::created(function (self $orderItem) {
-            $orderItem->order->updateAmount();
+            $orderItem->order->log("добавлено товар {$orderItem->name}", Auth::user());
         });
 
         static::updated(function (self $orderItem) {
-            $orderItem->order->updateAmount();
+            $orderItem->order->log("змінено товар {$orderItem->name}", Auth::user(), $orderItem->getUpdates());
         });
 
         static::deleted(function (self $orderItem) {
-            $orderItem->order->updateAmount();
+            $orderItem->order->log("видалено товар {$orderItem->name}", Auth::user());
         });
     }
 

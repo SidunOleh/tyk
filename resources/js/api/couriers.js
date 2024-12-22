@@ -67,4 +67,31 @@ export default {
 
         return res.data
     },
+    async createCash(courierId, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/couriers/${courierId}/cashes`, data)
+
+        return res.data
+    },
+    async editCash(courierId, cashId, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.put(`/api/couriers/${courierId}/cashes/${cashId}`, data)
+
+        return res.data
+    },
+    async deleteCash(courierId, cashId) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.delete(`/api/couriers/${courierId}/cashes/${cashId}`)
+
+        return res.data
+    },
 }

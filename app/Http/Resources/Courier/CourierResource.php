@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Courier;
 
+use App\Http\Resources\Cash\CashResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,6 +15,13 @@ class CourierResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $cashes = [];
+        foreach ($this->cashes()
+            ->orderBy('created_at', 'DESC')
+            ->get() as $cash) {
+            $cashes[] = new CashResource($cash);
+        }
+
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -21,10 +29,8 @@ class CourierResource extends JsonResource
             'phone' => $this->phone,
             'tg' => $this->tg,
             'vehicles' => $this->vehicles,
-            'cashes' => $this->cashes()
-                ->select('id', 'received', 'returned', 'courier_id', 'created_at')
-                ->orderBy('created_at', 'DESC')
-                ->get(),
+            'cashes' => $cashes,
+            'history' => $this->history,
         ];
     }
 }

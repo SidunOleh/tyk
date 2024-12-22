@@ -32,7 +32,7 @@
                 <a-list-item-meta>
                     <template #title>
                         <a-flex :gap="5">
-                            {{ new Date(item.created_at).toLocaleDateString('uk-UA', {day: 'numeric', month: 'long', year:'numeric',}) }}
+                            {{ formatDate(item.created_at, false) }}
                             <a-tag 
                                 style="margin: 0;"
                                 :color="serviceColor(item.type)">
@@ -54,30 +54,25 @@
 
                     <template #description>
                         <a-flex
-                            v-if="item.type == 'Доставка їжі'"
                             :wrap="'wrap'"
                             :gap="5">
-                            <span>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></span>
-                            <span>Продукти: <a-typography-text strong>{{ item.order_items.map(item => `${item.name} x ${item.quantity}`).join(', ') }}</a-typography-text></span>
-                            <span>Адреса: <a-typography-text strong>{{ item.details.to }}</a-typography-text></span>
-                        </a-flex>
+                            <template v-if="item.type == 'Доставка їжі'">
+                                <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
+                                <div>Продукти: <a-typography-text strong>{{ item.order_items.map(item => `${item.name} x ${item.quantity}`).join(', ') }}</a-typography-text></div>
+                                <div>Адреса: <a-typography-text strong>{{ item.details.food_to }}</a-typography-text></div>
+                            </template>
 
-                        <a-flex
-                            v-if="item.type == 'Кур\'єр'"
-                            :wrap="'wrap'"
-                            :gap="5">
-                            <span>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></span>
-                            <span>Звідки: <a-typography-text strong>{{ item.details.from }}</a-typography-text></span>
-                            <span>Куди: <a-typography-text strong>{{ item.details.to.join(', ') }}</a-typography-text></span>
-                        </a-flex>
-
-                        <a-flex
-                            v-if="item.type == 'Таксі'"
-                            :wrap="'wrap'"
-                            :gap="5">
-                            <span>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></span>
-                            <span>Звідки: <a-typography-text strong>{{ item.details.from }}</a-typography-text></span>
-                            <span>Куди: <a-typography-text strong>{{ item.details.to.join(', ') }}</a-typography-text></span>
+                            <template v-if="item.type == 'Кур\'єр'">
+                                <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
+                                <div>Звідки: <a-typography-text strong>{{ item.details.shipping_from }}</a-typography-text></div>
+                                <div>Куди: <a-typography-text strong>{{ item.details.shipping_to.join(', ') }}</a-typography-text></div>
+                            </template>
+                            
+                            <template v-if="item.type == 'Таксі'">
+                                <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
+                                <div>Звідки: <a-typography-text strong>{{ item.details.taxi_from }}</a-typography-text></div>
+                                <div>Куди: <a-typography-text strong>{{ item.details.taxi_to.join(', ') }}</a-typography-text></div>
+                            </template>
                         </a-flex>
 
                         <a-flex 
@@ -99,6 +94,7 @@ import {
     formatPrice,
     serviceColor,
     orderStatusColor,
+    formatDate,
 } from '../../../helpers/helpers'
 
 export default {
@@ -114,6 +110,7 @@ export default {
         formatPrice,
         serviceColor,
         orderStatusColor,
+        formatDate,
     },
 }
 </script>

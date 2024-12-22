@@ -53,7 +53,8 @@
             </template>
         </a-list>
 
-        <a-button 
+        <a-button
+            type="primary" 
             style="margin-top: 10px;"
             :loading="loading"
             @click="add">
@@ -65,7 +66,7 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import api from '../../api/cashes'
+import api from '../../api/couriers'
 import { confirmPopup, } from '../../helpers/helpers'
 
 export default {
@@ -84,15 +85,14 @@ export default {
         async add() {
             try {
                 this.loading = true
-                const res = await api.create({
+                const res = await api.createCash(this.courier.id, {
                     created_at: new Date(),
                     received: 0,
                     returned: 0,
-                    courier_id: this.courier.id,
                 })
                 this.data.unshift(res.cash)
                 message.success('Успішно додано.')
-                this.$emit('edit')
+                this.$emit('create')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {
@@ -101,11 +101,7 @@ export default {
         },
         async save(item) {
             try {
-                if (item.id) {
-                    await api.edit(item.id, item)
-                } else {
-                    await api.create(item)
-                }
+                await api.editCash(this.courier.id, item.id, item)
 
                 message.success('Успішно збережено.')
                 this.$emit('edit')
@@ -115,13 +111,10 @@ export default {
         },
         async deleteItem(item) {
             try {
-                if (item.id) {
-                    await api.delete(item.id, item)
-                } 
-
+                await api.deleteCash(this.courier.id, item.id, item)
                 this.data = this.data.filter(i => i != item)
                 message.success('Успішно видалено.')
-                this.$emit('edit')
+                this.$emit('delete')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             }

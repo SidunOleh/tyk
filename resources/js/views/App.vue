@@ -1,16 +1,24 @@
 <template>
-    <component :is="layout">
-        <router-view/>
-    </component>
+    <a-locale-provider :locale="locale">
+        <component :is="layout">
+            <router-view/>
+        </component>
+    </a-locale-provider>
 </template>
 
 <script>
 import Layout from './Layout/Layout.vue'
 import AuthLayout from './Layout/AuthLayout.vue'
+import ukUa from 'ant-design-vue/lib/locale/uk_UA'
 
 export default {
     components: {
         Layout, AuthLayout,
+    },
+    data() {
+        return {
+            locale: ukUa,
+        }
     },
     computed: {
         layout() {

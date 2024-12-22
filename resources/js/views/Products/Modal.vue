@@ -100,6 +100,7 @@
             </a-form-item>
 
             <a-button
+                type="primary"
                 :loading="loading"
                 @click="action == 'create' ? create() : edit()">
                 Зберегти

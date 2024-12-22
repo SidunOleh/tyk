@@ -3,10 +3,7 @@
 namespace App\Http\Resources\Order;
 
 use App\Http\Resources\OrderItem\OrderItemResource;
-use App\Models\FoodShippingDetails;
-use App\Models\OrderItem;
-use App\Models\ShippingDetails;
-use App\Models\TaxiDetails;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,35 +16,50 @@ class OrderResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $data = [
-            'id' => $this->id,
-            'subtotal' => $this->subtotal,
-            'shipping_price' => $this->shipping_price,
-            'bonuses' => $this->bonuses,
-            'total' => $this->total,
-            'time' => $this->time,
-            'notes' => $this->notes,
-            'details' => $this->details,
-            'status' => $this->status,
-            'paid' => $this->paid,
-            'payment_method' => $this->payment_method,
-            'created_at' => $this->created_at,
+        $data = $this->orderToArray($this->resource);
+
+        $client = $this->client()->withTrashed()->first();
+
+        $data['client'] = [
+            'id' => $client->id,
+            'phone' => $client->phone,
+            'first_name' => $client->first_name,
+            'last_name' => $client->last_name,
+            'addresses' => $client->addresses,
+            'bonuses' => $client->bonuses,
+            'history' => $this->history,
         ];
 
-        switch ($this->details_type) {
-            case FoodShippingDetails::class:
-                $data['type'] = 'Доставка їжі';
-            break;
-            case ShippingDetails::class:
-                $data['type'] = 'Кур\'єр';
-            break;
-            case TaxiDetails::class:
-                $data['type'] = 'Таксі';
-            break;
+        foreach ($client->orders as $order) {
+            $data['client']['orders'][] = $this->orderToArray($order);
         }
 
+        return $data;
+    }
+
+    protected function orderToArray(Order $order): array
+    {
+        $data = [
+            'id' => $order->id,
+            'type' => $order->type,
+            'subtotal' => $order->subtotal,
+            'shipping_price' => $order->shipping_price,
+            'additional_costs' => $order->additional_costs,
+            'bonuses' => $order->bonuses,
+            'total' => $order->total,
+            'time' => $order->time->format('Y-m-d H:i:s'),
+            'duration' => $order->duration,
+            'notes' => $order->notes,
+            'details' => $order->details,
+            'status' => $order->status,
+            'paid' => $order->paid,
+            'payment_method' => $order->payment_method,
+            'created_at' => $order->created_at,
+            'history' => $order->history,
+        ];
+
         if ($data['type'] == 'Доставка їжі') {
-            foreach ($this->orderItems as $orderItem) {
+            foreach ($order->orderItems as $orderItem) {
                 $data['order_items'][] = new OrderItemResource($orderItem);
             }
         }

@@ -4,24 +4,21 @@ namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UsersCollection;
-use App\Models\User;
+use App\Services\Users\UserService;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
+    public function __construct(
+        public UserService $userService
+    )
+    {
+        
+    }
+
     public function __invoke(Request $request)
     {
-        $page = $request->query('page', 1);
-        $perpage = $request->query('perpage', 15);
-        $orderby = $request->query('orderby', 'created_at');
-        $order = $request->query('order', 'DESC');
-        $s = $request->query('s', '');
-        $role = $request->query('role', []);
-
-        $users = User::orderBy($orderby, $order)
-            ->search($s)
-            ->roles($role)
-            ->paginate($perpage, ['*'], 'page', $page);
+        $users = $this->userService->index($request);
 
         return response(new UsersCollection($users));
     }

@@ -76,6 +76,21 @@ function formatPrice(price) {
     }).format(price)
 }
 
+function formatDate(date, withTime = true) {
+    const options = {
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+    }
+
+    if (withTime) {
+        options.hour = '2-digit'
+        options.minute = '2-digit'
+    }
+
+    return new Date(date).toLocaleString('uk-UA', options)
+}
+
 function serviceColor(service) {
     switch (service) {
         case 'Доставка їжі':
@@ -102,6 +117,7 @@ export {
     warningPopup,
     errorPopup,
     formatPrice,
+    formatDate,
     serviceColor,
     orderStatusColor,
 }

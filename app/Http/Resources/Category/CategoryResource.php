@@ -22,6 +22,7 @@ class CategoryResource extends JsonResource
             'description' => $this->description,
             'parent_id' => $this->parent_id,
             'count' => $this->products()->count(),
+            'history' => $this->history,
         ];
     }
 }

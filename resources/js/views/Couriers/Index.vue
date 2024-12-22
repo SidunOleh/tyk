@@ -11,7 +11,8 @@
         ref="table"
         @cashes="record => {cashes.record = record; cashes.open = true;}"
         @create="create.open = true"
-        @edit="record => {edit.record = record; edit.open = true;}"/>
+        @edit="record => {edit.record = record; edit.open = true;}"
+        @history="record => {history.record = record; history.open = true;}"/>
 
     <Modal
         v-if="create.open"
@@ -33,7 +34,13 @@
         :title="`Каса ${cashes.record.first_name} ${cashes.record.last_name}`"
         v-model:open="cashes.open"
         :courier="cashes.record"
-        @edit="$refs.table.updateData()"/>
+        @create="$refs.table.updateData()"
+        @edit="$refs.table.updateData()"
+        @delete="$refs.table.updateData()"/>
+
+    <History
+        v-model:open="history.open"
+        :history="history.record?.history"/>
 
 </template>
 
@@ -41,12 +48,14 @@
 import Table from './Table.vue'
 import Modal from './Modal.vue'
 import CashesModal from './CashesModal.vue'
+import History from '../components/History.vue'
 
 export default {
     components: {
         Table, 
         Modal, 
         CashesModal,
+        History,
     },
     data() {
         return {
@@ -58,6 +67,10 @@ export default {
                 record: null,
             },
             cashes: {
+                open: false,
+                record: null,
+            },
+            history: {
                 open: false,
                 record: null,
             },

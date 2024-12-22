@@ -15,7 +15,7 @@
 
         <template #expandedRowRender="{ record }">
             <a-descriptions 
-                style="margin-top: 10px;"
+                style="margin: 10px 0;"
                 size="small"
                 bordered
                 :column="1">
@@ -39,6 +39,11 @@
                     {{ record.bonuses }}
                 </a-descriptions-item>           
             </a-descriptions>
+
+            <OrdersTable 
+                :data="record.orders"
+                @edit="$emit('editOrder')"
+                @delete="$emit('deleteOrder')"/>
         </template>
 
         <template #title>
@@ -106,33 +111,42 @@
                 </a-tag>
             </template>
 
-            <a-tooltip>
-                <template #title>
-                    Редагувати
-                </template>
-
-                <template v-if="column.key === 'edit'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="$emit('edit', record)">
-                        <EditOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
-
-            <a-tooltip>
-                <template #title>
-                    Видалити
-                </template>
-    
-                <template v-if="column.key === 'delete'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.email}?`)">
-                        <DeleteOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
+            <template v-if="column.key === 'actions'">
+                <a-dropdown>
+                    <a 
+                        class="ant-dropdown-link" 
+                        @click.prevent>
+                        Дії
+                        <DownOutlined/>
+                    </a>
+                    <template #overlay>
+                        <a-menu>
+                            <a-menu-item @click="$emit('history', record)">
+                                <a href="javascript:;">
+                                    Історія
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item @click="$emit('createOrder', record)">
+                                <a href="javascript:;">
+                                    Створити замовлення
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item @click="$emit('edit', record)">
+                                <a href="javascript:;">
+                                    Редагувати
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item 
+                                danger
+                                @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.first_name} ${record.last_name}?`)">
+                                <a href="javascript:;">
+                                    Видалити
+                                </a>
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
+            </template>
 
         </template>
 
@@ -143,16 +157,16 @@
 <script>
 import { message, } from 'ant-design-vue'
 import {
-    EditOutlined,
-    DeleteOutlined,
+    DownOutlined,
 } from '@ant-design/icons-vue'
 import api from '../../api/clients'
 import { confirmPopup, } from '../../helpers/helpers'
+import OrdersTable from './OrdersTable.vue'
 
 export default {
     components: {
-        EditOutlined,
-        DeleteOutlined,
+        DownOutlined,
+        OrdersTable,
     },
     data() {
         return {
@@ -176,11 +190,7 @@ export default {
                     key: 'addresses',
                 },
                 {
-                    key: 'edit',
-                    align: 'center',
-                },
-                {
-                    key: 'delete',
+                    key: 'actions',
                     align: 'center',
                 },
             ],

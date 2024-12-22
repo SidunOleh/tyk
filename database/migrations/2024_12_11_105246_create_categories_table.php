@@ -23,6 +23,7 @@ return new class extends Migration
                 ->on('categories')
                 ->onUpdate('cascade')
                 ->nullOnDelete();
+            $table->json('history')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

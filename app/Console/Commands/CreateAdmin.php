@@ -28,11 +28,13 @@ class CreateAdmin extends Command
     public function handle()
     {
         $email = $this->ask('E-mail', 'test@gmail.com');
-        $name = $this->ask('Ім\'я', 'Test');
+        $firstName = $this->ask('Ім\'я', 'Test');
+        $lastName = $this->ask('Прізвище', 'Test');
         $phone = $this->ask('Телефон', '111111111');
 
         $user = User::create([
-            'name' => $name,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'phone' => $phone,
             'email' => $email,
             'password' => $password = Str::random(8),

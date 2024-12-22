@@ -3,8 +3,8 @@
         label="Замовлення"
         :required="true"
         has-feedback
-        :validate-status="errors['details.order_items'] ? 'error' : ''"
-        :help="errors['details.order_items']">
+        :validate-status="errors['order_items'] ? 'error' : ''"
+        :help="errors['order_items']">
         <a-select
             style="width: 100%"
             placeholder="Виберіть товар"
@@ -24,11 +24,11 @@
     </a-form-item>
 
     <a-list
-        v-if="data.order_items.length"
+        v-if="orderItems?.length"
         style="margin-bottom: 15px;"
         size="small"
         item-layout="horizontal"
-        :data-source="data.order_items">  
+        :data-source="orderItems">  
         <template #header>
             <a-typography-text strong>
                 Кошик
@@ -65,17 +65,6 @@
             {{ formatPrice(subtotal) }}
         </a-typography-text>
     </a-list>
-
-    <a-form-item 
-        label="Куди"
-        :required="true"
-        has-feedback
-        :validate-status="errors['details.food_to'] ? 'error' : ''"
-        :help="errors['details.food_to']">
-        <a-input
-            placeholder="Введіть адресу"
-            v-model:value="data.food_to"/>
-    </a-form-item>
 </template>
 
 <script>
@@ -84,17 +73,11 @@ import { formatPrice } from '../../../helpers/helpers'
 
 export default {
     props: [
-        'details',
-        'repeat',
+        'orderItems',
         'errors',
     ],
     data() {
         return {
-            data: {
-                food_to: '',
-                cook_time: null,
-                order_items: [],
-            },
             products: {
                 data: [],
                 fetching: false,
@@ -104,16 +87,17 @@ export default {
     computed: {
         productOptions() {
             return this.products.data.map(product => {
+                let label = product.name
+                label += `, ${product.categories.filter(cat => ! cat.parent_id).map(cat => cat.name).join(', ')}`
+
                 return {
-                    label: `${product.name}`,
+                    label: label,
                     value: product.id, 
                 }
             })
         },
         subtotal() {
-            return this.data
-                .order_items
-                .reduce((acc, item) => acc += item.quantity * item.amount, 0)
+            return this.orderItems.reduce((acc, item) => acc += item.quantity * item.amount, 0)
         },
     },
     methods: {
@@ -127,7 +111,7 @@ export default {
         addToCart(productId) {
             this.products.data.map(product => {
                 if (product.id == productId) {
-                    this.data.order_items.push({
+                    this.orderItems.push({
                         name: product.name,
                         quantity: 1,
                         amount: product.price,
@@ -137,36 +121,8 @@ export default {
             })
         },
         removeFromCart(i) {
-            this.data.order_items = this.data
-                .order_items
-                .filter((item, index) => index != i)
+            this.orderItems.splice(i, 1)
         },
-    },
-    watch: {
-        repeat: {
-            handler(repeat) {
-                this.data.food_to = repeat.details.to
-
-                this.data.order_items = repeat.order_items.map(item => {
-                    return {
-                        name: item.product.name,
-                        quantity: item.quantity,
-                        amount: item.product.price,
-                        product_id: item.product.id,
-                    }
-                })
-            },
-            deep: true,
-        },
-        data: {
-            handler(data) {
-                this.$emit('update:details', data)
-            },
-            deep: true,
-        },
-    },
-    mounted() {
-        this.$emit('update:details', this.data)
     },
 }
 </script>

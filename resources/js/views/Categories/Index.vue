@@ -10,7 +10,8 @@
     <Table 
         ref="table"
         :categories="categories"
-        @edit="record => {edit.record = record; edit.open = true;}"/>
+        @edit="record => {edit.record = record; edit.open = true;}"
+        @history="record => {history.record = record; history.open = true;}"/>
 
     <Modal
         v-if="create.open"
@@ -29,6 +30,10 @@
         v-model:open="edit.open"
         @edit="() => {$refs.table.updateData(); this.fetchAllCategories();}"/>
 
+    <History
+        v-model:open="history.open"
+        :history="history.record?.history"/>
+
 </template>
 
 <script>
@@ -37,11 +42,13 @@ import Table from './Table.vue'
 import Modal from './Modal.vue'
 import api from '../../api/products'
 import categoriesApi from '../../api/categories'
+import History from '../components/History.vue'
 
 export default {
     components: {
         Table,
         Modal,
+        History,
     },
     data() {
         return {
@@ -49,6 +56,10 @@ export default {
                 open: false,
             },
             edit: {
+                open: false,
+                record: null,
+            },
+            history: {
                 open: false,
                 record: null,
             },

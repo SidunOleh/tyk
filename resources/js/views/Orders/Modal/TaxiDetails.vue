@@ -7,7 +7,7 @@
         :help="errors['details.taxi_from']">
         <a-input
             placeholder="Введіть адресу"
-            v-model:value="data.taxi_from"/>
+            v-model:value="details.taxi_from"/>
     </a-form-item>
 
     <a-form-item 
@@ -20,12 +20,12 @@
             :vertical="true"
             :gap="5">
             <a-flex 
-                v-for="(address, i) in data.taxi_to"
+                v-for="(address, i) in details.taxi_to"
                 :gap="5"
                 :align="'center'">
                 <a-input
                     placeholder="Введіть адресу"
-                    v-model:value="data.taxi_to[i]"/>
+                    v-model:value="details.taxi_to[i]"/>
                 <a-button
                     danger
                     type="text"
@@ -37,7 +37,6 @@
 
             <a-button
                 style="align-self: start;" 
-                type="primary"
                 @click="addToAddress">
                 Додати адресу
             </a-button>
@@ -49,17 +48,8 @@
 export default {
     props: [
         'details',
-        'repeat',
         'errors',
     ],
-    data() {
-        return {
-            data: {
-                taxi_from: '',
-                taxi_to: ['',],
-            },
-        }
-    },
     computed: {
         toErrors() {
             const errors = []
@@ -68,34 +58,21 @@ export default {
                     errors.push(this.errors[field])
                 }
             }
+
             return errors
         },
     },
     methods: {
         addToAddress() {
-            this.data.taxi_to.push('')
+            this.details.taxi_to.push('')
         },
         removeToAddress(i) {
-            this.data.taxi_to = this.data.taxi_to.filter((address, index) => index != i)
-        },
-    },
-    watch: {
-        repeat: {
-            handler(repeat) {
-                this.data.taxi_from = repeat.details.from
-                this.data.taxi_to = repeat.details.to
-            },
-            deep: true,
-        },
-        data: {
-            handler(data) {
-                this.$emit('update:details', data)
-            },
-            deep: true,
+            this.details.taxi_to = this.details.taxi_to.filter((address, index) => index != i)
         },
     },
     mounted() {
-        this.$emit('update:details', this.data)
+        this.details.taxi_from = this.details.taxi_from ?? ''
+        this.details.taxi_to = this.details.taxi_to ?? ['']
     },
 }
 </script>

@@ -20,7 +20,10 @@
                 bordered
                 :column="1">
                 <a-descriptions-item label="Ім'я">
-                    {{ record.name }}
+                    {{ record.first_name }}
+                </a-descriptions-item>
+                <a-descriptions-item label="Прізвище">
+                    {{ record.last_name }}
                 </a-descriptions-item>
                 <a-descriptions-item label="Телефон">
                     {{ record.phone }}
@@ -81,12 +84,16 @@
 
         <template #bodyCell="{column, record}">
 
-            <template v-if="column.key === 'email'">
-                {{ record.email }}
+            <template v-if="column.key === 'first_name'">
+                {{ record.first_name }}
             </template>
 
-            <template v-if="column.key === 'name'">
-                {{ record.name }}
+            <template v-if="column.key === 'last_name'">
+                {{ record.last_name }}
+            </template>
+
+            <template v-if="column.key === 'email'">
+                {{ record.email }}
             </template>
 
             <template v-if="column.key === 'phone'">
@@ -99,33 +106,37 @@
                 </a-tag>
             </template>
 
-            <a-tooltip>
-                <template #title>
-                    Редагувати
-                </template>
-
-                <template v-if="column.key === 'edit'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="$emit('edit', record)">
-                        <EditOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
-
-            <a-tooltip>
-                <template #title>
-                    Видалити
-                </template>
-    
-                <template v-if="column.key === 'delete'">
-                    <span
-                        style="cursor: pointer;"
-                        @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.email}?`)">
-                        <DeleteOutlined/>
-                    </span>
-                </template>
-            </a-tooltip>
+            <template v-if="column.key === 'actions'">
+                <a-dropdown>
+                    <a 
+                        class="ant-dropdown-link" 
+                        @click.prevent>
+                        Дії
+                        <DownOutlined/>
+                    </a>
+                    <template #overlay>
+                        <a-menu>
+                            <a-menu-item @click="$emit('history', record)">
+                                <a href="javascript:;">
+                                    Історія
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item @click="$emit('edit', record)">
+                                <a href="javascript:;">
+                                    Редагувати
+                                </a>
+                            </a-menu-item>
+                            <a-menu-item 
+                                danger
+                                @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.email}?`)">
+                                <a href="javascript:;">
+                                    Видалити
+                                </a>
+                            </a-menu-item>
+                        </a-menu>
+                    </template>
+                </a-dropdown>
+            </template>
 
         </template>
 
@@ -136,23 +147,26 @@
 <script>
 import { message, } from 'ant-design-vue'
 import {
-    EditOutlined,
-    DeleteOutlined,
+    DownOutlined,
 } from '@ant-design/icons-vue'
 import api from '../../api/users'
 import { confirmPopup, } from '../../helpers/helpers'
 
 export default {
     components: {
-        EditOutlined,
-        DeleteOutlined,
+        DownOutlined,
     },
     data() {
         return {
             columns: [
                 {
                     title: 'Ім\'я',
-                    key: 'name',
+                    key: 'first_name',
+                    sorter: true,
+                },
+                {
+                    title: 'Прізвище',
+                    key: 'last_name',
                     sorter: true,
                 },
                 {
@@ -178,11 +192,7 @@ export default {
                     ],
                 },
                 {
-                    key: 'edit',
-                    align: 'center',
-                },
-                {
-                    key: 'delete',
+                    key: 'actions',
                     align: 'center',
                 },
             ],

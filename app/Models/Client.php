@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Client extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, History;
     
     protected $fillable = [
         'phone',
@@ -17,12 +20,43 @@ class Client extends Model
         'last_name',
         'addresses',
         'bonuses',
+        'history',
     ];
 
     protected $casts = [
         'addresses' => 'array',
         'bonuses' => 'float',
+        'history' => 'array',
     ];
+
+    protected $loggable = [
+        'phone',
+        'first_name',
+        'last_name',
+        'addresses',
+    ];
+
+    protected static function booted(): void
+    {
+        static::created(function (self $client) {
+            $client->log('створено', Auth::user());
+        });
+
+        static::updated(function (self $client) {
+            $client->log('змінено', Auth::user(), $client->getUpdates());
+        });
+
+        static::deleted(function (self $client) {
+            $client->log('видалено', Auth::user());
+        });
+    }
+
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . ($attributes['last_name'] ?? ''),
+        );
+    }
 
     public function scopeSearch(Builder $query, string $s): void
     {

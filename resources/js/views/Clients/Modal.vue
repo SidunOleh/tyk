@@ -20,7 +20,6 @@
 
             <a-form-item 
                 label="Прізвище"
-                :required="true"
                 has-feedback
                 :validate-status="errors['last_name'] ? 'error' : ''"
                 :help="errors.last_name">
@@ -67,7 +66,6 @@
 
                     <a-button 
                         style="align-self: start;"
-                        type="primary"
                         @click="addAddress">
                         Додати адресу
                     </a-button>
@@ -75,6 +73,7 @@
             </a-form-item>
 
             <a-button
+                type="primary"
                 :loading="loading"
                 @click="action == 'create' ? create() : edit()">
                 Зберегти

@@ -14,23 +14,26 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
+            $table->string('type');
             $table->decimal('subtotal')->default(0);
             $table->decimal('shipping_price')->default(0);
+            $table->decimal('additional_costs')->default(0);
             $table->decimal('bonuses')->default(0);
             $table->decimal('total')->default(0);
-            $table->dateTime('time')->nullable();
+            $table->dateTime('time');
+            $table->unsignedInteger('duration');
             $table->text('notes')->nullable();
             $table->string('status');
             $table->boolean('paid')->default(false);
             $table->string('payment_method')->nullable();
-
-            $table->unsignedBigInteger('details_id');
-            $table->string('details_type');
+            $table->json('details');
             
             $table->foreignId('client_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->json('history')->nullable();
             
             $table->timestamps();
             $table->softDeletes();

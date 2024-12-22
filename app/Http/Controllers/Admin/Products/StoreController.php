@@ -5,15 +5,20 @@ namespace App\Http\Controllers\Admin\Products;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Products\StoreRequest;
 use App\Http\Resources\Product\ProductResource;
-use App\Models\Product;
+use App\Services\Products\ProductService;
 
 class StoreController extends Controller
 {
+    public function __construct(
+        public ProductService $productService
+    )
+    {
+        
+    }
+
     public function __invoke(StoreRequest $request)
     {
-        $product = Product::create($request->except('categories'));
-
-        $product->categories()->sync($request->categories);
+        $product = $this->productService->create($request);
 
         return response(['product' => new ProductResource($product),]);
     }

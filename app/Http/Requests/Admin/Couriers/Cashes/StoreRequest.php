@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Cashes;
+namespace App\Http\Requests\Admin\Couriers\Cashes;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +24,6 @@ class StoreRequest extends FormRequest
         return [
             'received' => 'required|numeric|min:0',
             'returned' => 'required|numeric|min:0',
-            'courier_id' => 'required|exists:couriers,id',
         ];
     }
 }

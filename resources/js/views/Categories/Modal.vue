@@ -62,7 +62,8 @@
                     v-model:value="data.description"/>
             </a-form-item>
 
-            <a-button   
+            <a-button
+                type="primary"   
                 :loading="loading"
                 @click="action == 'create' ? create() : edit()">
                 Зберегти

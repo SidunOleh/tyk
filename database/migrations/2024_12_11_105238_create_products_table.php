@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('ingredients')->nullable();
             $table->string('weight')->nullable();
+            $table->json('history')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

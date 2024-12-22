@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('tg')->nullable();
             $table->json('vehicles');
+            $table->json('history')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

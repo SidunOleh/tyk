@@ -1,5 +1,19 @@
 <template>
     <a-form-item 
+        label="Тип доставки"
+        :required="true"
+        has-feedback
+        :validate-status="errors['details.shipping_type'] ? 'error' : ''"
+        :help="errors['details.shipping_type']">
+        <a-select
+            style="width: 100%"
+            placeholder="Виберіть тип"
+            :options="shippingTypeOptions"
+            v-model:value="details.shipping_type">
+        </a-select>
+    </a-form-item>
+
+    <a-form-item 
         label="Звідки"
         :required="true"
         has-feedback
@@ -7,7 +21,7 @@
         :help="errors['details.shipping_from']">
         <a-input
             placeholder="Введіть адресу"
-            v-model:value="data.shipping_from"/>
+            v-model:value="details.shipping_from"/>
     </a-form-item>
 
     <a-form-item 
@@ -20,12 +34,12 @@
             :vertical="true"
             :gap="5">
             <a-flex 
-                v-for="(address, i) in data.shipping_to"
+                v-for="(address, i) in details.shipping_to"
                 :gap="5"
                 :align="'center'">
                 <a-input
                     placeholder="Введіть адресу"
-                    v-model:value="data.shipping_to[i]"/>
+                    v-model:value="details.shipping_to[i]"/>
                 <a-button
                     danger
                     type="text"
@@ -37,7 +51,6 @@
 
             <a-button
                 style="align-self: start;" 
-                type="primary"
                 @click="addToAddress">
                 Додати адресу
             </a-button>
@@ -49,18 +62,34 @@
 export default {
     props: [
         'details',
-        'repeat',
         'errors',
     ],
     data() {
         return {
-            data: {
-                shipping_from: '',
-                shipping_to: ['',],
-            },
+            shippingTypes: [
+                'Посилка з пошти',
+                'Посилка з маршрутки',
+                'Закуп продуктів',
+                'Вручення квітів/подарунків',
+                'Забрати замовлення',
+                'Набрати води',
+                'Набрати бензин',
+                'Розвіз зелені',
+                'Розвіз хліб',
+                'Вантажні перевезення',
+                'Тверезий водій',
+                'Прикурити авто',
+            ],
         }
     },
     computed: {
+        shippingTypeOptions() {
+            return this.shippingTypes.map(shippingType => {
+                return {
+                    value: shippingType,
+                }
+            })
+        },
         toErrors() {
             const errors = []
             for (const field in this.errors) {
@@ -74,31 +103,17 @@ export default {
     },
     methods: {
         addToAddress() {
-            this.data.shipping_to.push('')
+            this.details.shipping_to.push('')
         },
         removeToAddress(i) {
-            this.data.shipping_to = this.data
+            this.details.shipping_to = this.details
                 .shipping_to
                 .filter((address, index) => index != i)
         },
     },
-    watch: {
-        repeat: {
-            handler(repeat) {
-                this.data.shipping_from = repeat.details.from
-                this.data.shipping_to = repeat.details.to
-            },
-            deep: true,
-        },
-        data: {
-            handler(data) {
-                this.$emit('update:details', data)
-            },
-            deep: true,
-        },
-    },
     mounted() {
-        this.$emit('update:details', this.data)
+        this.details.shipping_from = this.details.shipping_from ?? ''
+        this.details.shipping_to = this.details.shipping_to ?? ['']
     },
 }
 </script>
