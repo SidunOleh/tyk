@@ -16,15 +16,15 @@ class FoodShippingService extends OrderService
         $order = Order::create([
             'type' => $data['service'],
             'shipping_price' => $data['shipping_price'] ?? 0,
-            'additional_costs' => $request['additional_costs'] ?? 0,
-            'time' => $request['time'] ?? now()->format('Y-m-d H:i:s'),
-            'duration' => $request['duration'],
-            'notes' => $request['notes'] ?? '',
+            'additional_costs' => $data['additional_costs'] ?? 0,
+            'time' => $data['time'] ?? now()->format('Y-m-d H:i:s'),
+            'duration' => $data['duration'],
+            'notes' => $data['notes'] ?? '',
             'status' => 'Створено',
-            'client_id' => $request['client_id'],
-            'paid' => $request['paid'],
-            'payment_method' => $request['payment_method'],
-            'details' => $request['details'],
+            'client_id' => $data['client_id'],
+            'paid' => $data['paid'],
+            'payment_method' => $data['payment_method'],
+            'details' => $data['details'],
         ]);
 
         $order->orderItems()->createMany($request['order_items']);
