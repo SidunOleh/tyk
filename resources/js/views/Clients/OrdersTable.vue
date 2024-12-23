@@ -76,8 +76,8 @@
                 <a-descriptions-item label="Повна сума">
                     {{ formatPrice(record.total) }}
                 </a-descriptions-item>
-                <a-descriptions-item label="Сплачено">
-                    {{ record.payed ? 'Так' : 'Ні' }}
+                <a-descriptions-item label="Оплачено">
+                    {{ record.paid ? 'Так' : 'Ні' }}
                 </a-descriptions-item>  
                 <a-descriptions-item label="Метод оплати">
                     {{ record.payment_method }}
@@ -108,8 +108,8 @@
                 </a-tag>
             </template>
 
-            <template v-if="column.key === 'payed'">
-                {{ record.payed ? 'Так' : 'Ні' }}
+            <template v-if="column.key === 'paid'">
+                {{ record.paid ? 'Так' : 'Ні' }}
             </template>
 
             <template v-if="column.key === 'created_at'">
@@ -211,7 +211,7 @@ export default {
                 },
                 {
                     title: 'Оплачено',
-                    key: 'payed',
+                    key: 'paid',
                 },
                 {
                     title: 'Створено',

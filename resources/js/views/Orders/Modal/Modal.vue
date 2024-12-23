@@ -119,7 +119,7 @@
             </a-form-item>
 
             <a-form-item 
-                label="Сплачено"
+                label="Оплачено"
                 :required="true"
                 has-feedback
                 :validate-status="errors['paid'] ? 'error' : ''"

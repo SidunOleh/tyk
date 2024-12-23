@@ -31,10 +31,10 @@
             <a-list-item style="padding: 10px 0;">
                 <a-list-item-meta>
                     <template #title>
-                        <a-flex :gap="5">
+                        <a-flex>
                             {{ formatDate(item.created_at, false) }}
                             <a-tag 
-                                style="margin: 0;"
+                                style="margin-left: 10px;"
                                 :color="serviceColor(item.type)">
                                 <template v-if="item.type == 'Доставка їжі'">
                                     {{ 'Ї' }}
@@ -48,6 +48,9 @@
                             </a-tag>
                             <a-tag :color="orderStatusColor(item.status)">
                                 {{ item.status }}
+                            </a-tag>
+                            <a-tag>
+                                {{ item.paid ? 'Оплачено' : 'Не оплачено' }}
                             </a-tag>
                         </a-flex>
                     </template>
