@@ -193,7 +193,7 @@ return [
         'client_id' => 'клієнт',
         'duration' => 'тривалість',
         'payment_method' => 'метод оплати',
-        'paid' => 'сплачено',
+        'paid' => 'оплачено',
         'quantity' => 'к-сть',
         'additional_costs' => 'додаткові витрати',
     ],
