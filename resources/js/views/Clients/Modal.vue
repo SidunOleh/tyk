@@ -123,9 +123,7 @@ export default {
             this.data.addresses.push('')
         },
         removeAddress(i) {
-            this.data.addresses = this.data
-                .addresses
-                .filter((address, index) => index != i)
+            this.data.addresses.splice(i, 1)
         },
         async create() {
             try {

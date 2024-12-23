@@ -106,9 +106,7 @@ export default {
             this.details.shipping_to.push('')
         },
         removeToAddress(i) {
-            this.details.shipping_to = this.details
-                .shipping_to
-                .filter((address, index) => index != i)
+            this.details.shipping_to.splice(i, 1)
         },
     },
     mounted() {

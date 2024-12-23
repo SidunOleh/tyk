@@ -67,7 +67,7 @@ export default {
             this.details.taxi_to.push('')
         },
         removeToAddress(i) {
-            this.details.taxi_to = this.details.taxi_to.filter((address, index) => index != i)
+            this.details.taxi_to.splice(i, 1)
         },
     },
     mounted() {

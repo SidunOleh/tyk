@@ -71,6 +71,7 @@ abstract class OrderService extends Service
         $types = $request->query('type', []);
         $statuses = $request->query('statuses', []);
         $paid = $request->query('paid', []);
+        $paid = array_map(fn ($paid) => $paid == 'true' ? true : false, $paid);
 
         $models = $this->model::orderBy($orderby, $order)
             ->search($s)
