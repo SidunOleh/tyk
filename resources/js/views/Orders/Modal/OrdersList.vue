@@ -28,7 +28,9 @@
         <template 
             v-if="show"
             #renderItem="{ item }">
-            <a-list-item style="padding: 10px 0;">
+            <a-list-item 
+                :class="{current: current == item.id}"
+                style="padding: 10px 5px;">
                 <a-list-item-meta>
                     <template #title>
                         <a-flex>
@@ -78,7 +80,8 @@
                             </template>
                         </a-flex>
 
-                        <a-flex 
+                        <a-flex
+                            v-if="! current || current != item.id" 
                             style="margin-top: 10px;"
                             :gap="5">
                             <a-typography-link @click="$emit('repeat', item)">
@@ -103,6 +106,7 @@ import {
 export default {
     props: [
         'orders',
+        'current',
     ],
     data() {
         return {
@@ -117,3 +121,9 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.current {
+    background: #353a3a0a;
+}
+</style>

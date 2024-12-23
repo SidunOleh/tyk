@@ -40,6 +40,7 @@
             <OrdersList 
                 v-if="selectedClient"
                 :orders="selectedClient?.orders"
+                :current="item?.id"
                 @repeat="repeatOrder"/>
 
             <a-form-item 

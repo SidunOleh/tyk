@@ -30,7 +30,9 @@ class OrderResource extends JsonResource
             'history' => $this->history,
         ];
 
-        foreach ($client->orders as $order) {
+        foreach ($client->orders()
+            ->orderBy('created_at', 'DESC')
+            ->get() as $order) {
             $data['client']['orders'][] = $this->orderToArray($order);
         }
 
