@@ -195,5 +195,6 @@ return [
         'payment_method' => 'метод оплати',
         'paid' => 'сплачено',
         'quantity' => 'к-сть',
+        'additional_costs' => 'додаткові витрати',
     ],
 ];
