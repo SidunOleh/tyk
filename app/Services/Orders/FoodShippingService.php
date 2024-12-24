@@ -52,7 +52,12 @@ class FoodShippingService extends OrderService
             'details' => $data['details'],
         ]);
 
-        $orderItemsIds = array_map(function (array $data) use($order) {
+        $order->orderItems()
+            ->whereNotIn('id', array_filter(array_map(fn (array $item) => $item['id'] ?? null, $data['order_items']), fn ($val) => isset($val)))
+            ->get()
+            ->map(fn (OrderItem $item) => $item->delete());
+
+        array_map(function (array $data) use($order) {
             $data['order_id'] = $order->id;
             if (isset($data['id'])) {
                 $orderItem = OrderItem::find($data['id']);
@@ -62,13 +67,8 @@ class FoodShippingService extends OrderService
                 $orderItem = OrderItem::create($data);
             }
 
-            return $orderItem->id;
+            return $orderItem;
         }, $data['order_items']);
-
-        $order->orderItems()
-            ->whereNotIn('id', $orderItemsIds)
-            ->get()
-            ->map(fn (OrderItem $item) => $item->delete());
 
         $order->updateAmount();
     }
