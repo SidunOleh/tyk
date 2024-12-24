@@ -57,7 +57,7 @@ class FoodShippingService extends OrderService
             ->get()
             ->map(fn (OrderItem $item) => $item->delete());
 
-        array_map(function (array $data) use($order) {
+        $orderItems = array_map(function (array $data) use($order) {
             $data['order_id'] = $order->id;
             if (isset($data['id'])) {
                 $orderItem = OrderItem::find($data['id']);
