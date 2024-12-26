@@ -27,7 +27,6 @@
                 :time="time"
                 :orders="orders"
                 :couriers="couriers"
-                @changeStatus="fetchOrders(false)"
                 @edit="order => {edit.record = order; edit.open = true;}"/>
         </div>
     </a-spin>
@@ -86,9 +85,9 @@ export default {
                 end.toISOString().split('T')[0]
             ]
         },
-        async fetchOrders(loading = true) {
+        async fetchOrders() {
             try {
-                this.loading = loading
+                this.loading = true
                 this.orders = await ordersApi.fetchBetween(this.time[0], this.time[1])
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)

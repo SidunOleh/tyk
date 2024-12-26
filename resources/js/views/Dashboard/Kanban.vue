@@ -95,6 +95,11 @@ export default {
         async changeStatus(order, status) {
             try {
                 const res = await api.changeStatus(order.id, status)
+                this.orders.forEach(order => {
+                    if (order.id == res.order.id) {
+                        order.status = res.order.status
+                    }
+                })
                 this.$emit('changeStatus')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
