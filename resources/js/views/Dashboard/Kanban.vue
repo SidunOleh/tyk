@@ -19,16 +19,59 @@ export default {
     data() {
         return {
             kanban: null,
-            data: [],
         }
     },
     methods: {
-        changeData() {            
-            this.data = JSON.parse(JSON.stringify(this.orders))
+        createKanban() {
+            document.querySelector('#kanban').innerHTML = ''
+            
+            this.kanban = new jKanban({
+                element:'#kanban',
+                dragBoards: false,
+                responsivePercentage: true,
+                boards: [
+                    {
+                        'id' : 'Створено',
+                        'title'  : 'Вхідні замовлення',
+                        'class': 'created',
+                        'item'  : [],
+                    },
+                    {
+                        'id' : 'Готується',
+                        'title'  : 'Готується партнером',
+                        'class': 'cooking',
+                        'item'  : [],
+                    },
+                    {
+                        'id' : 'Доставляється',
+                        'title'  : 'Виконується кур\'єром',
+                        'class': 'shipping',
+                        'item'  : [],
+                    },
+                    {
+                        'id' : 'Виконано',
+                        'title'  : 'Виконано',
+                        'class': 'done',
+                        'item'  : [],
+                    },
+                ],
+                click: el => {
+                    const order = JSON.parse(el.getAttribute('data-data'))
+                    this.$emit('edit', order)
+                },
+                dropEl: (el, target) => {
+                    const order = JSON.parse(el.getAttribute('data-data'))
+                    const status = target.closest('.kanban-board').getAttribute('data-id')
+                    this.changeStatus(order, status)
+                },
+            })
 
-            this.data.forEach(order => {
+            this.orders.forEach(order => {
                 if (this.kanban.findBoard(order.status)) {
-                    this.kanban.addElement(order.status, this.orderToBoardEl(order))
+                    this.kanban.addElement(
+                        order.status, 
+                        this.orderToBoardEl(order)
+                    )
                 }
             })
         },
@@ -101,63 +144,17 @@ export default {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
-        createKanban() {
-            document.querySelector('#kanban').innerHTML = ''
-            
-            this.kanban = new jKanban({
-                element:'#kanban',
-                dragBoards: false,
-                responsivePercentage: true,
-                boards: [
-                    {
-                        'id' : 'Створено',
-                        'title'  : 'Вхідні замовлення',
-                        'class': 'created',
-                        'item'  : [],
-                    },
-                    {
-                        'id' : 'Готується',
-                        'title'  : 'Готується партнером',
-                        'class': 'cooking',
-                        'item'  : [],
-                    },
-                    {
-                        'id' : 'Доставляється',
-                        'title'  : 'Виконується кур\'єром',
-                        'class': 'shipping',
-                        'item'  : [],
-                    },
-                    {
-                        'id' : 'Виконано',
-                        'title'  : 'Виконано',
-                        'class': 'done',
-                        'item'  : [],
-                    },
-                ],
-                click: el => {
-                    const order = JSON.parse(el.getAttribute('data-data'))
-                    this.$emit('edit', order)
-                },
-                dropEl: (el, target) => {
-                    const order = JSON.parse(el.getAttribute('data-data'))
-                    const status = target.closest('.kanban-board').getAttribute('data-id')
-                    this.changeStatus(order, status)
-                },
-            })
-        },
     },
     watch: {
         orders: {
             handler() {
                 this.createKanban()
-                this.changeData()
             },
             deep: true,
         },
     },
     mounted() {
         this.createKanban()
-        this.changeData()
     }
 }
 </script>
