@@ -105,7 +105,13 @@ function serviceColor(service) {
 function orderStatusColor(status) {
     switch (status) {
         case 'Створено':
-            return 'green'
+            return '#65a623'
+        case 'Готується':
+            return '#9ba30094'
+        case 'Доставляється':
+            return '#c983d2'
+        case 'Виконано':
+            return '#8ea6ff'
     }
 }
 

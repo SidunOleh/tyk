@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Order;
 
+use App\Http\Resources\Courier\CourierResource;
 use App\Http\Resources\OrderItem\OrderItemResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -58,6 +59,7 @@ class OrderResource extends JsonResource
             'payment_method' => $order->payment_method,
             'created_at' => $order->created_at,
             'history' => $order->history,
+            'courier' => new CourierResource($this->courier),
         ];
 
         if ($data['type'] == 'Доставка їжі') {

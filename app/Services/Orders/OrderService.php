@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Services\Service;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
@@ -49,7 +50,6 @@ abstract class OrderService extends Service
             'time' => $data['time'] ?? now()->format('Y-m-d H:i:s'),
             'duration' => $data['duration'],
             'notes' => $data['notes'] ?? '',
-            'status' => 'Створено',
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
@@ -81,6 +81,25 @@ abstract class OrderService extends Service
             ->paginate($perpage, ['*'], 'page', $page);
 
         return $models;
+    }
+
+    public function getBetween(string $start, string $end): Collection
+    {
+        $orders = Order::betweenDate($start, $end)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return $orders;
+    }
+
+    public function changeStatus(Order $order, string $status): void
+    {
+        $order->update(['status' => $status,]);
+    }
+
+    public function changeCourier(Order $order, ?int $courierId): void
+    {
+        $order->update(['courier_id' => $courierId,]);
     }
 
     public static function make(string $type): self

@@ -369,7 +369,7 @@ export default {
                 this.errors = {}
                 const res = await api.edit(this.data.id, this.prepareData())
                 message.success('Успішно збережено.')
-                this.$emit('edit')
+                this.$emit('edit', res.order)
             } catch (err) {
                 if (err?.response?.status == 422) {
                     this.errors = err?.response?.data?.errors

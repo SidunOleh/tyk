@@ -19,11 +19,15 @@ use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController
 use App\Http\Controllers\Admin\Clients\UpdateController as ClientsUpdateController;
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
+use App\Http\Controllers\Admin\Couriers\GetAllController as CouriersGetAllController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Admin\Couriers\UpdateController as CouriersUpdateController;
 use App\Http\Controllers\Admin\Images\UploadController;
+use App\Http\Controllers\Admin\Orders\ChangeCourierController;
+use App\Http\Controllers\Admin\Orders\ChangeStatusController;
 use App\Http\Controllers\Admin\Orders\DeleteController as OrdersDeleteController;
+use App\Http\Controllers\Admin\Orders\GetBetweenController;
 use App\Http\Controllers\Admin\Orders\IndexController as OrdersIndexController;
 use App\Http\Controllers\Admin\Orders\StoreController as OrdersStoreController;
 use App\Http\Controllers\Admin\Orders\UpdateController as OrdersUpdateController;
@@ -65,6 +69,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/couriers')->name('couriers.')->group(function () {
             Route::get('/', CouriersIndexController::class)
                 ->name('index');
+            Route::get('/all', CouriersGetAllController::class)
+                ->name('all');
             Route::post('/', CouriersStoreController::class)
                 ->name('store');
             Route::put('/{courier}', CouriersUpdateController::class)
@@ -137,8 +143,14 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/orders')->name('orders.')->group(function () {
             Route::get('/', OrdersIndexController::class)
                 ->name('index');
+            Route::get('/between', GetBetweenController::class)
+                ->name('between');
             Route::post('/', OrdersStoreController::class)
                 ->name('store');
+            Route::post('/{order}/status', ChangeStatusController::class)
+                ->name('change-status');
+            Route::post('/{order}/courier', ChangeCourierController::class)
+                ->name('change-courier');
             Route::put('/{order}', OrdersUpdateController::class)
                 ->name('update');
             Route::delete('/{order}', OrdersDeleteController::class)

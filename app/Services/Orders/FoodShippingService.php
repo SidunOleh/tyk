@@ -45,7 +45,6 @@ class FoodShippingService extends OrderService
             'time' => $data['time'] ?? now()->format('Y-m-d H:i:s'),
             'duration' => $data['duration'],
             'notes' => $data['notes'] ?? '',
-            'status' => 'Створено',
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],

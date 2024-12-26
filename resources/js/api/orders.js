@@ -29,6 +29,17 @@ export default {
 
         return res.data
     },
+    async fetchBetween(start, end) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const query = new URLSearchParams({start, end})
+
+        const res = await axios.get(`/api/orders/between?${query}`)
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')
@@ -44,6 +55,24 @@ export default {
         }
 
         const res = await axios.put(`/api/orders/${id}`, data)
+
+        return res.data
+    },
+    async changeStatus(id, status) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/orders/${id}/status`, {status})
+
+        return res.data
+    },
+    async changeCourier(id, courierId) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/orders/${id}/courier`, {courier_id: courierId,})
 
         return res.data
     },

@@ -7,10 +7,16 @@ use App\Http\Requests\Admin\Couriers\Cashes\UpdateRequest as CashesUpdateRequest
 use App\Models\Cash;
 use App\Models\Courier;
 use App\Services\Service;
+use Illuminate\Database\Eloquent\Collection;
 
 class CourierService extends Service
 {
     protected string $model = Courier::class;
+
+    public function all(): Collection
+    {
+        return Courier::all();
+    }
 
     public function createCash(Courier $courier, CashesStoreRequest $request): Cash
     {

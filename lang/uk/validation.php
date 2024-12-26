@@ -196,5 +196,7 @@ return [
         'paid' => 'оплачено',
         'quantity' => 'к-сть',
         'additional_costs' => 'додаткові витрати',
+        'status' => 'статус',
+        'courier_id' => 'кур\'єр',
     ],
 ];

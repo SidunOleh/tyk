@@ -33,6 +33,12 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->foreignId('courier_id')
+                ->nullable()
+                ->constrained()
+                ->onUpdate('cascade')
+                ->nullOnDelete();
+
             $table->json('history')->nullable();
             
             $table->timestamps();

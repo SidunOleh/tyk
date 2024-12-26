@@ -29,6 +29,15 @@ export default {
 
         return res.data
     },
+    async all() {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/couriers/all')
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

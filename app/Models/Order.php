@@ -29,6 +29,7 @@ class Order extends Model
         'payment_method',
         'details',
         'client_id',
+        'courier_id',
         'history',
     ];
 
@@ -60,6 +61,7 @@ class Order extends Model
         'payment_method',
         'details',
         'client_id',
+        'courier_id',
     ];
 
     protected static function booted(): void
@@ -102,6 +104,9 @@ class Order extends Model
                 } elseif ($field == 'client_id') {
                     $data[__('validation.attributes.'.$field)] = 
                         'з ' . Client::find($this->getOriginal('client_id'))->fullName . ' на ' . $this->client->fullName;
+                } elseif ($field == 'courier_id') {
+                    $data[__('validation.attributes.'.$field)] = 
+                        'з ' . (Courier::find($this->getOriginal('courier_id'))?->fullName ?? '_') . ' на ' . ($this->courier?->fullName ?? '_');
                 } else {
                     $data[__('validation.attributes.'.$field)] = 
                         'з ' . ($this->formatValue($this->getOriginal($field)) ?? '_') . ' на ' . ($this->formatValue($this->{$field}) ?? '_');
@@ -151,6 +156,11 @@ class Order extends Model
         }
     }
 
+    public function scopeBetweenDate(Builder $query, string $start, string $end): void
+    {
+        $query->whereRaw("DATE(created_at) BETWEEN ? AND ?", [$start, $end]);
+    }
+
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -175,5 +185,10 @@ class Order extends Model
             'subtotal' => $subtotal,
             'total' => $total,
         ]);
+    }
+
+    public function courier(): BelongsTo
+    {
+        return $this->belongsTo(Courier::class);
     }
 }
