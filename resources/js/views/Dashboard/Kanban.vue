@@ -23,11 +23,7 @@ export default {
         }
     },
     methods: {
-        changeData() {
-            this.data.forEach(order => {
-                this.kanban.removeElement(String(order.id))
-            })
-            
+        changeData() {            
             this.data = JSON.parse(JSON.stringify(this.orders))
 
             this.data.forEach(order => {
@@ -107,6 +103,7 @@ export default {
         },
         createKanban() {
             document.querySelector('#kanban').innerHTML = ''
+            
             this.kanban = new jKanban({
                 element:'#kanban',
                 dragBoards: false,
