@@ -153,7 +153,9 @@ export default {
             dropEl: (el, target) => {
                 const order = JSON.parse(el.getAttribute('data-data'))
                 const status = target.closest('.kanban-board').getAttribute('data-id')
-                this.changeStatus(order, status)
+                if (order.status != status) {
+                    this.changeStatus(order, status)
+                }
             },
         })
 
