@@ -95,10 +95,8 @@ export default {
         async changeStatus(order, status) {
             try {
                 const res = await api.changeStatus(order.id, status)
-                this.kanban.replaceElement(
-                    String(order.id), 
-                    this.orderToBoardEl(res.order)
-                )
+                this.kanban.removeElement(String(order.id))
+                this.kanban.addElement(order.status, this.orderToBoardEl(order))
                 this.orders.forEach(order => {
                     if (order.id == res.order.id) {
                         order.status = res.order.status
