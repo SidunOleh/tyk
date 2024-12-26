@@ -69,7 +69,7 @@ abstract class OrderService extends Service
         $order = $request->query('order', 'DESC');
         $s = $request->query('s', '');
         $types = $request->query('type', []);
-        $statuses = $request->query('statuses', []);
+        $statuses = $request->query('status', []);
         $paid = $request->query('paid', []);
         $paid = array_map(fn ($paid) => $paid == 'true' ? true : false, $paid);
 
