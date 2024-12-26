@@ -96,12 +96,9 @@ export default {
         },
         async fetchCouriers() {
             try {
-                this.loading = true
                 this.couriers = await couriersApi.all()
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
-            } finally {
-                this.loading = false
             }
         },
     },
