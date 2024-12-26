@@ -95,6 +95,7 @@ export default {
         async changeStatus(order, status) {
             try {
                 const res = await api.changeStatus(order.id, status)
+                this.kanban.removeElement(String(order.id))
                 this.orders.forEach(order => {
                     if (order.id == res.order.id) {
                         order.status = res.order.status
