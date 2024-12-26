@@ -12,7 +12,6 @@
             @click="component = 'Timeline'">
             <FieldTimeOutlined/>
         </a-button>
-
         <a-button 
             v-if="component == 'Timeline'"
             @click="component = 'Kanban'">
