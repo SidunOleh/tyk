@@ -78,8 +78,8 @@
         </div>
     </div>
 
-    <link rel="stylesheet" href="jkanban.min.css">
-    <script src="jkanban.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/jkanban.min.css">
+    <script src="/assets/js/jkanban.min.js"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.7.1/event-calendar.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.7.1/event-calendar.min.js"></script>

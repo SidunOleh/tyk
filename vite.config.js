@@ -14,6 +14,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@img': path.resolve(__dirname, 'resources/img'),
+            '@audio': path.resolve(__dirname, 'resources/audio'),
         },
     },
 });

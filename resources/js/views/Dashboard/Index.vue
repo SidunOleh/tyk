@@ -50,6 +50,7 @@ import { message } from 'ant-design-vue'
 import ordersApi from '../../api/orders'
 import couriersApi from '../../api/couriers'
 import Modal from '../Orders/Modal/Modal.vue'
+import newOrderAudio from '../../../audio/new-order.mp3'
 
 export default {
     components: {
@@ -84,15 +85,25 @@ export default {
                 end.toISOString().split('T')[0]
             ]
         },
-        async fetchOrders() {
+        async fetchOrders(withLoading = true, alert = false) {
             try {
-                this.loading = true
-                this.orders = await ordersApi.fetchBetween(this.time[0], this.time[1])
+                this.loading = withLoading
+                const orders = await ordersApi.fetchBetween(this.time[0], this.time[1])
+
+                if (alert && this.hasNew(orders)) {
+                    new Audio(newOrderAudio).play()
+                    message.info('Нове замовлення')
+                }
+                
+                this.orders = orders
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {
                 this.loading = false
             }
+        },
+        hasNew(orders) {
+            return orders.some(order => ! this.orders.some(item => item.id == order.id))
         },
         async fetchCouriers() {
             try {
@@ -112,6 +123,10 @@ export default {
     mounted() {
         this.setTime()
         this.fetchCouriers()
+
+        setInterval(() => {
+            this.fetchOrders(false, true)
+        }, 5 * 1000)
     },
 }
 </script>
