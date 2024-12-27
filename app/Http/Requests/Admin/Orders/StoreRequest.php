@@ -55,7 +55,7 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'payment_method.required_if' => 'Поле метод оплати є обов\'язковим, коли сплачено.',
+            'payment_method.required_if' => 'Поле метод оплати є обов\'язковим, коли оплачено.',
             'details.order_items.min' => 'Замовлення повинно містити хоча б 1 елементів.',
             'details.order_items.required_if' => 'Замовлення є обов\'язковим, коли сервіс Доставка їжі.',
         ];
