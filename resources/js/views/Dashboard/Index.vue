@@ -126,7 +126,7 @@ export default {
 
         setInterval(() => {
             this.fetchOrders(false, true)
-        }, 5 * 1000)
+        }, 10 * 1000)
     },
 }
 </script>
