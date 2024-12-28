@@ -122,7 +122,10 @@ export default {
     },
     mounted() {
         this.setTime()
-        this.fetchCouriers()
+
+        if (this.time) {
+            this.fetchOrders()
+        }
 
         setInterval(() => {
             this.fetchOrders(false, true)
