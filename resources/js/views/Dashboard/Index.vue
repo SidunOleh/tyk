@@ -122,13 +122,12 @@ export default {
     },
     mounted() {
         this.setTime()
-
-        if (this.time) {
-            this.fetchOrders()
-        }
+        this.fetchOrders()
 
         setInterval(() => {
-            this.fetchOrders(false, true)
+            if (this.time) {
+                this.fetchOrders(false, true)
+            }
         }, 10 * 1000)
     },
 }
