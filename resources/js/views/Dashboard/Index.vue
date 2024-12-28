@@ -122,7 +122,7 @@ export default {
     },
     mounted() {
         this.setTime()
-        this.fetchOrders()
+        this.fetchCouriers()
 
         setInterval(() => {
             if (this.time) {
