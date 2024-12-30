@@ -70,6 +70,7 @@ export default {
                 open: false,
                 record: null,
             },
+            interval: null,
             loading: false,
         }
     },
@@ -124,11 +125,14 @@ export default {
         this.setTime()
         this.fetchCouriers()
 
-        setInterval(() => {
+        this.interval = setInterval(() => {
             if (this.time) {
                 this.fetchOrders(false, true)
             }
         }, 10 * 1000)
+    },
+    unmounted() {
+        clearInterval(this.interval)
     },
 }
 </script>
