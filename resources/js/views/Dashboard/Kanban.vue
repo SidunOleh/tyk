@@ -133,12 +133,10 @@ export default {
         },
         async changeStatus(order, status) {
             try {
-                const res = await api.changeStatus(order.id, status)
-                this.orders.forEach(order => {
-                    if (order.id == res.order.id) {
-                        order.status = res.order.status
-                    }
-                })
+                this.orders[
+                    this.orders.findIndex(item => item.id == order.id)
+                ].status = status
+                await api.changeStatus(order.id, status)
                 this.$emit('changeStatus')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)

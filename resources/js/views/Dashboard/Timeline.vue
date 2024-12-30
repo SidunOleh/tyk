@@ -72,10 +72,12 @@ export default {
         },
         async changeCourier(orderId, courierId) {
             try {
-                const res = await api.changeCourier(orderId, courierId)
                 this.orders[
                     this.orders.findIndex(order => order.id == orderId)
-                ] = res.order
+                ].courier = this.couriers[
+                    this.couriers.findIndex(courier => courier.id == courierId)
+                ]
+                await api.changeCourier(orderId, courierId)
                 this.$emit('changeCourier')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
