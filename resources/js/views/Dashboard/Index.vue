@@ -96,12 +96,24 @@ export default {
                     message.info('Нове замовлення')
                 }
                 
-                this.orders = orders
+                this.setOrders(orders)
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {
                 this.loading = false
             }
+        },
+        setOrders(orders) {
+            const newOrders = orders.map(order => {
+                const index = this.orders.findIndex(item => item.id == order.id)
+                if (index == -1) {
+                    return order
+                } else {
+                    return this.orders[index]
+                }
+            })
+
+            this.orders = newOrders
         },
         hasNew(orders) {
             return orders.some(order => ! this.orders.some(item => item.id == order.id))
