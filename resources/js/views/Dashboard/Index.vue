@@ -36,7 +36,7 @@
         v-model:open="edit.open"
         action="edit"
         :item="edit.record"
-        @edit="fetchOrders"/>
+        @edit="order => orders = orders.map(item => item.id == order.id ? order : item)"/>
 </template>
 
 <script>
