@@ -112,6 +112,8 @@ function orderStatusColor(status) {
             return '#c983d2'
         case 'Виконано':
             return '#8ea6ff'
+        case 'Скасовано': 
+            return '#d31616'
     }
 }
 

@@ -54,6 +54,12 @@ export default {
                         'class': 'done',
                         'item'  : [],
                     },
+                    {
+                        'id' : 'Скасовано',
+                        'title'  : 'Скасовано',
+                        'class': 'canceled',
+                        'item'  : [],
+                    },
                 ],
                 click: el => {
                     const order = JSON.parse(el.getAttribute('data-data'))
@@ -176,6 +182,10 @@ export default {
 
 .kanban-container .done {
     background: #8ea6ff;
+}
+
+.kanban-container .canceled {
+    background: #d31616;
 }
 
 .kanban-board-header {
