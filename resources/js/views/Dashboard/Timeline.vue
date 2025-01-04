@@ -121,6 +121,8 @@ export default {
             selectable: false,
             pointer: false,
             locale: 'uk-UA',
+            slotWidth: 150,
+            slotDuration: '00:30:00',
             eventDrop: info => {
                 info.event.start = info.oldEvent.start
                 info.event.end = info.oldEvent.end
@@ -149,5 +151,9 @@ export default {
 <style>
 .ec-toolbar {
     display: none !important;
+}
+
+.ec-timeline .ec-time, .ec-timeline .ec-line {
+  width: 150px !important;
 }
 </style>
