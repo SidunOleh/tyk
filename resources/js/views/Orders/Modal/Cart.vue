@@ -44,11 +44,26 @@
                 </a-list-item-meta>
 
                 <template #actions>
-                    <a-input-number
-                        placeholder="К-сть"
-                        size="small"
-                        :min="1"
-                        v-model:value="item.quantity"/>
+                    <a-flex :gap="5">
+                        <a-button 
+                            style="width: 25px;" 
+                            size="small"
+                            @click="item.quantity > 1 && item.quantity--">
+                            -
+                        </a-button>
+                        <a-input
+                            style="width: 60px; text-align: center ;"
+                            placeholder="К-сть"
+                            readonly
+                            size="small"
+                            v-model:value="item.quantity"/>
+                        <a-button 
+                            style="width: 25px;" 
+                            size="small"
+                            @click="item.quantity++">
+                            +
+                        </a-button>
+                    </a-flex>
                     <a-button
                         danger
                         type="text"

@@ -332,7 +332,7 @@ export default {
         },
         repeatOrder(order) {
             this.data.service = order.type
-            this.data.details = order.details
+            this.data.details = JSON.parse(JSON.stringify(order.details))
 
             if (order.type == 'Доставка їжі') {
                 this.data.order_items = order.order_items.map(item => {

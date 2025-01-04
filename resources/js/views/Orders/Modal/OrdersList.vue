@@ -3,7 +3,7 @@
         style="margin-bottom: 15px;"
         size="small"
         item-layout="horizontal"
-        :data-source="orders"
+        :data-source="ordersToShow"
         :locale="{emptyText: 'Немає замовлень'}">  
         <template #header>
             <a-flex
@@ -92,6 +92,22 @@
                 </a-list-item-meta>
             </a-list-item>
         </template>
+
+        <a-flex 
+            v-if="show && orders.length > 3"
+            :justify="'center'">
+            <a-typography-link
+                v-if="! showAll"
+                @click="showAll = true">
+                Показати всі замовлення
+            </a-typography-link>
+
+            <a-typography-link
+                v-if="showAll"
+                @click="showAll = false">
+                Приховати всі замовлення
+            </a-typography-link>
+        </a-flex>
     </a-list>
 </template>
 
@@ -111,7 +127,13 @@ export default {
     data() {
         return {
             show: true,
+            showAll: false,
         }
+    },
+    computed: {
+        ordersToShow() {
+            return this.showAll ? this.orders : this.orders.slice(0, 3)
+        },
     },
     methods: {
         formatPrice,
