@@ -32,6 +32,7 @@ class OrderResource extends JsonResource
         ];
 
         foreach ($client->orders()
+            ->with('orderItems')
             ->orderBy('created_at', 'DESC')
             ->get() as $order) {
             $data['client']['orders'][] = $this->orderToArray($order);
@@ -64,7 +65,9 @@ class OrderResource extends JsonResource
         ];
 
         if ($data['type'] == 'Доставка їжі') {
-            foreach ($order->orderItems as $orderItem) {
+            foreach ($order->orderItems()
+                ->with('product')
+                ->get() as $orderItem) {
                 $data['order_items'][] = new OrderItemResource($orderItem);
             }
         }

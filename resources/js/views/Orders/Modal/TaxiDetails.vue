@@ -122,10 +122,16 @@ export default {
             this.toAddresses = [...new Set(this.toAddresses)]
         },
         addFromAddress() {
-            this.fromAddresses.push(this.newFromAddress)
+            if (this.newFromAddress) {
+                this.fromAddresses.push(this.newFromAddress)
+                this.newFromAddress = ''
+            }
         },
         addToAddress() {
-            this.toAddresses.push(this.newToAddress)
+            if (this.newToAddress) {
+                this.toAddresses.push(this.newToAddress)
+                this.newToAddress = ''
+            }
         },
     },
     watch: {
