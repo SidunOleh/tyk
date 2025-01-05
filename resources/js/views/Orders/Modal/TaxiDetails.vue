@@ -5,9 +5,28 @@
         has-feedback
         :validate-status="errors['details.taxi_from'] ? 'error' : ''"
         :help="errors['details.taxi_from']">
-        <a-input
-            placeholder="Введіть адресу"
-            v-model:value="details.taxi_from"/>
+        <a-select
+            v-model:value="details.taxi_from"
+            placeholder="Виберіть адресу"
+            :options="fromAddressOptions">
+            <template #dropdownRender="{ menuNode: menu }">
+                <component :is="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-flex 
+                    style="padding: 4px 8px"
+                    :gap="5">
+                    <a-input 
+                        v-model:value="newFromAddress" 
+                        placeholder="Введіть адресу" />
+                    <a-button @click="addFromAddress">
+                        <template #icon>
+                            <PlusOutlined/>
+                        </template>
+                        Додати
+                    </a-button>
+                </a-flex>
+            </template>
+        </a-select>
     </a-form-item>
 
     <a-form-item 
@@ -16,41 +35,69 @@
         has-feedback
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
-        <a-flex
-            :vertical="true"
-            :gap="5">
-            <a-flex 
-                v-for="(address, i) in details.taxi_to"
-                :gap="5"
-                :align="'center'">
-                <a-input
-                    placeholder="Введіть адресу"
-                    v-model:value="details.taxi_to[i]"/>
-                <a-button
-                    danger
-                    type="text"
-                    size="small"
-                    @click="removeToAddress(i)">
-                    X
-                </a-button>
-            </a-flex>
-
-            <a-button
-                style="align-self: start;" 
-                @click="addToAddress">
-                Додати адресу
-            </a-button>
-        </a-flex>
+        <a-select
+            v-model:value="details.taxi_to"
+            placeholder="Виберіть адресу"
+            mode="multiple"
+            :options="toAddressOptions">
+            <template #dropdownRender="{ menuNode: menu }">
+                <component :is="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-flex 
+                    style="padding: 4px 8px"
+                    :gap="5">
+                    <a-input 
+                        v-model:value="newToAddress" 
+                        placeholder="Введіть адресу" />
+                    <a-button @click="addToAddress">
+                        <template #icon>
+                            <PlusOutlined/>
+                        </template>
+                        Додати
+                    </a-button>
+                </a-flex>
+            </template>
+        </a-select>
     </a-form-item>
 </template>
 
 <script>
+import {
+    PlusOutlined,
+} from '@ant-design/icons-vue'
+
 export default {
+    components: {
+        PlusOutlined,
+    },
     props: [
         'details',
+        'client',
         'errors',
     ],
+    data() {
+        return {
+            fromAddresses: [],
+            toAddresses: [],
+            newFromAddress: '',
+            newToAddress: '',
+        }
+    },
     computed: {
+        fromAddressOptions() {
+            return this.fromAddresses.map(address => {
+                return {
+                    value: address,
+                }
+            })
+        },
+        toAddressOptions() {
+            return this.toAddresses.map(address => {
+                return {
+                    value: address,
+                }
+            })
+        },
         toErrors() {
             const errors = []
             for (const field in this.errors) {
@@ -63,16 +110,43 @@ export default {
         },
     },
     methods: {
-        addToAddress() {
-            this.details.taxi_to.push('')
+        setAddresses() {
+            this.fromAddresses = [...this.client?.addresses ?? []]
+            if (this.details.taxi_from) {
+                this.fromAddresses.push(this.details.taxi_from)
+            }
+            this.fromAddresses = [...new Set(this.fromAddresses)]
+
+            this.toAddresses = [...this.client?.addresses ?? []]
+            this.toAddresses = this.toAddresses.concat(this.details.taxi_to ?? [])
+            this.toAddresses = [...new Set(this.toAddresses)]
         },
-        removeToAddress(i) {
-            this.details.taxi_to.splice(i, 1)
+        addFromAddress() {
+            this.fromAddresses.push(this.newFromAddress)
+        },
+        addToAddress() {
+            this.toAddresses.push(this.newToAddress)
+        },
+    },
+    watch: {
+        client: {
+            handler() {
+                this.setAddresses()
+            },
+            deep: true,
+        },
+        details: {
+            handler() {
+                this.setAddresses()
+            },
+            deep: true,
         },
     },
     mounted() {
-        this.details.taxi_from = this.details.taxi_from ?? ''
-        this.details.taxi_to = this.details.taxi_to ?? ['']
+        this.details.taxi_from = this.details.taxi_from ? this.details.taxi_from : null
+        this.details.taxi_to = this.details.taxi_to ?? []
+
+        this.setAddresses()
     },
 }
 </script>

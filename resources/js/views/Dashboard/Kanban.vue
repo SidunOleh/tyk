@@ -101,7 +101,7 @@ export default {
         foodShippingElHtml(order) {
             return `
                 <div>
-                    ${formatDate(order.created_at, false)} <b>${order.type}</b>
+                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>
@@ -114,7 +114,7 @@ export default {
         shippingElHtml(order) {
             return `
                 <div>
-                    ${formatDate(order.created_at, false)} <b>${order.type}</b>
+                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>
@@ -127,7 +127,7 @@ export default {
         taxiElHtml(order) {
             return `
                 <div>
-                    ${formatDate(order.created_at, false)} <b>${order.type}</b>
+                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>

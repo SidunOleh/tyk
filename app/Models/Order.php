@@ -15,6 +15,7 @@ class Order extends Model
     use SoftDeletes, History;
 
     protected $fillable = [
+        'number',
         'type',
         'subtotal',
         'shipping_price',
@@ -66,6 +67,15 @@ class Order extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (self $order) {
+            $day = now()->format('d');
+            
+            $count = Order::whereDate('created_at', now()->format('Y-m-d'))->count() + 1;
+            $count = str_pad($count, 3, '0', STR_PAD_LEFT);
+
+            $order->number = "{$day}{$count}";
+        });
+
         static::created(function (self $order) {
             $order->log('створено', Auth::user());
         });

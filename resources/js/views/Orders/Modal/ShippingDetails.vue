@@ -19,9 +19,28 @@
         has-feedback
         :validate-status="errors['details.shipping_from'] ? 'error' : ''"
         :help="errors['details.shipping_from']">
-        <a-input
-            placeholder="Введіть адресу"
-            v-model:value="details.shipping_from"/>
+        <a-select
+            v-model:value="details.shipping_from"
+            placeholder="Виберіть адресу"
+            :options="fromAddressOptions">
+            <template #dropdownRender="{ menuNode: menu }">
+                <component :is="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-flex 
+                    style="padding: 4px 8px"
+                    :gap="5">
+                    <a-input 
+                        v-model:value="newFromAddress" 
+                        placeholder="Введіть адресу" />
+                    <a-button @click="addFromAddress">
+                        <template #icon>
+                            <PlusOutlined/>
+                        </template>
+                        Додати
+                    </a-button>
+                </a-flex>
+            </template>
+        </a-select>
     </a-form-item>
 
     <a-form-item 
@@ -30,42 +49,52 @@
         has-feedback
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
-        <a-flex
-            :vertical="true"
-            :gap="5">
-            <a-flex 
-                v-for="(address, i) in details.shipping_to"
-                :gap="5"
-                :align="'center'">
-                <a-input
-                    placeholder="Введіть адресу"
-                    v-model:value="details.shipping_to[i]"/>
-                <a-button
-                    danger
-                    type="text"
-                    size="small"
-                    @click="removeToAddress(i)">
-                    X
-                </a-button>
-            </a-flex>
-
-            <a-button
-                style="align-self: start;" 
-                @click="addToAddress">
-                Додати адресу
-            </a-button>
-        </a-flex>
+        <a-select
+            v-model:value="details.shipping_to"
+            placeholder="Виберіть адресу"
+            mode="multiple"
+            :options="toAddressOptions">
+            <template #dropdownRender="{ menuNode: menu }">
+                <component :is="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-flex 
+                    style="padding: 4px 8px"
+                    :gap="5">
+                    <a-input 
+                        v-model:value="newToAddress" 
+                        placeholder="Введіть адресу" />
+                    <a-button @click="addToAddress">
+                        <template #icon>
+                            <PlusOutlined/>
+                        </template>
+                        Додати
+                    </a-button>
+                </a-flex>
+            </template>
+        </a-select>
     </a-form-item>
 </template>
 
 <script>
+import {
+    PlusOutlined,
+} from '@ant-design/icons-vue'
+
 export default {
+    components: {
+        PlusOutlined,
+    },
     props: [
         'details',
+        'client',
         'errors',
     ],
     data() {
         return {
+            fromAddresses: [],
+            toAddresses: [],
+            newFromAddress: '',
+            newToAddress: '',
             shippingTypes: [
                 'Посилка з пошти',
                 'Посилка з маршрутки',
@@ -83,6 +112,20 @@ export default {
         }
     },
     computed: {
+        fromAddressOptions() {
+            return this.fromAddresses.map(address => {
+                return {
+                    value: address,
+                }
+            })
+        },
+        toAddressOptions() {
+            return this.toAddresses.map(address => {
+                return {
+                    value: address,
+                }
+            })
+        },
         shippingTypeOptions() {
             return this.shippingTypes.map(shippingType => {
                 return {
@@ -102,16 +145,43 @@ export default {
         },
     },
     methods: {
-        addToAddress() {
-            this.details.shipping_to.push('')
+        setAddresses() {
+            this.fromAddresses = [...this.client?.addresses ?? []]
+            if (this.details.shipping_from) {
+                this.fromAddresses.push(this.details.shipping_from)
+            }
+            this.fromAddresses = [...new Set(this.fromAddresses)]
+
+            this.toAddresses = [...this.client?.addresses ?? []]
+            this.toAddresses = this.toAddresses.concat(this.details.shipping_to ?? [])
+            this.toAddresses = [...new Set(this.toAddresses)]
         },
-        removeToAddress(i) {
-            this.details.shipping_to.splice(i, 1)
+        addFromAddress() {
+            this.fromAddresses.push(this.newFromAddress)
+        },
+        addToAddress() {
+            this.toAddresses.push(this.newToAddress)
+        },
+    },
+    watch: {
+        client: {
+            handler() {
+                this.setAddresses()
+            },
+            deep: true,
+        },
+        details: {
+            handler() {
+                this.setAddresses()
+            },
+            deep: true,
         },
     },
     mounted() {
-        this.details.shipping_from = this.details.shipping_from ?? ''
-        this.details.shipping_to = this.details.shipping_to ?? ['']
+        this.details.shipping_from = this.details.shipping_from ? this.details.shipping_from : null
+        this.details.shipping_to = this.details.shipping_to ?? []
+
+        this.setAddresses()
     },
 }
 </script>

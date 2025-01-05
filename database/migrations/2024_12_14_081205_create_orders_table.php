@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
+            $table->string('number');
             $table->string('type');
             $table->decimal('subtotal')->default(0);
             $table->decimal('shipping_price')->default(0);

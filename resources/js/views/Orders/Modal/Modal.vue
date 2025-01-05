@@ -65,6 +65,7 @@
             
             <component 
                 :is="detailsComponent"
+                :client="selectedClient"
                 :details="data.details"
                 :errors="errors"/>
 

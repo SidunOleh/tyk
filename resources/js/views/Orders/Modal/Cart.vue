@@ -7,7 +7,7 @@
         :help="errors['order_items']">
         <a-select
             style="width: 100%"
-            placeholder="Виберіть товар"
+            placeholder="Знайдіть товар"
             :filter-option="false"
             :options="productOptions"
             :showSearch="true"

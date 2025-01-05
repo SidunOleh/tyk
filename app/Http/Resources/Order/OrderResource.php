@@ -44,6 +44,7 @@ class OrderResource extends JsonResource
     {
         $data = [
             'id' => $order->id,
+            'number' => $order->number,
             'type' => $order->type,
             'subtotal' => $order->subtotal,
             'shipping_price' => $order->shipping_price,

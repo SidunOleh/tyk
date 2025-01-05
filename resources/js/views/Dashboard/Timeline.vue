@@ -64,7 +64,7 @@ export default {
             event.id = order.id
             event.start = new Date(order.time)
             event.end = new Date(event.start.getTime() + order.duration * 60000)
-            event.title = `${order.type}, ${formatPrice(order.total)}`
+            event.title = {html: `${order.type} №${order.number} ${formatPrice(order.total)}`}
             event.resourceIds = [order.courier?.id ?? null]
             event.color = orderStatusColor(order.status)
             event.extendedProps = {order}
@@ -155,5 +155,9 @@ export default {
 
 .ec-timeline .ec-time, .ec-timeline .ec-line {
   width: 150px !important;
+}
+
+.ec-timeline .ec-event-body {
+    flex-direction: column !important;
 }
 </style>
