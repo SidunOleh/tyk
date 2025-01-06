@@ -2,7 +2,10 @@
 
 namespace App\Http\Resources\Client;
 
+use App\Http\Resources\Courier\CourierResource;
 use App\Http\Resources\Order\OrderResource;
+use App\Http\Resources\OrderItem\OrderItemResource;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,9 +22,22 @@ class ClientResource extends JsonResource
         foreach ($this->orders()
             ->orderBy('created_at', 'DESC')
             ->get() as $order) {
-            $orders[] = new OrderResource($order);
+            $orders[] = $this->orderToArray($order);
         }
 
+        $client = $this->clientData();
+        $client['orders'] = $orders;
+
+        foreach ($client['orders'] as &$order) {
+            $order['client'] = $this->clientData();
+            $order['client']['orders'] = $orders;
+        }
+
+        return $client;
+    }
+
+    protected function clientData(): array
+    {
         return [
             'id' => $this->id,
             'phone' => $this->phone,
@@ -29,8 +45,39 @@ class ClientResource extends JsonResource
             'last_name' => $this->last_name,
             'addresses' => $this->addresses,
             'bonuses' => $this->bonuses,
-            'orders' => $orders,
             'history' => $this->history,
         ];
+    }
+
+    protected function orderToArray(Order $order): array
+    {
+        $data = [
+            'id' => $order->id,
+            'number' => $order->number,
+            'type' => $order->type,
+            'subtotal' => $order->subtotal,
+            'shipping_price' => $order->shipping_price,
+            'additional_costs' => $order->additional_costs,
+            'bonuses' => $order->bonuses,
+            'total' => $order->total,
+            'time' => $order->time->format('Y-m-d H:i:s'),
+            'duration' => $order->duration,
+            'notes' => $order->notes,
+            'details' => $order->details,
+            'status' => $order->status,
+            'paid' => $order->paid,
+            'payment_method' => $order->payment_method,
+            'created_at' => $order->created_at,
+            'history' => $order->history,
+            'courier' => new CourierResource($this->courier),
+        ];
+
+        if ($data['type'] == 'Доставка їжі') {
+            foreach ($order->orderItems as $orderItem) {
+                $data['order_items'][] = new OrderItemResource($orderItem);
+            }
+        }
+
+        return $data;
     }
 }

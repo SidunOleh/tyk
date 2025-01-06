@@ -85,4 +85,15 @@ export default {
 
         return res.data
     },
+    async bulkDelete(ids) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post('/api/orders/bulk', {
+            _method: 'DELETE', ids,
+        })
+
+        return res.data
+    },
 }

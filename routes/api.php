@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexControll
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Admin\Couriers\UpdateController as CouriersUpdateController;
 use App\Http\Controllers\Admin\Images\UploadController;
+use App\Http\Controllers\Admin\Orders\BulkDeleteController as OrdersBulkDeleteController;
 use App\Http\Controllers\Admin\Orders\ChangeCourierController;
 use App\Http\Controllers\Admin\Orders\ChangeStatusController;
 use App\Http\Controllers\Admin\Orders\DeleteController as OrdersDeleteController;
@@ -153,6 +154,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('change-courier');
             Route::put('/{order}', OrdersUpdateController::class)
                 ->name('update');
+            Route::delete('/bulk', OrdersBulkDeleteController::class)
+                ->name('bulk-delete');
             Route::delete('/{order}', OrdersDeleteController::class)
                 ->name('delete');
         });

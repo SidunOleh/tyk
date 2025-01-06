@@ -65,15 +65,19 @@ class Order extends Model
         'courier_id',
     ];
 
+    protected $with = [
+        'orderItems',
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (self $order) {
-            // $day = now()->format('d');
+            $day = now()->format('d');
             
-            // $count = Order::whereDate('created_at', now()->format('Y-m-d'))->count() + 1;
-            // $count = str_pad($count, 3, '0', STR_PAD_LEFT);
+            $count = Order::whereDate('created_at', now()->format('Y-m-d'))->count() + 1;
+            $count = str_pad($count, 3, '0', STR_PAD_LEFT);
 
-            // $order->number = "{$day}{$count}";
+            $order->number = "{$day}{$count}";
         });
 
         static::created(function (self $order) {

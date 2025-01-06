@@ -29,6 +29,10 @@ class OrderItem extends Model
         'quantity',
     ];
 
+    protected $with = [
+        'product',
+    ];
+
     protected static function booted(): void
     {
         static::created(function (self $orderItem) {
