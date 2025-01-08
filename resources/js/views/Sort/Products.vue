@@ -18,7 +18,7 @@
         <a-button
             type="primary"
             @click="save">
-            Save
+            Зберегти
         </a-button>
     </a-spin>
 </template>
