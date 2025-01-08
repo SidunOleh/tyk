@@ -56,6 +56,12 @@
                             Категорії
                         </router-link>
                     </a-menu-item>
+
+                    <a-menu-item key="sort">
+                        <router-link :to="{name: 'sort.categories'}">
+                            Порядок
+                        </router-link>
+                    </a-menu-item>
                 </a-sub-menu>
 
                 <a-menu-item key="couriers">

@@ -37,6 +37,20 @@
                         {{ categories.filter(category => category.id == record.parent_id)[0]?.name }}
                     </a-tag>
                 </a-descriptions-item>
+                <a-descriptions-item label="Теги">
+                    <a-tag  
+                        v-for="tag in record.tags"
+                        :bordered="false">
+                        {{ tag.name }}
+                    </a-tag>
+                </a-descriptions-item>
+                <a-descriptions-item label="Супутні товари">
+                    <a-tag  
+                        v-for="product in record.upsells"
+                        :bordered="false">
+                        {{ product.name }}
+                    </a-tag>
+                </a-descriptions-item>
                 <a-descriptions-item label="Опис">
                     <div v-html="record.description?.replace(/\n/g, '<br/>')">
                     </div>          

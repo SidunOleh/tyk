@@ -8,8 +8,17 @@ use App\Http\Controllers\Admin\Couriers\Cashes\UpdateController as CashesUpdateC
 use App\Http\Controllers\Admin\Categories\BulkDeleteController as CategoriesBulkDeleteController;
 use App\Http\Controllers\Admin\Categories\DeleteController as CategoriesDeleteController;
 use App\Http\Controllers\Admin\Categories\GetAllController;
+use App\Http\Controllers\Admin\Categories\GetProducts;
+use App\Http\Controllers\Admin\Categories\GetTreeController;
 use App\Http\Controllers\Admin\Categories\IndexController as CategoriesIndexController;
+use App\Http\Controllers\Admin\Categories\ReorderController;
+use App\Http\Controllers\Admin\Categories\ReorderProductsController;
 use App\Http\Controllers\Admin\Categories\StoreController as CategoriesStoreController;
+use App\Http\Controllers\Admin\Categories\Tags\DeleteController as TagsDeleteController;
+use App\Http\Controllers\Admin\Categories\Tags\GetController;
+use App\Http\Controllers\Admin\Categories\Tags\ReorderController as TagsReorderController;
+use App\Http\Controllers\Admin\Categories\Tags\StoreController as TagsStoreController;
+use App\Http\Controllers\Admin\Categories\Tags\UpdateController as TagsUpdateController;
 use App\Http\Controllers\Admin\Categories\UpdateController as CategoriesUpdateController;
 use App\Http\Controllers\Admin\Clients\BulkDeleteController as ClientsBulkDeleteController;
 use App\Http\Controllers\Admin\Clients\DeleteController as ClientsDeleteController;
@@ -111,6 +120,10 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('index');
             Route::get('/all', GetAllController::class)
                 ->name('all');
+            Route::get('/tree', GetTreeController::class)
+                ->name('tree');
+            Route::get('/{category}/products', GetProducts::class)
+                ->name('products');
             Route::post('/', CategoriesStoreController::class)
                 ->name('store');
             Route::put('/{category}', CategoriesUpdateController::class)
@@ -119,6 +132,23 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('bulk-delete');
             Route::delete('/{category}', CategoriesDeleteController::class)
                 ->name('delete');
+            Route::post('/reorder', ReorderController::class)
+                ->name('reorder');
+            Route::post('/{category}/reorder-products', ReorderProductsController::class)
+                ->name('reorder-products');
+
+            Route::prefix('/tags')->name('tags.')->group(function () {
+                Route::get('/', GetController::class)
+                    ->name('get');
+                Route::post('/', TagsStoreController::class)
+                    ->name('store');
+                Route::put('/{categoryTag}', TagsUpdateController::class)
+                    ->name('update');
+                Route::delete('/{categoryTag}', TagsDeleteController::class)
+                    ->name('delete');
+                Route::post('/reorder', TagsReorderController::class)
+                    ->name('reorder');
+            });
         });
 
         Route::prefix('/images')->name('images.')->group(function () {

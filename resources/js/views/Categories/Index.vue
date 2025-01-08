@@ -18,6 +18,7 @@
         title="Створення категорії"
         action="create"
         :categories="categories"
+        :tags="tags"
         v-model:open="create.open"
         @create="() => {$refs.table.updateData(); this.fetchAllCategories();}"/>
 
@@ -27,6 +28,7 @@
         action="edit"
         :categories="categories"
         :item="edit.record"
+        :tags="tags"
         v-model:open="edit.open"
         @edit="() => {$refs.table.updateData(); this.fetchAllCategories();}"/>
 
@@ -52,6 +54,7 @@ export default {
     },
     data() {
         return {
+            tags: [],
             create: {
                 open: false,
             },
@@ -75,9 +78,17 @@ export default {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
+        async fetchCategoryTags() {
+            try {
+                this.tags = await categoriesApi.getTags() 
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
     },
     mounted() {
         this.fetchAllCategories()
+        this.fetchCategoryTags()
     },
 }
 </script>

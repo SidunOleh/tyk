@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Categories;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class ReorderProductsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'slug' => 'required|string|unique:products,slug',
-            'image' => 'string|nullable',
-            'description' => 'string|nullable',
-            'parent_id' => 'exists:categories,id|nullable',
-            'visible' => 'boolean',
-            'tags' => 'array',
-            'tags.*' => 'exists:category_tags,id',
-            'upsells' => 'array',
-            'upsells' => 'exists:products,id',
+            'products' => 'required|array',
+            'products.*.id' => 'required',
         ];
     }
 }

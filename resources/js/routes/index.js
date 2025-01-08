@@ -131,6 +131,32 @@ const routes = [{
         title: 'Користувачі',
     },
 }, {
+    path: '/sort/categories',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Sort/Categories.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'sort.categories',
+    meta: {
+        roles: ['адмін', ],
+        key: 'sort',
+        title: 'Сортування категорій',
+    },
+}, {
+    path: '/sort/categories/:id/products',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Sort/Products.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'sort.products',
+    meta: {
+        roles: ['адмін', ],
+        key: 'sort',
+        title: 'Сортування товарів',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

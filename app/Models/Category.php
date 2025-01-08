@@ -9,22 +9,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Mavinoo\Batch\Traits\HasBatch;
 
 class Category extends Model
 {
-    use SoftDeletes, History;
+    use SoftDeletes, History, HasBatch;
 
     protected $fillable = [
+        'id',
         'name',
         'slug',
         'image',
         'description',
         'parent_id',
         'history',
+        'order',
+        'visible',
+        'upsells',
     ];
 
     protected $casts = [
         'history' => 'array',
+        'order' => 'integer',
+        'visible' => 'boolean',
+        'upsells' => 'array',
     ];
 
     protected $loggable = [
@@ -64,7 +72,11 @@ class Category extends Model
     {
         $query->whereAny([
             'name',
-            'description',
         ], 'like', "%{$s}%");
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(CategoryTag::class);
     }
 }

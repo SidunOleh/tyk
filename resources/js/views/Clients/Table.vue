@@ -10,7 +10,7 @@
         }"
         :bordered="true"
         :loading="loading"
-        :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows}"
+        :rowSelection="{onChange: (selectedRowKeys, selectedRows) => selected = selectedRows,}"
         @change="changeQuery">
 
         <template #expandedRowRender="{ record }">
@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { message, } from 'ant-design-vue'
+import { message, Table } from 'ant-design-vue'
 import {
     DownOutlined,
 } from '@ant-design/icons-vue'

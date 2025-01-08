@@ -38,6 +38,24 @@ export default {
 
         return res.data
     },
+    async tree() {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/categories/tree')
+
+        return res.data
+    },
+    async getProducts(id) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get(`/api/categories/${id}/products`)
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')
@@ -73,6 +91,69 @@ export default {
         const res = await axios.post('/api/categories/bulk', {
             _method: 'DELETE', ids,
         })
+
+        return res.data
+    },
+    async reorder(data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post('/api/categories/reorder', data)
+
+        return res.data
+    },
+    async reorderProducts(id, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/categories/${id}/reorder-products`, data)
+
+        return res.data
+    },
+    async getTags() {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/categories/tags')
+
+        return res.data
+    },
+    async createTag(data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post('/api/categories/tags', data)
+
+        return res.data
+    },
+    async editTag(id, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.put(`/api/categories/tags/${id}`, data)
+
+        return res.data
+    },
+    async deleteTag(id) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.delete(`/api/categories/tags/${id}`)
+
+        return res.data
+    },
+    async reorderTags(data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post('/api/categories/tags/reorder', data)
 
         return res.data
     },

@@ -23,7 +23,10 @@ return new class extends Migration
                 ->on('categories')
                 ->onUpdate('cascade')
                 ->nullOnDelete();
+            $table->json('upsells')->nullable();
             $table->json('history')->nullable();
+            $table->unsignedInteger('order')->nullable();
+            $table->boolean('visible')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

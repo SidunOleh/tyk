@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Categories;
+namespace App\Http\Requests\Admin\Categories\Tags;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,15 +23,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'slug' => 'required|string|unique:products,slug',
-            'image' => 'string|nullable',
-            'description' => 'string|nullable',
-            'parent_id' => 'exists:categories,id|nullable',
-            'visible' => 'boolean',
-            'tags' => 'array',
-            'tags.*' => 'exists:category_tags,id',
-            'upsells' => 'array',
-            'upsells' => 'exists:products,id',
+            'image' => 'required|string',
         ];
     }
 }

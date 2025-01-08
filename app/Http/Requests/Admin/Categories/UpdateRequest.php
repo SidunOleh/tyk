@@ -35,6 +35,11 @@ class UpdateRequest extends FormRequest
             'image' => 'string|nullable',
             'description' => 'string|nullable',
             'parent_id' => 'exists:categories,id|nullable',
+            'visible' => 'boolean',
+            'tags' => 'array',
+            'tags.*' => 'exists:category_tags,id',
+            'upsells' => 'array',
+            'upsells' => 'exists:products,id',
         ];
     }
 }

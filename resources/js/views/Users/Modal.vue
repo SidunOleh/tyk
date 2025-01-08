@@ -95,7 +95,7 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import usersApi from '../../api/users'
+import api from '../../api/users'
 
 export default {
     props: [
@@ -139,7 +139,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await usersApi.create(this.data)
+                const res = await api.create(this.data)
                 message.success(`Успішно створено. E-mail з доступами надіслано ${this.data.email}.`)
                 this.$emit('create')
                 this.$emit('update:open', false)
@@ -157,7 +157,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await usersApi.edit(this.data.id, this.data)
+                const res = await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {

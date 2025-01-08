@@ -14,6 +14,7 @@ class Product extends Model
     use SoftDeletes, History;
 
     protected $fillable = [
+        'id',
         'name',
         'slug',
         'price',
@@ -58,10 +59,6 @@ class Product extends Model
     {
         $query->whereAny([
             'name',
-            'price',
-            'description',
-            'ingredients',
-            'weight',
         ], 'like', "%{$s}%");
     }
 

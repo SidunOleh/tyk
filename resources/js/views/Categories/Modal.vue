@@ -52,6 +52,60 @@
                     @changeFileList="changeFileList"/>
             </a-form-item>
 
+            <a-form-item
+                label="Теги"
+                has-feedback
+                :validate-status="errors['tags'] ? 'error' : ''"
+                :help="errors.tags">
+                <a-select
+                    placeholder="Виберіть теги"
+                    mode="tags"
+                    :options="tagOptions"
+                    v-model:value="data.tags">
+                    <template #dropdownRender="{ menuNode: menu }">
+                        <component :is="menu" />
+                        <a-divider style="margin: 10px 0" />
+                        <a-button 
+                            style="width: 100%;"
+                            @click="showTagsModal = true">
+                            Керування
+                        </a-button>
+                    </template>
+                </a-select>
+            </a-form-item>
+
+            <a-form-item 
+                label="Супутні товари"
+                has-feedback
+                :validate-status="errors['upsells'] ? 'error' : ''"
+                :help="errors['upsells']">
+                <a-select
+                    style="width: 100%"
+                    placeholder="Знайдіть товар"
+                    mode="tags"
+                    :filter-option="false"
+                    :options="productOptions"
+                    :showSearch="true"
+                    v-model:value="data.upsells"
+                    @search="fetchProducts">
+                    <template 
+                        v-if="products.fetching" 
+                        #notFoundContent>
+                        <a-spin 
+                            style="width: 100%" 
+                            size="small"/>
+                    </template>
+                </a-select>
+            </a-form-item>
+
+            <a-form-item 
+                label="Видимість"
+                has-feedback
+                :validate-status="errors['visible'] ? 'error' : ''"
+                :help="errors.visible">
+                <a-switch v-model:checked="data.visible"/>
+            </a-form-item>
+
             <a-form-item 
                 label="Опис"
                 has-feedback
@@ -72,6 +126,11 @@
         </a-form>
 
     </a-modal>
+
+    <TagsModal 
+        v-if="showTagsModal"
+        v-model:open="showTagsModal"
+        :tags="tags"/>
 </template>
 
 <script>
@@ -79,6 +138,8 @@ import { message } from 'ant-design-vue'
 import api from '../../api/categories'
 import Upload from '../components/Upload.vue'
 import slugify from 'slugify'
+import TagsModal from './Tags/Modal.vue'
+import productsApi from '../../api/products'
 
 export default {
     props: [
@@ -87,9 +148,11 @@ export default {
         'action',
         'item',
         'categories',
+        'tags',
     ],
     components: {
-        Upload,
+        Upload, 
+        TagsModal,
     },
     data() {
         return {
@@ -97,10 +160,18 @@ export default {
                 name: '',
                 parent_id: null,
                 image: null,
+                visible: true,
+                tags: [],
+                upsells: [],
                 description: '',
+            },
+            products: {
+                data: [],
+                fetching: false,
             },
             uploaded: [],
             errors: {},
+            showTagsModal: false,
             loading: false,
         }
     },
@@ -116,9 +187,34 @@ export default {
             
             return options
         },
+        tagOptions() {
+            return this.tags.map(tag => {
+                return {
+                    label: tag.name,
+                    value: tag.id,
+                }
+            })  
+        },
+        productOptions() {
+            return this.products.data.map(product => {
+                let label = product.name
+                label += `, ${product.categories.filter(cat => ! cat.parent_id).map(cat => cat.name).join(', ')}`
+
+                return {
+                    label: label,
+                    value: product.id, 
+                }
+            })
+        },
     },      
     methods: {
         slugify,
+        async fetchProducts(s) {
+            this.products.fetching = true
+            const res = await productsApi.search(s)
+            this.products.data = res
+            this.products.fetching = false
+        },
         async create() {
             try {
                 this.loading = true
@@ -189,6 +285,9 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
+            this.data.tags = this.data.tags.map(tag => tag.id)
+            this.products.data = this.item.upsells
+            this.data.upsells = this.data.upsells.map(product => product.id)
 
             if (this.item.image) {
                 this.uploaded.push({
