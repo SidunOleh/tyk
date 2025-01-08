@@ -31,7 +31,7 @@ class ImportProductSlugs extends Command
             $this->error('Can\'t open file.');
             return;
         }
-
+        
         $i = 0;
         while (($line = fgetcsv($file, null, ',')) !== false) {
             if ($i++ == 0) {

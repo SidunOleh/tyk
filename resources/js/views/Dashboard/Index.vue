@@ -81,9 +81,11 @@ export default {
             const end = new Date()
             end.setDate(end.getDate() + 1)
 
+            const format = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, 0)}-${String(d.getDate()).padStart(2, 0)}`
+
             this.time = [
-                start.toISOString().split('T')[0],
-                end.toISOString().split('T')[0]
+                format(start),
+                format(end),
             ]
         },
         async fetchOrders(withLoading = true, alert = false) {
