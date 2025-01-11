@@ -31,18 +31,18 @@ Route::domain(config('app.admin_domain'))->group(function () {
 /**
  * Pages
  */
-Route::get('/', HomeController::class)
-    ->name('pages.home'); 
-Route::get('/zaklady', EstablishmentsController::class)
-    ->name('pages.zaklady');  
-Route::get('/product-category/{category:slug}', ProductsController::class)
-    ->name('pages.category'); 
-Route::get('/catalog-html/{category}', GetCatalogHtmlController::class)
-    ->name('pages.catalog-html');
-Route::get('/cart', CartController::class)
-    ->name('pages.cart'); 
-Route::get('/checkout', CheckoutController::class)
-    ->name('pages.checkout'); 
+// Route::get('/', HomeController::class)
+//     ->name('pages.home'); 
+// Route::get('/zaklady', EstablishmentsController::class)
+//     ->name('pages.zaklady');  
+// Route::get('/product-category/{category:slug}', ProductsController::class)
+//     ->name('pages.category'); 
+// Route::get('/catalog-html/{category}', GetCatalogHtmlController::class)
+//     ->name('pages.catalog-html');
+// Route::get('/cart', CartController::class)
+//     ->name('pages.cart'); 
+// Route::get('/checkout', CheckoutController::class)
+//     ->name('pages.checkout'); 
 
 /**
  * Cart
