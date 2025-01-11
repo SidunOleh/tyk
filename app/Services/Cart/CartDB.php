@@ -34,7 +34,7 @@ class CartDB extends Cart
             $quantity
         );
 
-        $this->retrieveItems();
+        $this->items[] = $cartItem;
 
         return $cartItem;
     }
@@ -47,7 +47,7 @@ class CartDB extends Cart
 
         $cartItemModel->delete();
 
-        $this->retrieveItems();
+        $this->items = array_filter($this->items, fn (CartCartItem $item) => $item->id != $itemId);
 
         return true;
     }
@@ -58,9 +58,13 @@ class CartDB extends Cart
             return false;
         }
 
-        $cartItemModel->update(['quantity' => $quantity,]);
+        if ($quantity > 0) {
+            $cartItemModel->update(['quantity' => $quantity,]);
 
-        $this->retrieveItems();
+            ($this->getItem($itemId))->quantity = $quantity;
+        } else {
+            $this->removeItem($itemId);
+        }
 
         return true;
     }

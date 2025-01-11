@@ -7,7 +7,7 @@ use App\Models\Category;
 use App\Services\Cart\Cart;
 use App\Services\Categories\CategoryService;
 
-class ProductsController extends Controller
+class GetCatalogHtmlController extends Controller
 {
     public function __construct(
         public CategoryService $categoryService,
@@ -19,12 +19,10 @@ class ProductsController extends Controller
 
     public function __invoke(Category $category)
     {
-        $categoryTree = $this->categoryService->subtree($category->id);
         $products = $this->categoryService->getProducts($category);
 
-        return view('pages.products', [
+        return view('templates.catalog', [
             'category' => $category,
-            'categoryTree' => $categoryTree,
             'products' => $products,
             'cart' => $this->cart,
         ]);

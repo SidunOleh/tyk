@@ -68,4 +68,14 @@ class Product extends Model
             $query->whereHas('categories', fn (Builder $query) => $query->whereIn('categories.id', $categories));
         }
     }
+
+    public function formattedPrice(): string
+    {
+        return number_format($this->price, 2) . '₴';
+    }
+
+    public function imageUrl(): string
+    {
+        return $this->image ?: asset('/assets/img/placeholder.webp');
+    }
 }

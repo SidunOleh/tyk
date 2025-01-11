@@ -50,33 +50,43 @@
             <div class="subtotal-list">
                 <div class="subtotal-item">
                     <p class="position">Проміжний підсумок</p>
-                    <p class="sum">2100.00₴</p>
+                    <p class="sum">
+                        {{ $cart->formattedTotal() }}₴
+                    </p>
                 </div>
                 <div class="subtotal-item">
                     <p class="position">Доставка</p>
-                    <p class="sum deliver">Єдиний тариф. Варіанти доставки будуть оновлені під час оформлення замовлення.</p>
+                    <p class="sum deliver">
+                        Єдиний тариф. Варіанти доставки будуть оновлені під час оформлення замовлення.
+                    </p>
                 </div>
                 <div class="subtotal-item">
                     <p class="position">Загалом</p>
-                    <p class="sum">2100.00₴</p>
+                    <p class="sum">
+                        {{ $cart->formattedTotal() }}₴
+                    </p>
                 </div>
-                <p class="remark">*Ціна вказана без урахування пакування і вартості послуги доставки</p>
+                <p class="remark">
+                    *Ціна вказана без урахування пакування і вартості послуги доставки
+                </p>
             </div>
 
             <div class="radio-group">
                 <label class="radio-option">
-            <input type="radio" name="payment" value="Оплата карткою" checked />
-            <span class="custom-radio"></span>
-            Оплата карткою
-        </label>
+                    <input type="radio" name="payment" value="Оплата карткою" checked />
+                    <span class="custom-radio"></span>
+                    Оплата карткою
+                </label>
                 <label class="radio-option">
-            <input type="radio" name="payment" value="Готівкою при отриманні" />
-            <span class="custom-radio"></span>
-            Готівкою при отриманні
-        </label>
+                    <input type="radio" name="payment" value="Готівкою при отриманні" />
+                    <span class="custom-radio"></span>
+                    Готівкою при отриманні
+                </label>
             </div>
 
-            <a href="#" type="sabmit" class="btn">Підтвердити замовлення</a>
+            <a type="sabmit" class="btn">
+                Підтвердити замовлення
+            </a>
         </div>
     </div>
 </section>

@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Mavinoo\Batch\Traits\HasBatch;
+use Staudenmeir\EloquentJsonRelations\Relations\BelongsToJson;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 class Category extends Model
 {
-    use SoftDeletes, History, HasBatch;
+    use SoftDeletes, History, HasBatch, HasJsonRelationships;
 
     protected $fillable = [
         'id',
@@ -78,5 +80,25 @@ class Category extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(CategoryTag::class);
+    }
+
+    public function scopeEstablishment(Builder $query): void
+    {
+        $query->where('parent_id', null);
+    }
+
+    public function scopeVisible(Builder $query): void
+    {
+        $query->where('visible', true);
+    }
+
+    public function imageUrl(): string
+    {
+        return $this->image ?: asset('/assets/img/placeholder.webp');
+    }
+
+    public function upsells(): BelongsToJson
+    {
+        return $this->belongsToJson(Product::class, 'upsells');
     }
 }

@@ -14,6 +14,7 @@ use App\Services\Service;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class CategoryService extends Service
 {
@@ -51,6 +52,27 @@ class CategoryService extends Service
         return $this->makeTree($categories->toArray(), 0);
     }
 
+    public function subtree(int $parentId)
+    {
+        $subtree = DB::select("
+            WITH RECURSIVE cte AS
+            (
+                SELECT c1.id, c1.name, c1.slug, c1.image, c1.description, c1.parent_id, c1.order
+                    FROM categories c1
+                    WHERE parent_id=:parent_id AND visible=true
+                UNION ALL
+                SELECT c2.id, c2.name, c2.slug, c2.image, c2.description, c2.parent_id, c2.order
+                    FROM categories c2
+                    JOIN cte
+                    ON cte.id=c2.parent_id
+                    WHERE visible=true
+            )
+            SELECT * FROM cte ORDER BY -cte.order DESC;
+        ", ['parent_id' => $parentId,]);
+
+        return $this->makeTree($subtree, $parentId);
+    }
+
     private function makeTree(
         array $categories, 
         int $parentId
@@ -58,6 +80,7 @@ class CategoryService extends Service
     {
         $tree = [];
         foreach ($categories as $category) {
+            $category = (array) $category;
             if ($category['parent_id'] == $parentId) {
                 $category['children'] = $this->makeTree(
                     $categories, 
@@ -107,7 +130,7 @@ class CategoryService extends Service
     public function getProducts(Category $category): Collection
     {
         $products = $category->products()
-            ->select('products.id', 'products.name')
+            ->select('products.id', 'products.name', 'products.image', 'products.price')
             ->orderByRaw('-category_product.order DESC')
             ->get();
 

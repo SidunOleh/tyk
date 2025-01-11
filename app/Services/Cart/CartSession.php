@@ -22,41 +22,44 @@ class CartSession extends Cart
             $quantity
         );
 
-        $cartItems = session('cart', []);
-        $cartItems[] = $cartItem;
-        session(['cart' => $cartItems,]);
+        $this->items[] = $cartItem;
 
-        $this->retrieveItems();
+        session(['cart' => $this->items,]);
 
         return $cartItem;
     }
 
     public function removeItem(int $itemId): bool
     {
-        $cartItems = session('cart', []);
-        $newCartItems = array_filter($cartItems, fn (CartCartItem $cartItem) => $cartItem->id != $itemId);
-        session(['cart' => $newCartItems,]);
+        $deleted = false;
+        $this->items = array_filter($this->items, function (CartCartItem $cartItem) use ($itemId, $deleted) {
+            if ($cartItem->id != $itemId) {
+                return true;
+            } else {
+                return ! $deleted = true;
+            }
+        });
 
-        $this->retrieveItems();
+        session(['cart' => $this->items,]);
 
-        return count($newCartItems) != count($cartItems);
+        return $deleted ;
     }
 
     public function changeQuantity(int $itemId, int $quantity): bool
     {
-        $cartItems = session('cart', []);
-        foreach ($cartItems as $cartItem) {
-            if ($cartItem->id == $itemId) {
-                $cartItem->quantity = $quantity;
-                session(['cart' => $cartItems,]);
-
-                $this->retrieveItems();
-
-                return true;
-            }
+        if (! $item = $this->getItem($itemId)) {
+            return false;
         }
-        
-        return false;
+
+        if ($quantity > 0) {
+            $item->quantity = $quantity;
+
+            session(['cart' => $this->items,]);
+        } else {
+            $this->removeItem($itemId);
+        }
+
+        return true;
     }
 
     public function saveToDB(): array

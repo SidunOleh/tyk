@@ -19,4 +19,9 @@ class CartItem
     {
         return $this->product->price * $this->quantity;
     }
+
+    public function formattedAmount(): string
+    {
+        return number_format($this->amount(), 2);
+    }
 }

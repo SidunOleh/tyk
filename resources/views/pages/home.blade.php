@@ -78,86 +78,54 @@
             Доставка їжі <br /> з ваших <span>улюблених</span> ресторанів
         </h2>
         <div class="eaterie-filters">
-            <div class="filter-item" data-filter="pizza"><img src="./img/pizza.svg" alt="Pizza" />Піца</div>
-            <div class="filter-item" data-filter="fastfood"><img src="./img/burger.svg" alt="Fastfood" /> Фастфуд</div>
-            <div class="filter-item" data-filter="shawarma"><img src="./img/shau.svg" alt="Shawarma" /> Шаурма</div>
-            <div class="filter-item" data-filter="sushi"><img src="./img/sushi.svg" alt="Sushi" /> Суші</div>
-            <div class="filter-item" data-filter="drinks"><img src="./img/drinks.svg" alt="Drinks" /> Напої</div>
-            <div class="filter-item" data-filter="sweets"><img src="./img/sweets.svg" alt="Sweets" /> Солодощі</div>
-            <div class="filter-item" data-filter="homefood"><img src="./img/homeFood.svg" alt="Home food" /> Як вдома</div>
+            <div class="filter-item active" data-filter="all">
+                <div class="icon">
+                    <img src="{{ asset('/assets/img/all.svg') }}" alt="" />
+                </div>
+                Все
+            </div>
+            @foreach ($tags as $tag)
+            <div class="filter-item" data-filter="{{ $tag->id }}">
+                <img src="{{ $tag->image }}" alt="Pizza" />
+                {{ $tag->name }}
+            </div>
+            @endforeach
         </div>
         <div class="eaterie-list">
-            <a href="openProduct.html" class="eaterie-item" data-category="drinks">
-                <div class="img-card"><img src="./img/drink-img.jpg" alt="" /></div>
+            @foreach ($zaklady as $i => $zaklad)
+            <a 
+                href="{{ route('pages.category', ['category' => $zaklad->slug,]) }}" 
+                @class(['eaterie-item', 'hide' => $i > 5,])
+                data-tags="{{ json_encode($zaklad->tags->pluck('id')) }}">
+                <div class="img-card">
+                    <img src="{{ $zaklad->imageUrl() }}" alt="" />
+                </div>
                 <div class="info-card">
                     <div class="title">
-                        <div class="icon"><img src="./img/drink-img.jpg" alt="" /></div>
-                        Drink-Market
+                        <!-- <div class="icon">
+                            <img src="./img/drink-img.jpg" alt="" />
+                        </div> -->
+                        {{ $zaklad->name }}
                     </div>
                     <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label top">🔥 ТОП</div>
+                        <div class="work-time">
+                            <img src="{{ asset('/assets/img/clock.svg') }}" alt="" />
+                            {!! $zaklad->description !!}
+                        </div>
+                        <!-- <div class="label top">
+                            🔥 ТОП
+                        </div> -->
                     </div>
                 </div>
             </a>
-            <a href="openProduct.html" class="eaterie-item" data-category="pizza">
-                <div class="img-card"><img src="./img/pizza-img.jpg" alt="" /></div>
-                <div class="info-card">
-                    <div class="title">Drink-Market</div>
-                    <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label sale">😱 Знижки до -15%</div>
-                    </div>
-                </div>
-            </a>
-            <a href="openProduct.html" class="eaterie-item" data-category="homefood">
-                <div class="img-card"><img src="./img/terasa.jpg" alt="" /></div>
-                <div class="info-card">
-                    <div class="title">Drink-Market</div>
-                    <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label new">✨ Новинка</div>
-                    </div>
-                </div>
-            </a>
-            <a href="openProduct.html" class="eaterie-item" data-category="fastfood">
-                <div class="img-card"><img src="./img/rolex.jpg" alt="" /></div>
-                <div class="info-card">
-                    <div class="title">Drink-Market</div>
-                    <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label top">🔥 ТОП</div>
-                    </div>
-                </div>
-            </a>
-            <a href="openProduct.html" class="eaterie-item" data-category="shawarma">
-                <div class="img-card"><img src="./img/prima.jpg" alt="" /></div>
-                <div class="info-card">
-                    <div class="title">
-                        <div class="icon"><img src="./img/drink-img.jpg" alt="" /></div>
-                        Drink-Market
-                    </div>
-                    <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label new">✨ Новинка</div>
-                    </div>
-                </div>
-            </a>
-            <a href="openProduct.html" class="eaterie-item" data-category="sushi">
-                <div class="img-card"><img src="./img/ilove.jpg" alt="" /></div>
-                <div class="info-card">
-                    <div class="title">
-                        <div class="icon"><img src="./img/drink-img.jpg" alt="" /></div>
-                        Drink-Market
-                    </div>
-                    <div class="bottom">
-                        <div class="work-time"><img src="./img/clock.svg" alt="" />08:00 - 21:00</div>
-                        <div class="label sale">😱 Знижки до -15%</div>
-                    </div>
-                </div>
-            </a>
+            @endforeach
         </div>
-        <a href="#" class="btn clear">Більше закладів</a>
+        <a class="btn clear">
+            Більше закладів
+        </a>
+        <a class="btn clear hide">
+            Приховати
+        </a>
     </div>
 </section>
 
