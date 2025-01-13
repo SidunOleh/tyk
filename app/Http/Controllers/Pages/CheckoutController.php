@@ -16,6 +16,10 @@ class CheckoutController extends Controller
 
     public function __invoke()
     {
+        if (! $this->cart->items) {
+            return redirect()->route('pages.zaklady');
+        }
+
         return view('pages.checkout', [
             'cart' => $this->cart,
         ]);

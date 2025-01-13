@@ -1,4 +1,4 @@
-@include('templates.header')
+@include('templates.header', ['title' => $category->name])
 
 <section class="page-hero" style="background-image: url('{{ $category->image }}')">
     <div class="wrapper">

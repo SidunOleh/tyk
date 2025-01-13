@@ -1,4 +1,4 @@
-@include('templates.header')
+@include('templates.header', ['title' => 'Заклади'])
 
 <section class="page-hero" style="background-image: url({{ asset('/assets/img/pizza-img.jpg') }})">
     <div class="wrapper">

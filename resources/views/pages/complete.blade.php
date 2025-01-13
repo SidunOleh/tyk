@@ -1,4 +1,4 @@
-@include('templates.header')
+@include('templates.header', ['title' => 'Успішно створено'])
 
 <section class="orderReceived">
     <div class="container">

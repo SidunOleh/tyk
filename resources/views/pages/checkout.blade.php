@@ -1,4 +1,4 @@
-@include('templates.header')
+@include('templates.header', ['title' => 'Оформлення замовлення'])
 
 <section class="checkout">
     <div class="container">

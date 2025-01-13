@@ -1,4 +1,4 @@
-@include('templates.header')
+@include('templates.header', ['title' => 'Особистий кабінет'])
 
 <section class="account">
     <div class="container">
