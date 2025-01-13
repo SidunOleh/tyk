@@ -19,7 +19,7 @@
                 </a-typography-title>
 
                 <router-link 
-                    style="font-size: 15px; margin-bottom: 10px;" 
+                    style="font-size: 15px;" 
                     :to="{name: 'sort.products', params: {id: el.id}}">
                     товари
                 </router-link>

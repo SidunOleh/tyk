@@ -117,6 +117,18 @@ function orderStatusColor(status) {
     }
 }
 
+function formatPhone(phone) {
+    const matches = phone
+        .replace(/\D/g, '')
+        .match(/(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/)
+    return ! matches[2] ? 
+        matches[1] : 
+        '(' + matches[1] + ') ' + 
+        matches[2] + 
+        (matches[3] ? '-' + matches[3] : '') + 
+        (matches[4] ? '-' + matches[4] : '')
+}
+
 export {
     auth,
     hasRole,
@@ -128,4 +140,5 @@ export {
     formatDate,
     serviceColor,
     orderStatusColor,
+    formatPhone,
 }

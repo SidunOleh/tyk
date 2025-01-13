@@ -19,6 +19,7 @@ return new class extends Migration
             $table->json('addresses')->nullable();
             $table->decimal('bonuses')->default(0);
             $table->json('history')->nullable();
+            $table->string('code')->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
         });

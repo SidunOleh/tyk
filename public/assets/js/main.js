@@ -27,7 +27,7 @@ $(window).on('scroll', function() {
     }
 });
 
-$('.account_btn').click(function() {
+$('.account_btn.unlogged').click(function() {
     $('.popUp-Wrapper.signIn').addClass('open');
 });
 
@@ -291,6 +291,28 @@ $('.filter-item').on('click', function() {
     $('.eaterieNum').text($('.eaterie-item:visible').length)
 })
 
+$('.home-eaterie .filter-item').click(() => {
+    $('.eaterie-item').removeClass('hide')
+
+    if (!$('.home-eaterie').hasClass('more')) {
+        $('.eaterie-item:visible').each((i, item) => {
+            if (i > 5) {
+                $(item).addClass('hide')
+            }
+        })
+    }
+})
+
+$('.home-eaterie .btn').click(() => {
+    $('.home-eaterie').toggleClass('more')
+    $('.home-eaterie .btn').toggleClass('hide')
+    $('.eaterie-item:visible, .eaterie-item.hide').each((i, item) => {
+        if (i > 5) {
+            $(item).toggleClass('hide')
+        }
+    })
+})
+
 /**
  * Catalog
  */
@@ -401,14 +423,13 @@ $(document).on('click', '.counter__button--increase, .counter__button--decrease'
         }
 
         if (newValue > 0) {
-            loading($(this).closest('.cart-item'))
             input.val(newValue)
             const productId = $(this).closest('.cart-item').find('.product').data('id')
             const data = await changeQuantity(productId, newValue)
             updateCart(data)
         }
-    } finally {
-        loading($(this).closest('.cart-item'), false)
+    } catch (err) {
+        console.error(err)
     }
 })
 
@@ -418,6 +439,8 @@ $(document).on('click', '.cart-item .delete', async function() {
         const itemId = $(this).closest('.cart-item').data('id')
         const data = await removeItemFromCart(itemId)
         updateCart(data)
+    } catch (err) {
+        console.error(err)
     } finally {
         loading($(this).closest('.cart-item'), false)
     }
@@ -432,21 +455,14 @@ $('.additions .btn').click(() => {
     })
 })
 
-$('.home-eaterie .btn').click(() => {
-    $('.home-eaterie .btn').toggleClass('hide')
-    $('.eaterie-item').each((i, item) => {
-        if (i > 5) {
-            $(item).toggleClass('hide')
-        }
-    })
-})
-
 $('.additions-item .add').click(async function() {
     try {
         loading($(this).closest('.additions-item'))
         const productId = $(this).closest('.additions-item').data('id')
         const data = await changeQuantity(productId, 1)
         updateCart(data)
+    } catch (err) {
+        console.error(err)
     } finally {
         loading($(this).closest('.additions-item'), false)
     }

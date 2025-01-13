@@ -11,6 +11,10 @@
 </head>
 
 <body>
+    @include('modals.delivery')
+    @include('modals.taxi')
+    @include('modals.login')
+
     <header class="header">
         <div class="container">
             <div class="header-container">
@@ -24,7 +28,7 @@
                         <li class="nav-item">
                             <a 
                                 href="{{ route('pages.home') }}" 
-                                @class(['nav-link', 'active' => request()->route()->getName() == 'pages.home',])>
+                                @class(['nav-link', 'active' => request()->route()?->getName() == 'pages.home',])>
                                 Головна
                             </a>
                         </li>
@@ -51,9 +55,16 @@
                         <a href="tel:7789956555" class="phone_btn">
                             <img src="{{ asset('/assets/img/phone.svg') }}" alt="" />
                         </a>
-                        <div class="account_btn">
+                        @auth('web')
+                        <a href="{{ route('pages.cabinet') }}" class="account_btn">
+                            <img src="{{ asset('/assets/img/account.svg') }}" alt="" />
+                        </a>
+                        @endauth
+                        @guest('web')
+                        <div class="account_btn unlogged">
                             <img src="{{ asset('/assets/img/account.svg') }}" alt="" />
                         </div>
+                        @endguest
                     </div>
 
                     <div class="burger-menu">

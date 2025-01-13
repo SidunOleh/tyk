@@ -6809,3 +6809,19 @@ section.catalog .eaterie-list {
 .hide {
     display: none !important;
 }
+
+.home-eaterie .btn.more {
+    display: block !important;
+}
+
+.home-eaterie.more .btn.more {
+    display: none !important;
+}
+
+.home-eaterie .btn.less {
+    display: none !important;
+}
+
+.home-eaterie.more .btn.less {
+    display: block !important;
+}

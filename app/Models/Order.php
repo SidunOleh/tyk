@@ -205,4 +205,9 @@ class Order extends Model
     {
         return $this->belongsTo(Courier::class);
     }
+
+    public function totalFormatted(): string
+    {
+        return number_format($this->total, 2);
+    }
 }

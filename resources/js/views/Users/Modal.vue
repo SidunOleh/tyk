@@ -65,8 +65,11 @@
                 :validate-status="errors['phone'] ? 'error' : ''"
                 :help="errors.phone">
                 <a-input
-                    placeholder="Введіть телефон"
-                    v-model:value="data.phone"/>
+                    prefix="+38"
+                    placeholder="(097) 123-45-67"
+                    v-model:value="data.phone"
+                    :maxlength="15"
+                    @change="() => data.phone = formatPhone(data.phone)"/>
             </a-form-item>
 
             <a-form-item
@@ -96,6 +99,9 @@
 <script>
 import { message } from 'ant-design-vue'
 import api from '../../api/users'
+import { 
+    formatPhone,
+} from '../../helpers/helpers'
 
 export default {
     props: [
@@ -132,6 +138,7 @@ export default {
         },
     },      
     methods: {
+        formatPhone,
         generatePassword() {
             this.data.password = Math.random().toString(36).substring(2)
         },

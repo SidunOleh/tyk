@@ -11,9 +11,7 @@ class LogInController extends Controller
 {
     public function __invoke(LoginRequest $request)
     {
-        $credentials = $request->validated();
-
-        if (! Auth::attempt($credentials)) {
+        if (! Auth::attempt($request->validated())) {
             return response(['message' => 'Неправильний e-mail або пароль.',], 401);
         }
 

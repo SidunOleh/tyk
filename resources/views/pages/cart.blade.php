@@ -7,7 +7,7 @@
     <div class="container">
         <h2 class="section_title">Не забудьте додати до корзини ці товари</h2>
         <div class="additions-list">
-            @foreach ($cart->upsells() as $i => $product)
+            @foreach ($upsells as $i => $product)
             <div 
                 @class(['additions-item', 'hide' => $i > 3,]) 
                 data-id="{{ $product->id }}">

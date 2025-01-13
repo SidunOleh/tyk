@@ -9,19 +9,19 @@
         <div class="hero__services">
             <div class="left">
                 <div class="hero__item">
-                    <img src="./img/waveRed.svg" alt="" class="back" />
-                    <img src="./img/driver.svg" alt="" class="icon" />
+                    <img src="{{ asset('/assets/img/waveRed.svg') }}" alt="" class="back" />
+                    <img src="{{ asset('/assets/img/driver.svg') }}" alt="" class="icon" />
                     <div class="info">
                         <p class="title_32">Доставка їжі вашого міста</p>
                         <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
-                        <a href="catalog.html" class="btn">Замовити їжу</a>
+                        <a href="{{ route('pages.zaklady') }}" class="btn">Замовити їжу</a>
                     </div>
                 </div>
             </div>
             <div class="column">
                 <div class="hero__item">
-                    <img src="./img/waveGreen.svg" alt="" class="back" />
-                    <img src="./img/heroTaxi.svg" alt="" class="icon" />
+                    <img src="{{ asset('/assets/img/waveGreen.svg') }}" alt="" class="back" />
+                    <img src="{{ asset('/assets/img/heroTaxi.svg') }}" alt="" class="icon" />
                     <div class="info">
                         <p class="title_32">Таксі</p>
                         <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
@@ -29,9 +29,9 @@
                     </div>
                 </div>
                 <div class="hero__item">
-                    <img src="./img/waveGrey.svg" alt="" class="back" />
-                    <img src="./img/Box.svg" alt="" class="icon__1 icon" />
-                    <img src="./img/Box2.svg" alt="" class="icon__2 icon" />
+                    <img src="{{ asset('/assets/img/waveGrey.svg') }}" alt="" class="back" />
+                    <img src="{{ asset('/assets/img/Box.svg') }}" alt="" class="icon__1 icon" />
+                    <img src="{{ asset('/assets/img/Box2.svg') }}" alt="" class="icon__2 icon" />
                     <div class="info">
                         <p class="title_32">Кур’єрські послуги</p>
                         <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
@@ -42,16 +42,16 @@
         </div>
         <div class="hero__services-slider">
             <div class="hero__item">
-                <img src="./img/wave-red.svg" alt="" class="back" />
+                <img src="{{ asset('/assets/img/wave-red.svg') }}" alt="" class="back" />
 
                 <div class="info">
                     <p class="title_32">Доставка їжі вашого міста</p>
                     <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
-                    <a href="catalog.html" class="btn">Замовити їжу</a>
+                    <a href="{{ route('pages.zaklady') }}" class="btn">Замовити їжу</a>
                 </div>
             </div>
             <div class="hero__item">
-                <img src="./img/waveGreen.svg" alt="" class="back" />
+                <img src="{{ asset('/assets/img/waveGreen.svg') }}" alt="" class="back" />
 
                 <div class="info">
                     <p class="title_32">Таксі</p>
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="hero__item">
-                <img src="./img/waveGrey.svg" alt="" class="back" />
+                <img src="{{ asset('/assets/img/waveGrey.svg') }}" alt="" class="back" />
 
                 <div class="info">
                     <p class="title_32">Кур’єрські послуги</p>

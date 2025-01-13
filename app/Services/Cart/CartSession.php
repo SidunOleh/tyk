@@ -42,7 +42,7 @@ class CartSession extends Cart
 
         session(['cart' => $this->items,]);
 
-        return $deleted ;
+        return $deleted;
     }
 
     public function changeQuantity(int $itemId, int $quantity): bool
