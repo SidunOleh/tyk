@@ -455,7 +455,7 @@ $('.additions .btn').click(() => {
     })
 })
 
-$('.additions-item .add').click(async function() {
+$(document).on('click', '.additions-item .add', async function() {
     try {
         loading($(this).closest('.additions-item'))
         const productId = $(this).closest('.additions-item').data('id')
