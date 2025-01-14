@@ -1,6 +1,6 @@
-<section class="upsells">
+<div class="upsells">
     @if (($upsells = $cart->upsells())->count())
-    <div class="additions">
+    <section class="additions">
         <div class="container">
             <h2 class="section_title">Не забудьте додати до корзини ці товари</h2>
             <div class="additions-list">
@@ -40,6 +40,6 @@
             </a>
             @endif
         </div>
-    </div>
+    </section>
     @endif
-</section>
+</div>
