@@ -50,24 +50,24 @@ Route::post('/logout', AuthLogOutController::class)
 /**
  * Pages
  */
-// Route::get('/', HomeController::class)
-//     ->name('pages.home'); 
-// Route::get('/zaklady', EstablishmentsController::class)
-//     ->name('pages.zaklady');  
-// Route::get('/product-category/{category:slug}', ProductsController::class)
-//     ->name('pages.category'); 
-// Route::get('/catalog-html/{category}', GetCatalogHtmlController::class)
-//     ->name('pages.catalog-html');
-// Route::get('/korzyna', CartController::class)
-//     ->name('pages.cart'); 
-// Route::get('/oformlennya', CheckoutController::class)
-//     ->name('pages.checkout'); 
-// Route::get('/cabinet', CabinetController::class)
-//     ->middleware(['auth:web',])
-//     ->name('pages.cabinet'); 
-// Route::get('/complete', CompleteController::class)
-//     ->middleware(['auth:web',])
-//     ->name('pages.complete'); 
+Route::get('/', HomeController::class)
+    ->name('pages.home'); 
+Route::get('/zaklady', EstablishmentsController::class)
+    ->name('pages.zaklady');  
+Route::get('/product-category/{category:slug}', ProductsController::class)
+    ->name('pages.category'); 
+Route::get('/catalog-html/{category}', GetCatalogHtmlController::class)
+    ->name('pages.catalog-html');
+Route::get('/korzyna', CartController::class)
+    ->name('pages.cart'); 
+Route::get('/oformlennya', CheckoutController::class)
+    ->name('pages.checkout'); 
+Route::get('/cabinet', CabinetController::class)
+    ->middleware(['auth:web',])
+    ->name('pages.cabinet'); 
+Route::get('/complete', CompleteController::class)
+    ->middleware(['auth:web',])
+    ->name('pages.complete'); 
 
 /**
  * Cart

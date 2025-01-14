@@ -28,6 +28,7 @@ class UpdateRequest extends FormRequest
             'phone' => [
                 'required',
                 'string',
+                'regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
                 Rule::unique('clients')->ignore(request()
                     ->route()
                     ->parameter('client')

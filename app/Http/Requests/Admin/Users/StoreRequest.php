@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'phone' => 'string|nullable',
+            'phone' => 'string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|nullable',
             'email' => 'required|email|unique:users,email',
             'password' => [
                 'required',

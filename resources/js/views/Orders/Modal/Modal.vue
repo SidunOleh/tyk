@@ -95,6 +95,7 @@
 
             <a-form-item 
                 label="Час"
+                :required="action == 'edit'"
                 has-feedback
                 :validate-status="errors['time'] ? 'error' : ''"
                 :help="errors.time">

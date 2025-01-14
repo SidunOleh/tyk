@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
             'service' => 'required|string',
             'shipping_price' => 'numeric|min:0',
             'additional_costs' => 'numeric|min:0',
-            'time' => 'date_format:Y-m-d H:i:s|nullable',
+            'time' => 'required|date_format:Y-m-d H:i:s',
             'duration' => 'required|integer|min:1',
             'notes' => 'string|nullable',
             'client_id' => 'required|exists:clients,id',

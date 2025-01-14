@@ -31,7 +31,7 @@ export default {
                     id: courier.id,
                 }
             }).concat({
-                title: 'кур\'єра немає',
+                title: 'потребує кур\'єра',
                 id: null,
             })
         },

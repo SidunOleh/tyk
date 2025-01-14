@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'string|nullable',
-            'phone' => 'required|string|unique:clients,phone',
+            'phone' => 'required|string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|unique:clients,phone',
             'addresses' => 'required|array|min:1',
             'addresses.*' => 'required|string',
         ];
