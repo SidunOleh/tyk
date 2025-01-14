@@ -23,7 +23,7 @@ class RemoveItemController extends Controller
             '.cart-section' => view('templates.cart', [
                 'cart' => $this->cart,
             ])->render(),
-            '.additions' => view('templates.upsells', [
+            '.upsells' => view('templates.upsells', [
                 'cart' => $this->cart,
             ])->render(),
             '.cartSubtotal' => view('templates.subtotal', [
