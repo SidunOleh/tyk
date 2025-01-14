@@ -1,5 +1,5 @@
-@if (($upsells = $cart->upsells())->count())
 <section class="additions">
+    @if (($upsells = $cart->upsells())->count())
     <div class="container">
         <h2 class="section_title">Не забудьте додати до корзини ці товари</h2>
         <div class="additions-list">
@@ -39,5 +39,5 @@
         </a>
         @endif
     </div>
+    @endif
 </section>
-@endif
