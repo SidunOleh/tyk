@@ -64,10 +64,21 @@ class CartSession extends Cart
 
     public function saveToDB(): array
     {
-        return array_map(fn (CartCartItem $item) => CartItem::create([
+        $cartItems = array_map(fn (CartCartItem $item) => CartItem::create([
             'quantity' => $item->id,
             'product_id' => $item->product->id,
             'client_id' => Auth::guard('web')->id(),
         ]), $this->items);
+
+        $this->empty();
+
+        return $cartItems;
+    }
+
+    public function empty(): void
+    {
+        $this->items = [];
+
+        session(['cart' => []]);
     }
 }
