@@ -125,7 +125,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.create(this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.phone = `+38${data.phone}`
+                const res = await api.create(data)
                 message.success('Успішно створено.')
                 this.$emit('create')
                 this.$emit('update:open', false)
@@ -143,7 +145,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.edit(this.data.id, this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.phone = `+38${data.phone}`
+                const res = await api.edit(this.data.id, data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -160,6 +164,7 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
+            this.data.phone = this.data.phone.substr(3)
         }
     },
 }

@@ -24,8 +24,7 @@ class OrderResource extends JsonResource
         $data['client'] = [
             'id' => $client->id,
             'phone' => $client->phone,
-            'first_name' => $client->first_name,
-            'last_name' => $client->last_name,
+            'full_name' => $client->full_name,
             'addresses' => $client->addresses,
             'bonuses' => $client->bonuses,
             'history' => $this->history,

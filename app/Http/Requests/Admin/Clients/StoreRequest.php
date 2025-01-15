@@ -22,9 +22,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|string',
-            'last_name' => 'string|nullable',
-            'phone' => 'required|string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|unique:clients,phone',
+            'full_name' => 'required|string',
+            'phone' => 'required|string|regex:/^\+38\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|unique:clients,phone',
             'addresses' => 'required|array|min:1',
             'addresses.*' => 'required|string',
         ];

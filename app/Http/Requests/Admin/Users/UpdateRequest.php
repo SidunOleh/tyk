@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'phone' => 'string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|nullable',
+            'phone' => 'string|regex:/^\+38\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|nullable',
             'email' => [
                 'required',
                 'email',

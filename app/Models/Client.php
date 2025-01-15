@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +15,7 @@ class Client extends Authenticatable
     
     protected $fillable = [
         'phone',
-        'first_name',
-        'last_name',
+        'full_name',
         'addresses',
         'bonuses',
         'code',
@@ -32,8 +30,7 @@ class Client extends Authenticatable
 
     protected $loggable = [
         'phone',
-        'first_name',
-        'last_name',
+        'full_name',
         'addresses',
     ];
 
@@ -52,19 +49,11 @@ class Client extends Authenticatable
         });
     }
 
-    protected function fullName(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes) => $attributes['first_name'] . ' ' . ($attributes['last_name'] ?? ''),
-        );
-    }
-
     public function scopeSearch(Builder $query, string $s): void
     {
         $query->whereAny([
             'phone',
-            'first_name',
-            'last_name',
+            'full_name',
         ], 'like', "%{$s}%");
     }
 

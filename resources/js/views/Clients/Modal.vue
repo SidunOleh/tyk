@@ -8,24 +8,14 @@
         <a-form layout="vertical">
 
             <a-form-item 
-                label="Ім'я"
+                label="Ім'я та прізвище"
                 :required="true"
                 has-feedback
-                :validate-status="errors['first_name'] ? 'error' : ''"
-                :help="errors.first_name">
+                :validate-status="errors['full_name'] ? 'error' : ''"
+                :help="errors.full_name">
                 <a-input
-                    placeholder="Введіть ім'я"
-                    v-model:value="data.first_name"/>
-            </a-form-item>
-
-            <a-form-item 
-                label="Прізвище"
-                has-feedback
-                :validate-status="errors['last_name'] ? 'error' : ''"
-                :help="errors.last_name">
-                <a-input
-                    placeholder="Введіть прізвище"
-                    v-model:value="data.last_name"/>
+                    placeholder="Введіть ім'я та прізвище"
+                    v-model:value="data.full_name"/>
             </a-form-item>
 
             <a-form-item 
@@ -104,8 +94,7 @@ export default {
     data() {
         return {
             data: {
-                first_name: '',
-                last_name: '',
+                full_name: '',
                 phone: '',
                 addresses: [''],
             },
@@ -136,7 +125,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.create(this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.phone = `+38${data.phone}`
+                const res = await api.create(data)
                 message.success('Успішно створено.')
                 this.$emit('create', res.client)
                 this.$emit('update:open', false)
@@ -154,7 +145,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.edit(this.data.id, this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.phone = `+38${data.phone}`
+                const res = await api.edit(this.data.id, data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -171,6 +164,7 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
+            this.data.phone = this.data.phone.substr(3)
         }
     },
 }

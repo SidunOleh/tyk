@@ -13,7 +13,7 @@ class AuthService
 {
     public function sendCode(string $phone): void
     {
-        $client = Client::where(['phone' => $phone])->firstOrFail();
+        $client = Client::firstOrCreate(['phone' => $phone]);
 
         $code = $this->generateCode();
 
@@ -21,15 +21,21 @@ class AuthService
 
         $result = TurboSMS::sendMessages($phone, $code);
 
-        if (! $result['success']) {
-            throw new Exception($result['info']);
+        if (
+            ! $result['success'] or 
+            $result['result'][0]['response_status'] != 'OK'
+        ) {
+            throw new Exception(
+                $result['info'],
+                $result['result'][0]['response_code']
+            );
         }
     }
 
     private function generateCode(): int
     {
         do {
-            $code = rand(1000000, 9999999);
+            $code = rand(100000, 999999);
         } while (Client::firstWhere('code', $code));
         
         return $code;

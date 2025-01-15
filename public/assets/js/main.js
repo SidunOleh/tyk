@@ -446,7 +446,7 @@ $(document).on('click', '.cart-item .delete', async function() {
     }
 })
 
-$('.additions .btn').click(() => {
+$(document).on('click', '.additions .btn', () => {
     $('.additions .btn').toggleClass('hide')
     $('.additions-item').each((i, item) => {
         if (i > 3) {

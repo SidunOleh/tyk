@@ -19,11 +19,8 @@
                 size="small"
                 bordered
                 :column="1">
-                <a-descriptions-item label="Ім'я">
-                    {{ record.first_name }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Прізвище">
-                    {{ record.last_name }}
+                <a-descriptions-item label="Ім'я та прізвище">
+                    {{ record.full_name }}
                 </a-descriptions-item>
                 <a-descriptions-item label="Телефон">
                     {{ record.phone }}
@@ -91,12 +88,8 @@
 
         <template #bodyCell="{column, record}">
 
-            <template v-if="column.key === 'first_name'">
-                {{ record.first_name }}
-            </template>
-
-            <template v-if="column.key === 'last_name'">
-                {{ record.last_name }}
+            <template v-if="column.key === 'full_name'">
+                {{ record.full_name }}
             </template>
 
             <template v-if="column.key === 'phone'">
@@ -172,13 +165,8 @@ export default {
         return {
             columns: [
                 {
-                    title: 'Ім\'я',
-                    key: 'first_name',
-                    sorter: true,
-                },
-                {
-                    title: 'Прізвище',
-                    key: 'last_name',
+                    title: 'Ім\'я та прізвище',
+                    key: 'full_name',
                     sorter: true,
                 },
                 {

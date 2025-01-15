@@ -23,12 +23,11 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|string',
-            'last_name' => 'string|nullable',
+            'full_name' => 'required|string',
             'phone' => [
                 'required',
                 'string',
-                'regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
+                'regex:/^\+38\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
                 Rule::unique('clients')->ignore(request()
                     ->route()
                     ->parameter('client')
