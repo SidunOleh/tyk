@@ -279,7 +279,7 @@ export default {
                 this.bulkAction == 'delete' && 
                 this.selected.length
             ) {
-                confirmPopup(this.bulkDelete, 'Ви впевнені що хочете видалити обраних користувачів?')
+                confirmPopup(this.bulkDelete, 'Ви впевнені що хочете видалити обраних кур\'єрів?')
             }
         },
     },
