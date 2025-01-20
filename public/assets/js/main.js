@@ -256,21 +256,28 @@ $('.dishes__menu .sub__item').on('click', function(e) {
 })
 
 $(document).on('click', '.quantity-btn--minus, .quantity-btn--plus', async function() {
-    const input = $(this).closest('.quantity-counter').find('input')
-    let currentValue = parseInt(input.val(), 10)
-    let newValue = currentValue
-
-    if ($(this).hasClass('quantity-btn--minus')) {
-        newValue -= 1
-    } else {
-        newValue += 1
-    }
-
-    if (newValue >= 0) {
-        input.val(newValue)
-        const productId = $(this).closest('.dish__item').data('id')
-        await changeQuantity(productId, newValue)
-        await updatePage()
+    try {
+        loading($(this))
+        const input = $(this).closest('.quantity-counter').find('input')
+        let currentValue = parseInt(input.val(), 10)
+        let newValue = currentValue
+    
+        if ($(this).hasClass('quantity-btn--minus')) {
+            newValue -= 1
+        } else {
+            newValue += 1
+        }
+    
+        if (newValue >= 0) {
+            input.val(newValue)
+            const productId = $(this).closest('.dish__item').data('id')
+            await changeQuantity(productId, newValue)
+            await updatePage()
+        }
+    } catch (err) {
+        console.error(err)
+    } finally {
+        loading($(this), false)   
     }
 })
 
@@ -279,6 +286,7 @@ $(document).on('click', '.quantity-btn--minus, .quantity-btn--plus', async funct
  */
 $(document).on('click', '.counter__button--increase, .counter__button--decrease', async function() {
     try {
+        loading($(this))
         const input = $(this).closest('.counter').find('input')
         let currentValue = parseInt(input.val(), 10)
         let newValue = currentValue
@@ -297,6 +305,8 @@ $(document).on('click', '.counter__button--increase, .counter__button--decrease'
         }
     } catch (err) {
         console.error(err)
+    } finally {
+        loading($(this), false)
     }
 })
 
