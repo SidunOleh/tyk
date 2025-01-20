@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Orders;
 
+use App\Rules\ExistsAddress;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -34,22 +35,43 @@ class UpdateRequest extends FormRequest
             
             'details' => 'required|array',
 
-            'details.food_to' => 'required_if:service,Доставка їжі|string',
+            'details.food_to' => 'required_if:service,Доставка їжі|array|min:1',
+            'details.food_to.*' => [
+                'required_if:service,Доставка їжі',
+                'string',
+                new ExistsAddress,
+            ],
+            'details.delivery_time' => 'date_format:Y-m-d H:i:s|nullable',
             'order_items' => 'required_if:service,Доставка їжі|array|min:1',
-            'order_items.*.id' => 'exists:order_items,id',
             'order_items.*.name' => 'required_if:service,Доставка їжі|string',
             'order_items.*.amount' => 'required_if:service,Доставка їжі|numeric|min:0',
             'order_items.*.quantity' => 'required_if:service,Доставка їжі|integer|min:1',
             'order_items.*.product_id' => 'required_if:service,Доставка їжі|exists:products,id',
 
             'details.shipping_type' => 'required_if:service,Кур\'єр|string',
-            'details.shipping_from' => 'required_if:service,Кур\'єр|string',
+            'details.shipping_from' => [
+                'required_if:service,Кур\'єр',
+                'string',
+                new ExistsAddress,
+            ],
             'details.shipping_to' => 'required_if:service,Кур\'єр|array|min:1',
-            'details.shipping_to.*' => 'required_if:service,Кур\'єр|string',
+            'details.shipping_to.*' => [
+                'required_if:service,Кур\'єр',
+                'string',
+                new ExistsAddress,
+            ],
 
-            'details.taxi_from' => 'required_if:service,Таксі|string',
+            'details.taxi_from' => [
+                'required_if:service,Таксі',
+                'string',
+                new ExistsAddress,
+            ],
             'details.taxi_to' => 'required_if:service,Таксі|array|min:1',
-            'details.taxi_to.*' => 'required_if:service,Таксі|string',
+            'details.taxi_to.*' => [
+                'required_if:service,Таксі',
+                'string',
+                new ExistsAddress,
+            ],
         ];
     }
 

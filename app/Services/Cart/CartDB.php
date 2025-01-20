@@ -17,7 +17,7 @@ class CartDB extends Cart
             $cartItemModel->id,
             $cartItemModel->product,
             $cartItemModel->quantity
-        ));
+        ))->toArray();
     }
     
     public function addItem(Product $product, int $quantity): CartCartItem
@@ -67,5 +67,12 @@ class CartDB extends Cart
         }
 
         return true;
+    }
+
+    public function empty(): void
+    {
+        $this->items = [];
+
+        CartItem::where('client_id', Auth::guard('web')->id())->delete();
     }
 }

@@ -28,6 +28,7 @@ jobs:
           sed -i 's/MAIL_USERNAME=/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g' .env
           sed -i 's/MAIL_PASSWORD=/MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}"/g' .env
           sed -i 's/TURBOSMS_API_KEY=/TURBOSMS_API_KEY="${{ secrets.TURBOSMS_API_KEY }}"/g' .env
+          sed -i 's/GOOGLE_MAPS_KEY=/GOOGLE_MAPS_KEY="${{ secrets.GOOGLE_MAPS_KEY }}"/g' .env
 
       - run: php artisan key:generate
 

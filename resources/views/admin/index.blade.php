@@ -78,6 +78,8 @@
         </div>
     </div>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.key') }}&libraries=places&language=uk&region=ua"></script>
+
     <link rel="stylesheet" href="/assets/css/jkanban.min.css">
     <script src="/assets/js/jkanban.min.js"></script>
     

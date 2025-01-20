@@ -11,6 +11,7 @@
             :filter-option="false"
             :options="productOptions"
             :showSearch="true"
+            v-model:value="selected"
             @search="fetchProducts"
             @select="addToCart">
             <template 
@@ -97,6 +98,7 @@ export default {
                 data: [],
                 fetching: false,
             },
+            selected: null,
         }
     },
     computed: {
@@ -134,6 +136,7 @@ export default {
                     })
                 }
             })
+            this.selected = null
         },
         removeFromCart(i) {
             this.orderItems.splice(i, 1)

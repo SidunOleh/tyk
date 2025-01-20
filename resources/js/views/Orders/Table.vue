@@ -14,86 +14,7 @@
         @change="changeQuery">
 
         <template #expandedRowRender="{ record }">
-            <a-descriptions 
-                style="margin-top: 10px;"
-                size="small"
-                bordered
-                :column="1">
-                <a-descriptions-item label="Тип">
-                    {{ record.type }} 
-                </a-descriptions-item>
-
-                <a-descriptions-item label="Статус">
-                    <a-tag :color="orderStatusColor(record.status)">
-                        {{ record.status }}
-                    </a-tag>
-                </a-descriptions-item>
-
-                <template v-if="record.type == 'Доставка їжі'">
-                    <a-descriptions-item label="Замовлення">
-                        {{ record.order_items.map(item => `${item.name} x ${item.quantity}`).join(', ') }}
-                    </a-descriptions-item>
-
-                    <a-descriptions-item label="Куди">
-                        {{ record.details.food_to }}
-                    </a-descriptions-item>
-                </template>
-
-                <template v-if="record.type == 'Кур\'єр'">
-                    <a-descriptions-item label="Тип доставки">
-                        {{ record.details.shipping_type }}
-                    </a-descriptions-item>
-                    <a-descriptions-item label="Звідки">
-                        {{ record.details.shipping_from }}
-                    </a-descriptions-item>
-                    <a-descriptions-item label="Куди">
-                        {{ record.details.shipping_to.join(', ') }}
-                    </a-descriptions-item>
-                </template>
-
-                <template v-if="record.type == 'Таксі'">
-                    <a-descriptions-item label="Звідки">
-                        {{ record.details.taxi_from }}
-                    </a-descriptions-item>
-                    <a-descriptions-item label="Куди">
-                        {{ record.details.taxi_to.join(', ') }}
-                    </a-descriptions-item>
-                </template>
-
-                <a-descriptions-item label="Клієнт">
-                    {{ record.client?.first_name + ' ' + (record.client?.last_name ?? '') }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Час">
-                    {{ formatDate(record.time) }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Тривалість">
-                    {{ record.duration }} хв.
-                </a-descriptions-item>
-                <a-descriptions-item label="Проміжна сума">
-                    {{ formatPrice(record.subtotal) }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Сума доставки">
-                    {{ formatPrice(record.shipping_price) }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Додаткові витрати">
-                    {{ formatPrice(record.additional_costs) }}
-                </a-descriptions-item>      
-                <a-descriptions-item label="Бонуси">
-                    {{ formatPrice(record.bonuses) }}
-                </a-descriptions-item>  
-                <a-descriptions-item label="Повна сума">
-                    {{ formatPrice(record.total) }}
-                </a-descriptions-item>
-                <a-descriptions-item label="Оплачено">
-                    {{ record.paid ? 'Так' : 'Ні' }}
-                </a-descriptions-item>  
-                <a-descriptions-item label="Метод оплати">
-                    {{ record.payment_method }}
-                </a-descriptions-item>    
-                <a-descriptions-item label="Нотатки">
-                    <div v-html="record.notes"></div>
-                </a-descriptions-item>          
-            </a-descriptions>
+            <OrderDescription :order="record"/>
         </template>
 
         <template #title>
@@ -164,7 +85,7 @@
             </template>
 
             <template v-if="column.key === 'client'">
-                {{ record.client ? record.client?.first_name + ' ' + (record.client?.last_name ?? '') : '' }}
+                {{ record.client.full_name ? record.client.full_name : record.client.phone  }}
             </template>
 
             <template v-if="column.key === 'created_at'">
@@ -221,10 +142,12 @@ import {
     formatDate,
     orderStatusColor,
 } from '../../helpers/helpers'
+import OrderDescription from './OrderDescription.vue'
 
 export default {
     components: {
         DownOutlined,
+        OrderDescription,
     },
     data() {
         return {

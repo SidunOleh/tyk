@@ -157,6 +157,19 @@ const routes = [{
         title: 'Сортування товарів',
     },
 }, {
+    path: '/promotions',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Promotions/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'promotions',
+    meta: {
+        roles: ['адмін', ],
+        key: 'promotions',
+        title: 'Акції',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

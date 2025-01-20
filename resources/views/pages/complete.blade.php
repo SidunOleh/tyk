@@ -30,7 +30,7 @@
                             Проміжний підсумок
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}₴
+                            {{ $order->totalFormatted() }}
                         </p>
                     </div>
                     <div class="subtotal-item">
@@ -46,7 +46,7 @@
                             Загалом
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}₴
+                            {{ $order->totalFormatted() }}
                         </p>
                     </div>
                     <p class="remark">

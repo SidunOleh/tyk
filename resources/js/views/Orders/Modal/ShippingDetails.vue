@@ -22,17 +22,15 @@
         <a-select
             v-model:value="details.shipping_from"
             placeholder="Виберіть адресу"
-            :options="fromAddressOptions">
+            :options="addressOptions">
             <template #dropdownRender="{ menuNode: menu }">
                 <component :is="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-flex 
                     style="padding: 4px 8px"
                     :gap="5">
-                    <a-input 
-                        v-model:value="newFromAddress" 
-                        placeholder="Введіть адресу" />
-                    <a-button @click="addFromAddress">
+                    <AddressInput v-model:address="newAddress" />
+                    <a-button @click="addAddress">
                         <template #icon>
                             <PlusOutlined/>
                         </template>
@@ -53,17 +51,15 @@
             v-model:value="details.shipping_to"
             placeholder="Виберіть адресу"
             mode="multiple"
-            :options="toAddressOptions">
+            :options="addressOptions">
             <template #dropdownRender="{ menuNode: menu }">
                 <component :is="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-flex 
                     style="padding: 4px 8px"
                     :gap="5">
-                    <a-input 
-                        v-model:value="newToAddress" 
-                        placeholder="Введіть адресу" />
-                    <a-button @click="addToAddress">
+                    <AddressInput v-model:address="newAddress" />
+                    <a-button @click="addAddress">
                         <template #icon>
                             <PlusOutlined/>
                         </template>
@@ -79,10 +75,12 @@
 import {
     PlusOutlined,
 } from '@ant-design/icons-vue'
+import AddressInput from '../../components/AddressInput.vue'
 
 export default {
     components: {
         PlusOutlined,
+        AddressInput,
     },
     props: [
         'details',
@@ -91,10 +89,8 @@ export default {
     ],
     data() {
         return {
-            fromAddresses: [],
-            toAddresses: [],
-            newFromAddress: '',
-            newToAddress: '',
+            addresses: [],
+            newAddress: '',
             shippingTypes: [
                 'Посилка з пошти',
                 'Посилка з маршрутки',
@@ -112,15 +108,8 @@ export default {
         }
     },
     computed: {
-        fromAddressOptions() {
-            return this.fromAddresses.map(address => {
-                return {
-                    value: address,
-                }
-            })
-        },
-        toAddressOptions() {
-            return this.toAddresses.map(address => {
+        addressOptions() {
+            return this.addresses.map(address => {
                 return {
                     value: address,
                 }
@@ -136,8 +125,12 @@ export default {
         toErrors() {
             const errors = []
             for (const field in this.errors) {
-                if (field.search('shipping_to') >= 0) {
-                    errors.push(this.errors[field])
+                if (field.match(/^details\.shipping_to\.\d$/)) {
+                    errors.push(`${this.errors[field]} №${Number(field.split('.').pop())+1}`)
+                }
+
+                if (field.match(/^details\.shipping_to$/)) {
+                    errors.push(`${this.errors[field]}`)
                 }
             }
 
@@ -146,26 +139,14 @@ export default {
     },
     methods: {
         setAddresses() {
-            this.fromAddresses = [...this.client?.addresses ?? []]
-            if (this.details.shipping_from) {
-                this.fromAddresses.push(this.details.shipping_from)
-            }
-            this.fromAddresses = [...new Set(this.fromAddresses)]
-
-            this.toAddresses = [...this.client?.addresses ?? []]
-            this.toAddresses = this.toAddresses.concat(this.details.shipping_to ?? [])
-            this.toAddresses = [...new Set(this.toAddresses)]
+            this.addresses = this.client
+                ?.addresses
+                .map(address => address.address) ?? []
         },
-        addFromAddress() {
-            if (this.newFromAddress) {
-                this.fromAddresses.push(this.newFromAddress)
-                this.newFromAddress = ''
-            }
-        },
-        addToAddress() {
-            if (this.newToAddress) {
-                this.toAddresses.push(this.newToAddress)
-                this.newToAddress = ''
+        addAddress() {
+            if (this.newAddress) {
+                this.addresses.push(this.newAddress)
+                this.newAddress = ''
             }
         },
     },
@@ -176,15 +157,14 @@ export default {
             },
             deep: true,
         },
-        details: {
-            handler() {
-                this.setAddresses()
-            },
-            deep: true,
-        },
     },
     mounted() {
-        this.details.shipping_from = this.details.shipping_from ? this.details.shipping_from : null
+        this.details.shipping_type = this.details.shipping_type 
+            ? this.details.shipping_type 
+            : null
+        this.details.shipping_from = this.details.shipping_from 
+            ? this.details.shipping_from
+            : null
         this.details.shipping_to = this.details.shipping_to ?? []
 
         this.setAddresses()

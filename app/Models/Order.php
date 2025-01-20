@@ -60,7 +60,7 @@ class Order extends Model
         'status',
         'paid',
         'payment_method',
-        'details',
+        // 'details',
         'client_id',
         'courier_id',
     ];
@@ -68,6 +68,12 @@ class Order extends Model
     protected $with = [
         'orderItems',
     ];
+
+    public const FOOD_SHIPPING = 'Доставка їжі';
+
+    public const SHIPPING = 'Кур\'єр';
+
+    public const TAXI = 'Таксі';
 
     protected static function booted(): void
     {
@@ -81,6 +87,8 @@ class Order extends Model
         });
 
         static::created(function (self $order) {
+            $order->client->addBonus(10);
+
             $order->log('створено', Auth::user());
         });
 
@@ -104,13 +112,13 @@ class Order extends Model
                 if ($field == 'details') {
                     $prev = [];
                     foreach ($this->getOriginal('details') as $name => $val) {
-                        $prev[] = __('validation.attributes.'.$name) . ' - ' . $this->formatValue($val);
+                        $prev[] = __('validation.attributes.'.$name) . ' - ' . implode(', ', array_map(fn (array $address) => $address['address'], $val ?? []));
                     }
                     $prev = implode(', ', $prev);
 
                     $curr = [];
                     foreach ($this->details as $name => $val) {
-                        $curr[] =  __('validation.attributes.'.$name) . ' - ' . $this->formatValue($val);
+                        $curr[] =  __('validation.attributes.'.$name) . ' - ' . implode(', ', array_map(fn (array $address) => $address['address'], $val ?? []));
                     }
                     $curr = implode(', ', $curr);
 
@@ -206,8 +214,8 @@ class Order extends Model
         return $this->belongsTo(Courier::class);
     }
 
-    public function totalFormatted(): string
+    public function totalFormatted(string $symb = '₴'): string
     {
-        return number_format($this->total, 2);
+        return number_format($this->total, 2) . $symb;
     }
 }

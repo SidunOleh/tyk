@@ -1,6 +1,9 @@
 <section class="cart-section">
     <div class="container">
-        <p class="hero__title">Корзина</p>
+        <p class="hero__title">
+            Корзина
+        </p>
+        
         @if ($cart->items)
         <div class="cart-body">
             <table class="cart-table">
@@ -35,7 +38,7 @@
                             </div>
                         </td>
                         <td class="price">
-                            {{ $item->product->formattedPrice() }} грн
+                            {{ $item->product->formattedPrice() }}
                         </td>
                         <td class="quantity">
                             <div class="counter">
@@ -45,7 +48,7 @@
                             </div>
                         </td>
                         <td class="subtotal_table">
-                            <span>{{ $item->formattedAmount() }} грн</span>
+                            <span>{{ $item->formattedAmount() }}</span>
                             <div class="delete">
                                 <img src="{{ asset('/assets/img/trash.svg') }}" alt="" />
                             </div>
@@ -56,7 +59,10 @@
             </table>
         </div>
         @else
-        Корзина порожня
+        <div class="empty">
+            Корзина порожня
+        </div>
         @endif
+        
     </div>
 </section>

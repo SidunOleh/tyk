@@ -8,9 +8,14 @@ use App\Http\Controllers\Auth\LogOutController as AuthLogOutController;
 use App\Http\Controllers\Auth\SendCodeController;
 use App\Http\Controllers\Cart\ChangeQuantityController;
 use App\Http\Controllers\Cart\RemoveItemController;
-use App\Http\Controllers\Orders\CourierController;
-use App\Http\Controllers\Orders\FoodShippingController;
-use App\Http\Controllers\Orders\TaxiController;
+use App\Http\Controllers\Clients\AddAddressController;
+use App\Http\Controllers\Clients\DeleteAccountController;
+use App\Http\Controllers\Clients\DeleteAddressController;
+use App\Http\Controllers\Clients\UpdatePersonalInfoController;
+use App\Http\Controllers\Fragments\RefreshController;
+use App\Http\Controllers\Orders\CheckoutController as OrdersCheckoutController;
+use App\Http\Controllers\Orders\RepeatController;
+use App\Http\Controllers\Pages\AboutUsController;
 use App\Http\Controllers\Pages\CabinetController;
 use App\Http\Controllers\Pages\CartController;
 use App\Http\Controllers\Pages\CheckoutController;
@@ -19,6 +24,7 @@ use App\Http\Controllers\Pages\EstablishmentsController;
 use App\Http\Controllers\Pages\GetCatalogHtmlController;
 use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Pages\ProductsController;
+use App\Http\Controllers\Pages\PromotionController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
@@ -52,23 +58,59 @@ Route::post('/logout', AuthLogOutController::class)
  */
 Route::get('/', HomeController::class)
     ->name('pages.home'); 
+Route::get('/about-us', AboutUsController::class)
+    ->name('pages.about-us'); 
+Route::get('/akciyi/{promotion:slug}', PromotionController::class)
+    ->name('pages.promotion'); 
 Route::get('/zaklady', EstablishmentsController::class)
     ->name('pages.zaklady');  
 Route::get('/product-category/{category:slug}', ProductsController::class)
     ->name('pages.category'); 
 Route::get('/catalog-html/{category}', GetCatalogHtmlController::class)
     ->name('pages.catalog-html');
+Route::get('/cabinet', CabinetController::class)
+    ->middleware(['auth:web',])
+    ->name('pages.cabinet');
 Route::get('/korzyna', CartController::class)
     ->name('pages.cart'); 
 Route::get('/oformlennya', CheckoutController::class)
-    ->name('pages.checkout'); 
-Route::get('/cabinet', CabinetController::class)
-    ->middleware(['auth:web',])
-    ->name('pages.cabinet'); 
+    ->name('pages.checkout');  
 Route::get('/complete', CompleteController::class)
-    ->middleware(['auth:web',])
     ->name('pages.complete'); 
 
+/**
+ * Fragments
+ */
+Route::get('/fragments/refresh', RefreshController::class)
+    ->name('fragments.refresh');
+    
+/**
+ * Update personal info
+ */
+Route::post('/update-personal-info', UpdatePersonalInfoController::class)
+    ->middleware(['auth:web',])
+    ->name('update-personal-info'); 
+
+/**
+ * Addresses
+ */
+Route::prefix('/addresses')
+    ->name('addresses.')
+    ->middleware(['auth:web',])
+    ->group(function () {
+    Route::post('/', AddAddressController::class)
+        ->name('add'); 
+    Route::delete('/', DeleteAddressController::class)
+        ->name('delete'); 
+});
+
+/**
+ * Delete Account
+ */
+Route::delete('/delete-account', DeleteAccountController::class)
+    ->middleware(['auth:web',])
+    ->name('delete-account');
+    
 /**
  * Cart
  */
@@ -80,13 +122,14 @@ Route::prefix('/cart')->name('cart.')->group(function () {
 });
 
 /**
- * Orders
+ * Repeat order
  */
-Route::prefix('/orders')->name('orders')->group(function () {
-    Route::post('/food-shipping', FoodShippingController::class)
-        ->name('food-shipping'); 
-    Route::post('/courier', CourierController::class)
-        ->name('courier'); 
-    Route::post('/taxi', TaxiController::class)
-        ->name('taxi'); 
-});
+Route::post('/orders/{order}/repeat/', RepeatController::class)
+    ->middleware(['auth:web',])
+    ->name('orders.repeat'); 
+
+/**
+ * Checkout
+ */
+Route::post('/checkout', OrdersCheckoutController::class)
+    ->name('checkout'); 

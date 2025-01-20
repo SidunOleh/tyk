@@ -19,16 +19,6 @@ class RemoveItemController extends Controller
     {
         $this->cart->removeItem($request->item_id);
     
-        return response([
-            '.cart-section' => view('templates.cart', [
-                'cart' => $this->cart,
-            ])->render(),
-            '.upsells' => view('templates.upsells', [
-                'cart' => $this->cart,
-            ])->render(),
-            '.cartSubtotal' => view('templates.subtotal', [
-                'cart' => $this->cart,
-            ])->render(),
-        ]);
+        return response(['message' => 'OK',]);
     }
 }

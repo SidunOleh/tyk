@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Clients;
 
+use App\Rules\ExistsAddress;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,14 +28,18 @@ class UpdateRequest extends FormRequest
             'phone' => [
                 'required',
                 'string',
-                'regex:/^\+38\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
+                'regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
                 Rule::unique('clients')->ignore(request()
                     ->route()
                     ->parameter('client')
                     ->id),
             ],
             'addresses' => 'required|array|min:1',
-            'addresses.*' => 'required|string',
+            'addresses.*' => [
+                'required',
+                'string',
+                new ExistsAddress,
+            ],
         ];
     }
 }

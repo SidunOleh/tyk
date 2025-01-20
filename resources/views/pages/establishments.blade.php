@@ -13,6 +13,7 @@
     </div>
 </section>
 
+<div class="container">
 <section class="catalog">
     <div class="categories">
         <p class="title">
@@ -74,5 +75,6 @@
         </div>
     </div>
 </section>
+</div>
 
 @include('templates.footer')

@@ -25,6 +25,8 @@ abstract class Cart
 
     abstract public function changeQuantity(int $itemId, int $quantity): bool;
 
+    abstract public function empty(): void;
+
     public function getItem(int $id): ?CartItem
     {
         foreach ($this->items as $item) {
@@ -57,9 +59,9 @@ abstract class Cart
         return array_reduce($this->items, fn (int $acc, CartItem $item) => $acc += $item->amount(), 0);
     }
 
-    public function formattedTotal(): string
+    public function formattedTotal(string $symb = '₴'): string
     {
-        return number_format($this->total(), 2);
+        return number_format($this->total(), 2) . $symb;
     }
 
     public function upsells(): Collection

@@ -20,8 +20,8 @@ class CartItem
         return $this->product->price * $this->quantity;
     }
 
-    public function formattedAmount(): string
+    public function formattedAmount(string $symb = '₴'): string
     {
-        return number_format($this->amount(), 2);
+        return number_format($this->amount(), 2) . $symb;
     }
 }

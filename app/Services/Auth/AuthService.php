@@ -5,7 +5,6 @@ namespace App\Services\Auth;
 use App\Models\Client;
 use App\Services\Cart\CartSession;
 use Daaner\TurboSMS\Facades\TurboSMS;
-use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -15,20 +14,26 @@ class AuthService
     {
         $client = Client::firstOrCreate(['phone' => $phone]);
 
-        $code = $this->generateCode();
+        $testMode = config('turbosms.test_mode');
 
-        $client->update(['code' => $code]);
-
-        $result = TurboSMS::sendMessages($phone, $code);
-
-        if (
-            ! $result['success'] or 
-            $result['result'][0]['response_status'] != 'OK'
-        ) {
-            throw new Exception(
-                $result['info'],
-                $result['result'][0]['response_code']
-            );
+        if ($testMode) {
+            $client->update(['code' => '000000']);
+        } else {
+            $code = $this->generateCode();
+        
+            $client->update(['code' => $code]);
+    
+            $result = TurboSMS::sendMessages('+38' . $phone, $code);
+        
+            if (
+                ! $result['success'] or 
+                $result['result'][0]['response_status'] != 'OK'
+            ) {
+                throw new TurboSMSException(
+                    $result['info'], 
+                    $result['result'][0]['response_code']
+                );
+            }
         }
     }
 
@@ -53,7 +58,7 @@ class AuthService
 
         $client->update(['code' => null]);
 
-        (new CartSession)->saveToDB();
+        (new CartSession)->saveToDB($client);
 
         return true;
     }

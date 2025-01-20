@@ -35,6 +35,8 @@ class Product extends Model
         'price',
     ];
 
+    public const PLACEHOLDER_IMAGE = '/assets/img/placeholder.webp';
+
     protected static function booted(): void
     {
         static::created(function (self $product) {
@@ -69,13 +71,13 @@ class Product extends Model
         }
     }
 
-    public function formattedPrice(): string
+    public function formattedPrice(string $symb = '₴'): string
     {
-        return number_format($this->price, 2) . '₴';
+        return number_format($this->price, 2) . $symb;
     }
 
     public function imageUrl(): string
     {
-        return $this->image ?: asset('/assets/img/placeholder.webp');
+        return $this->image ?: asset(self::PLACEHOLDER_IMAGE);
     }
 }

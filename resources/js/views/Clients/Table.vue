@@ -29,11 +29,11 @@
                     <a-tag  
                         v-for="address in record.addresses"
                         :bordered="false">
-                        {{ address }}
+                        {{ address.address }}
                     </a-tag>
                 </a-descriptions-item>    
                 <a-descriptions-item label="Бонуси">
-                    {{ record.bonuses }}
+                    {{ formatPrice(record.bonuses) }}
                 </a-descriptions-item>           
             </a-descriptions>
 
@@ -100,7 +100,7 @@
                 <a-tag 
                     v-for="address in record.addresses"
                     :bordered="false">
-                    {{ address }}
+                    {{ address.address }}
                 </a-tag>
             </template>
 
@@ -131,7 +131,7 @@
                             </a-menu-item>
                             <a-menu-item 
                                 danger
-                                @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.first_name} ${record.last_name}?`)">
+                                @click="confirmPopup(() => deleteRecord(record), `Ви впевнені що хочете видалити ${record.full_name ? record.full_name : record.phone}?`)">
                                 <a href="javascript:;">
                                     Видалити
                                 </a>
@@ -153,7 +153,10 @@ import {
     DownOutlined,
 } from '@ant-design/icons-vue'
 import api from '../../api/clients'
-import { confirmPopup, } from '../../helpers/helpers'
+import { 
+    confirmPopup, 
+    formatPrice,
+} from '../../helpers/helpers'
 import OrdersTable from './OrdersTable.vue'
 
 export default {
@@ -176,6 +179,7 @@ export default {
                 {
                     title: 'Адреси',
                     key: 'addresses',
+                    width: 200,
                 },
                 {
                     key: 'actions',
@@ -205,6 +209,7 @@ export default {
     },
     methods: {
         confirmPopup,
+        formatPrice,
         async updateData() {
             try {
                 this.loading = true

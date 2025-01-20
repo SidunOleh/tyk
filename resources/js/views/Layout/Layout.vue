@@ -73,6 +73,15 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-menu-item key="promotions">
+                    <template #icon>
+                        <SoundOutlined />
+                    </template>
+                    <router-link :to="{name: 'promotions'}">
+                        Акції
+                    </router-link>
+                </a-menu-item>
+
                 <a-menu-item key="users">
                     <template #icon>
                         <UserOutlined/>
@@ -120,6 +129,7 @@ import {
   UserAddOutlined,
   CarOutlined,
   WalletOutlined,
+  SoundOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
@@ -138,6 +148,7 @@ export default {
         CarOutlined,
         WalletOutlined,
         OrderModal,
+        SoundOutlined,
     },
     data() {
         return {

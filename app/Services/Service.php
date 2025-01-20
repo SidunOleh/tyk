@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundAddressException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use GoogleMaps;
 
 class Service
 {
@@ -58,5 +60,24 @@ class Service
         }
 
         return $models;
+    }
+
+    protected function getLatLng(string $address): array
+    {
+        $response = GoogleMaps::load('geocoding')
+            ->setParamByKey('address', $address)
+            ->get();
+        $response = json_decode($response, true);
+
+        if (! $response['results']) {
+            new NotFoundAddressException($address);
+        }
+
+        $result = $response['results'][0];
+
+        $latLng['lat'] = $result['geometry']['location']['lat'];
+        $latLng['lng'] = $result['geometry']['location']['lng'];
+
+        return $latLng;
     }
 }

@@ -37,7 +37,9 @@
             @endforeach
 
             @if (! $products->count())
-            Немає товарів
+            <div class="empty">
+                Немає товарів
+            </div>
             @endif
         </div>
     </div>

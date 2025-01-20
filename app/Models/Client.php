@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\ILogUser;
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Client extends Authenticatable
+class Client extends Authenticatable implements ILogUser
 {
     use SoftDeletes, History;
     
@@ -31,7 +32,6 @@ class Client extends Authenticatable
     protected $loggable = [
         'phone',
         'full_name',
-        'addresses',
     ];
 
     protected static function booted(): void
@@ -60,5 +60,45 @@ class Client extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function formattedBonuses(string $symb = '₴'): string
+    {
+        return number_format($this->bonuses, 2) . $symb;
+    }
+
+    public function logName(): string
+    {
+        return $this->full_name ?? $this->phone;
+    }
+
+    public function addAddresses(array $addresses): void
+    {
+        $new = [];
+        foreach ($addresses ?? [] as $address) {
+            if (! $this->hasAddress($address)) {
+                $new[] = $address;
+            }
+        }
+
+        if ($new) {
+            $this->update(['addresses' => array_merge($this->addresses ?? [], $new)]);
+        }
+    }
+
+    public function hasAddress(array $address): bool
+    {
+        foreach ($this->addresses ?? [] as $val) {
+            if ($val['address'] == $address['address']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function addBonus(float $amount): bool
+    {
+        return $this->update(['bonuses' => $this->bonuses + $amount]);
     }
 }

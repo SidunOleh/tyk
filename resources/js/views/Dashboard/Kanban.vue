@@ -106,8 +106,8 @@ export default {
                 <br>
                 <div>
                     Сума: <b>${formatPrice(order.total)}</b>
-                    Продути: <b>${order.order_items.map(item => `${item.name} x ${item.quantity}`).join(', ')}</b>
-                    Адреса: <b>${order.details.food_to}</b>
+                    Продути: <b>${order.order_items?.map(item => `${item.name} x ${item.quantity}`).join(' | ')}</b>
+                    Адреса: <b>${order.details.food_to.map(address => address.address).join(' | ')}</b>
                 </div>
             `
         },
@@ -119,8 +119,8 @@ export default {
                 <br>
                 <div>
                     Сума: <b>${formatPrice(order.total)}</b>
-                    Звідки: <b>${order.details.shipping_from}</b>
-                    Куди: <b>${order.details.shipping_to.join(', ')}</b>
+                    Звідки: <b>${order.details.shipping_from.address}</b>
+                    Куди: <b>${order.details.shipping_to.map(address => address.address).join(' | ')}</b>
                 </div>
             `
         },
@@ -132,8 +132,8 @@ export default {
                 <br>
                 <div>
                     Сума: <b>${formatPrice(order.total)}</b>
-                    Звідки: <b>${order.details.taxi_from}</b>
-                    Куди: <b>${order.details.taxi_to.join(', ')}</b>
+                    Звідки: <b>${order.details.taxi_from.address}</b>
+                    Куди: <b>${order.details.taxi_to.map(address => address.address).join(' | ')}</b>
                 </div>
             `
         },

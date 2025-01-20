@@ -11,8 +11,6 @@
 </head>
 
 <body>
-    @include('modals.delivery')
-    @include('modals.taxi')
     @include('modals.login')
 
     <header class="header">
@@ -32,15 +30,20 @@
                                 Головна
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a 
+                                href="{{ route('pages.about-us') }}" 
+                                @class(['nav-link', 'active' => request()->route()?->getName() == 'pages.about-us',])>
+                                Про нас
+                            </a>
+                        </li>
                         <li class="nav-item catalog">
                             <a href="{{ route('pages.zaklady') }}" class="nav-link">Заклади</a>
                         </li>
                     </ul>
                     <div class="mobile-bottom">
                         <div class="buttons">
-                            <div class="cart_btn">
-                                <img src="{{ asset('/assets/img/cart.svg') }}" alt="" />
-                            </div>
+                            @include('templates.cart-icon', ['cartTotal' => $cartTotal])
                             <a href="tel:7789956555" class="phone_btn">
                                 <img src="{{ asset('/assets/img/phone.svg') }}" alt="" />
                             </a>
@@ -49,9 +52,7 @@
                 </nav>
                 <div class="right">
                     <div class="buttons">
-                        <a href="{{ route('pages.cart') }}" class="cart_btn">
-                            <img src="{{ asset('/assets/img/cart.svg') }}" alt="" />
-                        </a>
+                        @include('templates.cart-icon', ['cartTotal' => $cartTotal])
                         <a href="tel:7789956555" class="phone_btn">
                             <img src="{{ asset('/assets/img/phone.svg') }}" alt="" />
                         </a>

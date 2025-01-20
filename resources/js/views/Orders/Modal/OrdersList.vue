@@ -63,20 +63,20 @@
                             :gap="5">
                             <template v-if="item.type == 'Доставка їжі'">
                                 <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
-                                <div>Продукти: <a-typography-text strong>{{ item.order_items.map(item => `${item.name} x ${item.quantity}`).join(', ') }}</a-typography-text></div>
-                                <div>Адреса: <a-typography-text strong>{{ item.details.food_to }}</a-typography-text></div>
+                                <div>Продукти: <a-typography-text strong>{{ item.order_items?.map(item => `${item.name} x ${item.quantity}`).join(' | ') }}</a-typography-text></div>
+                                <div>Адреса: <a-typography-text strong>{{ item.details.food_to.map(address => address.address).join(' | ') }}</a-typography-text></div>
                             </template>
 
                             <template v-if="item.type == 'Кур\'єр'">
                                 <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
-                                <div>Звідки: <a-typography-text strong>{{ item.details.shipping_from }}</a-typography-text></div>
-                                <div>Куди: <a-typography-text strong>{{ item.details.shipping_to.join(', ') }}</a-typography-text></div>
+                                <div>Звідки: <a-typography-text strong>{{ item.details.shipping_from.address }}</a-typography-text></div>
+                                <div>Куди: <a-typography-text strong>{{ item.details.shipping_to.map(address => address.address).join(' | ') }}</a-typography-text></div>
                             </template>
                             
                             <template v-if="item.type == 'Таксі'">
                                 <div>Сума: <a-typography-text strong>{{ formatPrice(item.total) }}</a-typography-text></div>
-                                <div>Звідки: <a-typography-text strong>{{ item.details.taxi_from }}</a-typography-text></div>
-                                <div>Куди: <a-typography-text strong>{{ item.details.taxi_to.join(', ') }}</a-typography-text></div>
+                                <div>Звідки: <a-typography-text strong>{{ item.details.taxi_from.address }}</a-typography-text></div>
+                                <div>Куди: <a-typography-text strong>{{ item.details.taxi_to.map(address => address.address).join(' | ') }}</a-typography-text></div>
                             </template>
                         </a-flex>
 

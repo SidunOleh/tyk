@@ -45,9 +45,7 @@
                         v-for="(address, i) in data.addresses"
                         :gap="5"
                         :align="'center'">
-                        <a-input
-                            placeholder="Введіть адресу"
-                            v-model:value="data.addresses[i]"/>
+                        <AddressInput v-model:address="data.addresses[i]"/>
                         <a-button
                             danger
                             type="text"
@@ -83,6 +81,7 @@ import api from '../../api/clients'
 import { 
     formatPhone,
 } from '../../helpers/helpers'
+import AddressInput from '../components/AddressInput.vue'
 
 export default {
     props: [
@@ -91,6 +90,9 @@ export default {
         'action',
         'item',
     ],
+    components: {
+        AddressInput,
+    },
     data() {
         return {
             data: {
@@ -106,10 +108,15 @@ export default {
         addressesErrors() {
             const errors = []
             for (const field in this.errors) {
-                if (field.search('addresses') == 0) {
-                    errors.push(this.errors[field])
+                if (field.match(/^addresses\.\d$/)) {
+                    errors.push(`${this.errors[field]} №${Number(field.split('.').pop())+1}`)
+                }
+
+                if (field.match(/^addresses$/)) {
+                    errors.push(`${this.errors[field]}`)
                 }
             }
+
             return errors
         },
     },
@@ -125,9 +132,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.phone = `+38${data.phone}`
-                const res = await api.create(data)
+                const res = await api.create(this.data)
                 message.success('Успішно створено.')
                 this.$emit('create', res.client)
                 this.$emit('update:open', false)
@@ -145,9 +150,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.phone = `+38${data.phone}`
-                const res = await api.edit(this.data.id, data)
+                const res = await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -164,7 +167,9 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
-            this.data.phone = this.data.phone.substr(3)
+            this.data.addresses = this.data
+                .addresses
+                .map(address => address.address)
         }
     },
 }

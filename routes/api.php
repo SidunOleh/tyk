@@ -47,6 +47,11 @@ use App\Http\Controllers\Admin\Products\IndexController as ProductsIndexControll
 use App\Http\Controllers\Admin\Products\SearchController as ProductsSearchController;
 use App\Http\Controllers\Admin\Products\StoreController as ProductsStoreController;
 use App\Http\Controllers\Admin\Products\UpdateController as ProductsUpdateController;
+use App\Http\Controllers\Admin\Promotions\BulkDeleteController as PromotionsBulkDeleteController;
+use App\Http\Controllers\Admin\Promotions\DeleteController as PromotionsDeleteController;
+use App\Http\Controllers\Admin\Promotions\IndexController as PromotionsIndexController;
+use App\Http\Controllers\Admin\Promotions\StoreController as PromotionsStoreController;
+use App\Http\Controllers\Admin\Promotions\UpdateController as PromotionsUpdateController;
 use App\Http\Controllers\Admin\Users\BulkDeleteController;
 use App\Http\Controllers\Admin\Users\DeleteController;
 use App\Http\Controllers\Admin\Users\IndexController;
@@ -187,6 +192,19 @@ Route::domain(config('app.admin_domain'))->group(function () {
             Route::delete('/bulk', OrdersBulkDeleteController::class)
                 ->name('bulk-delete');
             Route::delete('/{order}', OrdersDeleteController::class)
+                ->name('delete');
+        });
+
+        Route::prefix('/promotions')->name('promotions.')->group(function () {
+            Route::get('/', PromotionsIndexController::class)
+                ->name('index');
+            Route::post('/', PromotionsStoreController::class)
+                ->name('store');
+            Route::put('/{promotion}', PromotionsUpdateController::class)
+                ->name('update');
+            Route::delete('/bulk', PromotionsBulkDeleteController::class)
+                ->name('bulk-delete');
+            Route::delete('/{promotion}', PromotionsDeleteController::class)
                 ->name('delete');
         });
     });

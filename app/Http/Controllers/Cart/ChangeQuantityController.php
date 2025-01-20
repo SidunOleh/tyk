@@ -26,16 +26,6 @@ class ChangeQuantityController extends Controller
             $this->cart->addItem(Product::find($request->product_id), $request->quantity);
         }
 
-        return response([
-            '.cart-section' => view('templates.cart', [
-                'cart' => $this->cart,
-            ])->render(),
-            '.upsells' => view('templates.upsells', [
-                'cart' => $this->cart,
-            ])->render(),
-            '.cartSubtotal' => view('templates.subtotal', [
-                'cart' => $this->cart,
-            ])->render(),
-        ]);
+        return response(['message' => 'OK',]);
     }
 }

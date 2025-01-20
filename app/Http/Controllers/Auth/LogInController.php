@@ -20,7 +20,7 @@ class LogInController extends Controller
         $login = $this->authService->login($request->code);
 
         if (! $login) {
-            return response(['message' => 'Неправильний код.'], 401);
+            return response(['errors' => ['code' => ['Неправильний код.',]]], 422);
         }
 
         return response(['message' => 'OK',]);

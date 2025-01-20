@@ -21,10 +21,10 @@ class GetCatalogHtmlController extends Controller
     {
         $products = $this->categoryService->getProducts($category);
 
-        return view('templates.catalog', [
+        return response(view('templates.catalog', [
             'category' => $category,
             'products' => $products,
             'cart' => $this->cart,
-        ]);
+        ])->render());
     }
 }

@@ -166,9 +166,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.phone = `+38${data.phone}`
-                const res = await api.edit(this.data.id, data)
+                const res = await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -185,7 +183,6 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
-            this.data.phone = this.data.phone.substr(3)
         }
     },
 }

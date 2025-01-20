@@ -26,7 +26,7 @@ class SendCodeController extends Controller
         } catch (Exception $e) {
             Log::error($e);
 
-            return response(['message' => 'Помилка. Спробуйте ще раз.'], 400);
+            return response(['errors' => ['phone' => ['Помилка. Спробуйте ще раз.',]]], 422);
         }
     }
 }

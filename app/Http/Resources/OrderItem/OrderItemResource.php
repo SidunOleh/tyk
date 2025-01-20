@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\OrderItem;
 
-use App\Http\Resources\Product\ProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +19,7 @@ class OrderItemResource extends JsonResource
             'name' => $this->name,
             'quantity' => $this->quantity,
             'amount' => $this->amount,
-            'product' => $this->product ? new ProductResource($this->product) : null,
+            'product' => $this->product,
             'order_id' => $this->order_id,
         ];
     }

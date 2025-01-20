@@ -22,7 +22,7 @@ class SendCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|regex:/^\+38\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
+            'phone' => 'required|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
         ];
     }
 }

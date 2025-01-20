@@ -45,6 +45,8 @@ class Category extends Model
         'products',
     ];
 
+    public const PLACEHOLDER_IMAGE = '/assets/img/placeholder.webp';
+
     protected static function booted(): void
     {
         static::created(function (self $category) {
@@ -94,7 +96,7 @@ class Category extends Model
 
     public function imageUrl(): string
     {
-        return $this->image ?: asset('/assets/img/placeholder.webp');
+        return $this->image ?: asset(self::PLACEHOLDER_IMAGE);
     }
 
     public function upsells(): BelongsToJson

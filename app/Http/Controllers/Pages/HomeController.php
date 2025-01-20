@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\CategoryTag;
+use App\Models\Promotion;
 
 class HomeController extends Controller
 {
@@ -16,10 +17,12 @@ class HomeController extends Controller
             ->visible()
             ->orderBy('order', 'ASC')
             ->get();
+        $promotions = Promotion::all();
 
         return view('pages.home', [
             'tags' => $tags,
             'zaklady' => $zaklady,
+            'promotions' => $promotions,
         ]);
     }
 }

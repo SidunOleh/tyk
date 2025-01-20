@@ -71,7 +71,7 @@ class ClientResource extends JsonResource
             'courier' => new CourierResource($this->courier),
         ];
 
-        if ($data['type'] == 'Доставка їжі') {
+        if ($data['type'] == Order::FOOD_SHIPPING) {
             foreach ($order->orderItems as $orderItem) {
                 $data['order_items'][] = new OrderItemResource($orderItem);
             }

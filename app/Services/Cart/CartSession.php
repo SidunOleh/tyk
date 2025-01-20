@@ -3,9 +3,9 @@
 namespace App\Services\Cart;
 
 use App\Models\CartItem;
+use App\Models\Client;
 use App\Models\Product;
 use App\Services\Cart\CartItem as CartCartItem;
-use Illuminate\Support\Facades\Auth;
 
 class CartSession extends Cart
 {
@@ -62,12 +62,12 @@ class CartSession extends Cart
         return true;
     }
 
-    public function saveToDB(): array
+    public function saveToDB(Client $client): array
     {
         $cartItems = array_map(fn (CartCartItem $item) => CartItem::create([
-            'quantity' => $item->id,
+            'quantity' => $item->quantity,
             'product_id' => $item->product->id,
-            'client_id' => Auth::guard('web')->id(),
+            'client_id' => $client->id,
         ]), $this->items);
 
         $this->empty();

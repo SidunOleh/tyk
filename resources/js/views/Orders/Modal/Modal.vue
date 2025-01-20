@@ -256,7 +256,7 @@ export default {
         clientOptions() {
             return this.clients.data.map(client => {
                 return {
-                    label: `${client.phone}, ${client.first_name} ${client.last_name ?? ''}`,
+                    label: `${client.phone}, ${client.full_name ?? ''}`,
                     value: client.id, 
                 }
             })
@@ -308,6 +308,10 @@ export default {
             data.service = data.type
 
             if (data.service == 'Доставка їжі') {
+                data.details.food_to = data.details
+                    .food_to
+                    .map(address => address.address)
+
                 data.order_items = data.order_items.map(item => {
                     return {
                         id: item.id,
@@ -317,6 +321,24 @@ export default {
                         product_id: item.product.id,
                     }
                 })
+            }
+
+            if (data.service == 'Кур\'єр') {
+                data.details.shipping_from = data.details
+                    .shipping_from
+                    .address
+                data.details.shipping_to = data.details
+                    .shipping_to
+                    .map(address => address.address)
+            }
+
+            if (data.service == 'Таксі') {
+                data.details.taxi_from = data.details
+                    .taxi_from
+                    .address
+                data.details.taxi_to = data.details
+                    .taxi_to
+                    .map(address => address.address)
             }
 
             this.data = data
@@ -334,17 +356,39 @@ export default {
         },
         repeatOrder(order) {
             this.data.service = order.type
-            this.data.details = JSON.parse(JSON.stringify(order.details))
 
-            if (order.type == 'Доставка їжі') {
+            if (this.data.service == 'Доставка їжі') {
+                this.data.details.food_to = order.details
+                    .food_to
+                    .map(address => address.address)
+
                 this.data.order_items = order.order_items.map(item => {
                     return {
+                        id: item.id,
                         name: item.product.name,
                         quantity: item.quantity,
                         amount: item.product.price,
                         product_id: item.product.id,
                     }
                 })
+            }
+
+            if (this.data.service == 'Кур\'єр') {
+                this.data.details.shipping_from = order.details
+                    .shipping_from
+                    .address
+                this.data.details.shipping_to = order.details
+                    .shipping_to
+                    .map(address => address.address)
+            }
+
+            if (this.data.service == 'Таксі') {
+                this.data.details.taxi_from = order.details
+                    .taxi_from
+                    .address
+                this.data.details.taxi_to = order.details
+                    .taxi_to
+                    .map(address => address.address)
             }
         },
         async create() {
