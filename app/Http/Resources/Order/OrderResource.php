@@ -26,6 +26,7 @@ class OrderResource extends JsonResource
             'phone' => $client->phone,
             'full_name' => $client->full_name,
             'addresses' => $client->addresses,
+            'description' => $this->description,
             'bonuses' => $client->bonuses,
             'history' => $this->history,
         ];
@@ -62,7 +63,7 @@ class OrderResource extends JsonResource
             'courier' => new CourierResource($this->courier),
         ];
 
-        if ($data['type'] == 'Доставка їжі') {
+        if ($data['type'] == Order::FOOD_SHIPPING) {
             foreach ($order->orderItems as $orderItem) {
                 $data['order_items'][] = new OrderItemResource($orderItem);
             }

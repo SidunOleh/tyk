@@ -32,7 +32,8 @@
                     <h2>Дані доставки</h2>
                     <div class="address-select">
                         <div class="form-group input-box">
-                            <input 
+                            <input  
+                                autocomplete="__away"
                                 class="autocomplete"
                                 type="text" 
                                 name="address" 

@@ -30,6 +30,7 @@ class User extends Authenticatable implements ILogUser
         'phone',
         'role',
         'password',
+        'phonet_number',
         'history',
     ];
 

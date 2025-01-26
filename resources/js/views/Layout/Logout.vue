@@ -1,15 +1,16 @@
 <template>
     <a-flex
-        :justify="'center'"
+        :justify="'flex-start'"
         :align="'center'"
-        :gap="15"
-        style="padding: 15px;">
+        :gap="10"
+        style="margin-top: 10px; padding: 10px 33px;">
+
         <div
             v-if="!collapsed" 
             class="user">
             {{ user }}
         </div>
-
+        
         <a-tooltip placement="right">
             <template
                 v-if="collapsed" 
@@ -42,6 +43,7 @@
                 </svg>
             </div>
         </a-tooltip>
+    
     </a-flex>
 </template>
 

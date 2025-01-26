@@ -163,11 +163,37 @@ const routes = [{
             import ('../views/Promotions/Index.vue'),
         loadingComponent: Loader,
     }),
-    name: 'promotions',
+    name: 'promotions.index',
     meta: {
         roles: ['адмін', ],
         key: 'promotions',
         title: 'Акції',
+    },
+}, {
+    path: '/cars',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Cars/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'cars.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'cars',
+        title: 'Автомобілі',
+    },
+}, {
+    path: '/analytics',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Analytics/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'analytics.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'analytics',
+        title: 'Аналітика',
     },
 }, {
     path: '/:pathMatch(.*)*',

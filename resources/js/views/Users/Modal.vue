@@ -84,6 +84,16 @@
                     v-model:value="data.role"/>
             </a-form-item>
 
+            <a-form-item 
+                label="Phonet номер"
+                has-feedback
+                :validate-status="errors['phone_number'] ? 'error' : ''"
+                :help="errors.phonet_number">
+                <a-input
+                    placeholder="Введіть phonet номер"
+                    v-model:value="data.phonet_number"/>
+            </a-form-item>
+
             <a-button
                 type="primary"
                 :loading="loading"
@@ -119,6 +129,7 @@ export default {
                 last_name: '',
                 phone: '',
                 role: null,
+                phonet_number: '',
             },
             errors: {},
             roles: [

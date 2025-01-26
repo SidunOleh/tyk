@@ -34,12 +34,13 @@ class UpdateRequest extends FormRequest
                     ->parameter('client')
                     ->id),
             ],
-            'addresses' => 'required|array|min:1',
+            'addresses' => 'array',
             'addresses.*' => [
                 'required',
                 'string',
                 new ExistsAddress,
             ],
+            'description' => 'string|nullable',
         ];
     }
 }

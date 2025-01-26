@@ -5,8 +5,6 @@
             v-model:collapsed="collapsed"
             collapsible>
 
-            <Logout :collapsed="collapsed"/>
-            
             <a-menu 
                 v-model:selectedKeys="selectedKeys" 
                 mode="inline">
@@ -37,6 +35,24 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-menu-item key="couriers">
+                    <template #icon>
+                        <DragOutlined/>
+                    </template>
+                    <router-link :to="{name: 'couriers.index'}">
+                        Кур'єри
+                    </router-link>
+                </a-menu-item>
+
+                <!-- <a-menu-item key="cars">
+                    <template #icon>
+                        <CarOutlined/>
+                    </template>
+                    <router-link :to="{name: 'cars.index'}">
+                        Автомобілі
+                    </router-link>
+                </a-menu-item> -->
+
                 <a-sub-menu>
                     <template #icon>
                         <ShopOutlined/>
@@ -64,21 +80,21 @@
                     </a-menu-item>
                 </a-sub-menu>
 
-                <a-menu-item key="couriers">
-                    <template #icon>
-                        <CarOutlined/>
-                    </template>
-                    <router-link :to="{name: 'couriers.index'}">
-                        Кур'єри
-                    </router-link>
-                </a-menu-item>
-
                 <a-menu-item key="promotions">
                     <template #icon>
                         <SoundOutlined />
                     </template>
-                    <router-link :to="{name: 'promotions'}">
+                    <router-link :to="{name: 'promotions.index'}">
                         Акції
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="analytics">
+                    <template #icon>
+                        <LineChartOutlined />
+                    </template>
+                    <router-link :to="{name: 'analytics.index'}">
+                        Аналітика
                     </router-link>
                 </a-menu-item>
 
@@ -90,7 +106,11 @@
                         Користувачі
                     </router-link>
                 </a-menu-item>
+
             </a-menu>
+            
+            <Logout :collapsed="collapsed"/>
+
         </a-layout-sider>
 
         <a-layout-content class="content" :style="{margin: '24px 16px', padding: '24px', background: '#fff',  'border-radius': '5px',}">
@@ -114,6 +134,7 @@
         v-if="order.create"
         title="Створення замовлення"
         action="create"
+        :client="order.client"
         v-model:open="order.create"/>
 </template>
 
@@ -130,9 +151,15 @@ import {
   CarOutlined,
   WalletOutlined,
   SoundOutlined,
+  DragOutlined,
+  LineChartOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
+import { auth } from '../../helpers/helpers'
+import Phonet from '../../helpers/phonet'
+import clientsApi from '../../api/clients'
+import { message } from 'ant-design-vue'
 
 export default {
     components: {
@@ -149,6 +176,8 @@ export default {
         WalletOutlined,
         OrderModal,
         SoundOutlined,
+        DragOutlined,
+        LineChartOutlined,
     },
     data() {
         return {
@@ -156,13 +185,41 @@ export default {
             collapsed: true,
             order: {
                 create: false,
+                client: null,
             },
         }
+    },
+    methods: {
+        auth,
     },
     async mounted() {
         await this.$router.isReady()
 
         this.selectedKeys.push(this.$router.currentRoute.value.meta.key)
+
+        // if (typeof phonetConf !== 'undefined') {
+        //     const phonet = new Phonet(phonetConf)
+
+        //     phonet.listen('call.bridge', async call => {
+        //         const client = {}
+        //         const phone = call.otherLegs[0].num
+        //         client.phone = `(${phone[3] + phone[4] + phone[5]}) ${phone[6] + phone[7] + phone[8]}-${phone[9] + phone[10]}-${phone[11] + phone[12]}`
+        //         client.full_name = call.otherLegs[0].name
+
+        //         if (client.phone == this.order.client?.phone && this.order.create) {
+        //             return
+        //         }
+
+        //         this.order.create = false
+
+        //         const res = await clientsApi.findOrCreate(client)
+        //         this.order.client = res.client
+
+        //         setTimeout(() => {
+        //             this.order.create = true
+        //         })
+        //     })
+        // }
     },
 }
 </script>

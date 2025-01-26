@@ -78,6 +78,18 @@
         </div>
     </div>
 
+    @auth('admin')
+        @if ($phonerNumber = auth('admin')->user()->phonet_number)
+        <script>
+            const phonetConf = {{ Js::from([
+                'domain' => config('services.phonet.domain'),
+                'apiKey' => config('services.phonet.apiKey'),
+                'subscriber' => $phonerNumber,
+            ]) }}
+        </script>
+        @endif
+    @endauth
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.key') }}&libraries=places&language=uk&region=ua"></script>
 
     <link rel="stylesheet" href="/assets/css/jkanban.min.css">

@@ -2,6 +2,7 @@
 
 namespace App\Services\Clients;
 
+use App\Http\Requests\Admin\Clients\FindOrCreateRequest;
 use App\Http\Requests\Clients\AddAddressRequest;
 use App\Http\Requests\Clients\DeleteAddressRequest;
 use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
@@ -38,6 +39,11 @@ class ClientService extends Service
         $validated['addresses'] = $addresses;
 
         $client->update($validated);
+    }
+
+    public function findOrCreate(FindOrCreateRequest $request): Client
+    {
+        return Client::firstOrCreate(['phone' => $request->phone], ['full_name' => $request->full_name ?? 'Новий клієнт']);
     }
 
     public function updatePersonalInfo(Client $client, UpdatePersonalInfoRequest $request): void

@@ -90,9 +90,12 @@ export default {
         toErrors() {
             const errors = []
             for (const field in this.errors) {
-                const parts = field.split('.')
-                if (parts.includes('taxi_to')) {
-                    errors.push(`${this.errors[field]} №${Number(parts.pop())+1}`)
+                if (field.match(/^details\.taxi_to\.\d$/)) {
+                    errors.push(`${this.errors[field]} №${Number(field.split('.').pop())+1}`)
+                }
+
+                if (field.match(/^details\.taxi_to$/)) {
+                    errors.push(`${this.errors[field]}`)
                 }
             }
 
@@ -102,8 +105,8 @@ export default {
     methods: {
         setAddresses() {
             this.addresses = this.client
-                ?.addresses
-                .map(address => address.address) ?? []
+                .addresses
+                ?.map(address => address.address) ?? []
         },
         addAddress() {
             if (this.newAddress) {

@@ -18,6 +18,7 @@ class Client extends Authenticatable implements ILogUser
         'phone',
         'full_name',
         'addresses',
+        'description',
         'bonuses',
         'code',
         'history',

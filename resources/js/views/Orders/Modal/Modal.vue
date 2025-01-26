@@ -3,7 +3,7 @@
         :title="title"
         :open="open"
         :footer="null"
-        @cancel="$emit('update:open', false)">
+        @cancel="e => {if (! e.target.classList.contains('ant-modal-wrap')) $emit('update:open', false);}">
         <a-form layout="vertical">
             <a-form-item 
                 label="Клієнт"
@@ -103,8 +103,8 @@
                     style="width: 100%;"
                     showTime
                     placeholder="Виберіть час"
-                    format="YYYY-MM-DD hh:mm"
-                    valueFormat="YYYY-MM-DD hh:mm:ss"
+                    format="YYYY-MM-DD HH:mm"
+                    valueFormat="YYYY-MM-DD HH:mm:ss"
                     v-model:value="data.time"/>
             </a-form-item>
 
@@ -160,12 +160,21 @@
                 </a-typography-text>
             </div>
 
-            <a-button
-                type="primary"
-                :loading="loading"
-                @click="action == 'create' ? create() : edit()">
-                Зберегти
-            </a-button>
+            <a-flex :gap="5">
+                <a-button
+                    type="primary"
+                    :loading="loading"
+                    @click="action == 'create' ? create() : edit()">
+                    Зберегти
+                </a-button>
+
+                <a-button
+                    v-if="action == 'edit'"
+                    type="primary"
+                    @click="copyToClipboard">
+                    Копіювати
+                </a-button>
+            </a-flex>
         </a-form>
     </a-modal>
 
@@ -187,7 +196,10 @@ import Cart from './Cart.vue'
 import ShippingDetails from './ShippingDetails.vue'
 import TaxiDetails from './TaxiDetails.vue'
 import ClientsModal from '../../Clients/Modal.vue'
-import { formatPrice } from '../../../helpers/helpers'
+import { 
+    formatPrice,
+    copyToClipboard, 
+} from '../../../helpers/helpers'
 
 export default {
     props: [
@@ -312,7 +324,7 @@ export default {
                     .food_to
                     .map(address => address.address)
 
-                data.order_items = data.order_items.map(item => {
+                data.order_items = data.order_items?.map(item => {
                     return {
                         id: item.id,
                         name: item.product.name,
@@ -362,7 +374,7 @@ export default {
                     .food_to
                     .map(address => address.address)
 
-                this.data.order_items = order.order_items.map(item => {
+                this.data.order_items = order.order_items?.map(item => {
                     return {
                         id: item.id,
                         name: item.product.name,
@@ -434,6 +446,45 @@ export default {
             }
 
             return data
+        },
+        copyToClipboard() {
+            let text = ''
+            switch (this.data.service) {
+                case 'Доставка їжі':
+                    text = this.foodShippingText()
+                break
+                case 'Кур\'єр':
+                    text = this.shippingText()
+                break
+                case 'Таксі':
+                    text = this.taxiText()
+                break
+            }
+
+            copyToClipboard(text)
+
+            message.success('Скопійовано в буфер обміну.')
+        },
+        foodShippingText() {
+            return `${this.data.service} №${this.data.number}
+Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+Товари: ${this.data.order_items?.map(orderItem => `${orderItem.name} x ${orderItem.quantity}`).join(' | ')}
+Куди: ${this.data.details.food_to}
+Метод оплати: ${this.data.payment_method ?? ''}`
+        },
+        shippingText() {
+            return `${this.data.service} №${this.data.number}
+Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+Звідки: ${this.data.details.shipping_from}
+Куди: ${this.data.details.shipping_to?.join(' | ')}
+Метод оплати: ${this.data.payment_method ?? ''}`
+        },
+        taxiText() {
+            return `${this.data.service} №${this.data.number}
+Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+Звідки: ${this.data.details.taxi_from}
+Куди: ${this.data.details.taxi_to?.join(' | ')}
+Метод оплати: ${this.data.payment_method ?? ''}`
         },
     },
     mounted() {

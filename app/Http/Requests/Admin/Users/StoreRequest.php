@@ -32,6 +32,7 @@ class StoreRequest extends FormRequest
                 Password::min(8),
             ],
             'role' => 'required|string',
+            'phonet_number' => 'string|nullable',
         ];
     }
 }

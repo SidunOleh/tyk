@@ -40,6 +40,7 @@ class UpdateRequest extends FormRequest
                 'nullable',
             ],
             'role' => 'required|string',
+            'phonet_number' => 'string|nullable',
         ];
     }
 }

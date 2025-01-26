@@ -43,6 +43,7 @@ class ClientResource extends JsonResource
             'phone' => $this->phone,
             'full_name' => $this->full_name,
             'addresses' => $this->addresses,
+            'description' => $this->description,
             'bonuses' => $this->bonuses,
             'history' => $this->history,
         ];

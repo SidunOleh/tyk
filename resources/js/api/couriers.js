@@ -38,6 +38,15 @@ export default {
 
         return res.data
     },
+    async currentLocations() {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/couriers/current-locations')
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

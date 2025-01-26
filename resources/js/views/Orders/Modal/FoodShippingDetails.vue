@@ -92,8 +92,8 @@ export default {
     methods: {
         setAddresses() {
             this.addresses = this.client
-                ?.addresses
-                .map(address => address.address) ?? []
+                .addresses
+                ?.map(address => address.address) ?? []
         },
         addAddress() {
             if (this.newAddress) {

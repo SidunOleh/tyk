@@ -25,12 +25,12 @@ class StoreRequest extends FormRequest
         return [
             'full_name' => 'required|string',
             'phone' => 'required|string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|unique:clients,phone',
-            'addresses' => 'required|array|min:1',
+            'addresses' => 'array',
             'addresses.*' => [
-                'required',
                 'string',
                 new ExistsAddress,
             ],
+            'description' => 'string|nullable',
         ];
     }
 }

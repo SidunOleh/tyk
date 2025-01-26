@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'mapon_api_key' => env('MAPON_API_KEY'),
+
+    'phonet' => [
+        'domain' => env('PHONET_DOMAIN'),
+        'apiKey' => env('PHONET_API_KEY'),
+    ],
 ];

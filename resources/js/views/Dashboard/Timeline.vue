@@ -83,6 +83,19 @@ export default {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
+        renderCurrentLine() {
+            const offset = (new Date().getHours() * 60 + new Date().getMinutes()) / (24 * 60) * 100
+            const currentLineEl = document.createElement('div')
+            currentLineEl.classList.add('current')
+            currentLineEl.style.left = `${offset}%`
+            for (const todayEl of document.querySelectorAll('.ec-today')) {
+                if (todayEl.querySelector('.current')) {
+                    todayEl.querySelector('.current').replaceWith(currentLineEl.cloneNode())
+                } else {
+                    todayEl.append(currentLineEl.cloneNode())   
+                }
+            }
+        },
     },
     watch: {
         time: {
@@ -114,6 +127,7 @@ export default {
             },
             resources: this.resources,
             date: new Date(),
+            scrollTime: `${new Date().getHours()}:00`,
             duration: {
                 days: 1
             },
@@ -123,6 +137,7 @@ export default {
             locale: 'uk-UA',
             slotWidth: 150,
             slotDuration: '00:30:00',
+            nowIndicator: true,
             eventDrop: info => {
                 info.event.start = info.oldEvent.start
                 info.event.end = info.oldEvent.end
@@ -144,6 +159,9 @@ export default {
 
         this.changeDateInterval()
         this.changeData()
+
+        this.renderCurrentLine()
+        setInterval(() => this.renderCurrentLine(), 1000)
     }
 }
 </script>
@@ -159,5 +177,35 @@ export default {
 
 .ec-timeline .ec-event-body {
     flex-direction: column !important;
+}
+
+.ec-day {
+    position: relative;
+}
+
+.ec-today .current {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(100% + 1px);
+    width: 1px;
+    background: rgb(22 119 255);
+    transition: all linear 1s;
+    z-index: 10;
+}
+
+.ec-days:last-child .ec-today .current {
+    height: 100%;
+}
+
+.ec-days:nth-child(2) .ec-today .current::before {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgb(22 119 255);
+    top: 0;
+    right: -195%;
 }
 </style>

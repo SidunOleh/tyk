@@ -129,6 +129,17 @@ function formatPhone(phone) {
         (matches[4] ? '-' + matches[4] : '')
 }
 
+function copyToClipboard(text) {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    textArea.style.position = 'absolute'
+    textArea.style.left = '-999999px'
+    document.body.prepend(textArea)
+    textArea.select()
+    document.execCommand('copy')
+    textArea.remove()
+}
+
 export {
     auth,
     hasRole,
@@ -141,4 +152,5 @@ export {
     serviceColor,
     orderStatusColor,
     formatPhone,
+    copyToClipboard,
 }

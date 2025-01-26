@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('full_name')->nullable();
             $table->json('addresses')->nullable();
+            $table->text('description')->nullable();
             $table->decimal('bonuses')->default(0);
             $table->json('history')->nullable();
             $table->string('code')->nullable()->unique();

@@ -9,6 +9,7 @@
 
             <a-form-item 
                 label="Фото"
+                :required="true"
                 has-feedback
                 :validate-status="errors['image'] ? 'error' : ''"
                 :help="errors.image">

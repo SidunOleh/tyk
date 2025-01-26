@@ -47,6 +47,15 @@ export default {
 
         return res.data
     },
+    async findOrCreate(data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post('/api/clients/find-or-create', data)
+
+        return res.data
+    },
     async edit(id, data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

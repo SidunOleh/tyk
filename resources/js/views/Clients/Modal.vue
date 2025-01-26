@@ -34,7 +34,6 @@
 
             <a-form-item 
                 label="Адреси"
-                :required="true"
                 has-feedback
                 :validate-status="addressesErrors.length ? 'error' : ''"
                 :help="addressesErrors">
@@ -61,6 +60,16 @@
                         Додати адресу
                     </a-button>
                 </a-flex>
+            </a-form-item>
+
+            <a-form-item 
+                label="Опис"
+                has-feedback
+                :validate-status="errors['description'] ? 'error' : ''"
+                :help="errors.description">
+                <a-textarea
+                    :rows="5"
+                    v-model:value="data.description"/>
             </a-form-item>
 
             <a-button
@@ -99,6 +108,7 @@ export default {
                 full_name: '',
                 phone: '',
                 addresses: [''],
+                description: '',
             },
             errors: {},
             loading: false,
@@ -132,7 +142,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.create(this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.addresses = data.addresses.filter(address => address)
+                const res = await api.create(data)
                 message.success('Успішно створено.')
                 this.$emit('create', res.client)
                 this.$emit('update:open', false)
@@ -150,7 +162,9 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.edit(this.data.id, this.data)
+                const data = JSON.parse(JSON.stringify(this.data))
+                data.addresses = data.addresses.filter(address => address)
+                const res = await api.edit(this.data.id, data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {

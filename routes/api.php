@@ -1,7 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\Analytics\IncomeController;
+use App\Http\Controllers\Admin\Analytics\OrdersController;
+use App\Http\Controllers\Admin\Analytics\ProductsController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\Auth\SendResetLinkController;
+use App\Http\Controllers\Admin\Cars\BulkDeleteController as CarsBulkDeleteController;
+use App\Http\Controllers\Admin\Cars\DeleteController as CarsDeleteController;
+use App\Http\Controllers\Admin\Cars\IndexController as CarsIndexController;
+use App\Http\Controllers\Admin\Cars\StoreController as CarsStoreController;
+use App\Http\Controllers\Admin\Cars\UpdateController as CarsUpdateController;
 use App\Http\Controllers\Admin\Couriers\Cashes\DeleteController as CashesDeleteController;
 use App\Http\Controllers\Admin\Couriers\Cashes\StoreController as CashesStoreController;
 use App\Http\Controllers\Admin\Couriers\Cashes\UpdateController as CashesUpdateController;
@@ -22,6 +30,7 @@ use App\Http\Controllers\Admin\Categories\Tags\UpdateController as TagsUpdateCon
 use App\Http\Controllers\Admin\Categories\UpdateController as CategoriesUpdateController;
 use App\Http\Controllers\Admin\Clients\BulkDeleteController as ClientsBulkDeleteController;
 use App\Http\Controllers\Admin\Clients\DeleteController as ClientsDeleteController;
+use App\Http\Controllers\Admin\Clients\FindOrCreateController;
 use App\Http\Controllers\Admin\Clients\IndexController as ClientsIndexController;
 use App\Http\Controllers\Admin\Clients\SearchController;
 use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController;
@@ -29,6 +38,7 @@ use App\Http\Controllers\Admin\Clients\UpdateController as ClientsUpdateControll
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Admin\Couriers\GetAllController as CouriersGetAllController;
+use App\Http\Controllers\Admin\Couriers\GetCurrentLocationsController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Admin\Couriers\UpdateController as CouriersUpdateController;
@@ -86,6 +96,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('index');
             Route::get('/all', CouriersGetAllController::class)
                 ->name('all');
+            Route::get('/current-locations', GetCurrentLocationsController::class)
+                ->name('current-locations');
             Route::post('/', CouriersStoreController::class)
                 ->name('store');
             Route::put('/{courier}', CouriersUpdateController::class)
@@ -168,6 +180,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('search');
             Route::post('/', ClientsStoreController::class)
                 ->name('store');
+            Route::post('/find-or-create', FindOrCreateController::class)
+                ->name('find-or-create');
             Route::put('/{client}', ClientsUpdateController::class)
                 ->name('update');
             Route::delete('/bulk', ClientsBulkDeleteController::class)
@@ -206,6 +220,28 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('bulk-delete');
             Route::delete('/{promotion}', PromotionsDeleteController::class)
                 ->name('delete');
+        });
+
+        Route::prefix('/cars')->name('cars.')->group(function () {
+            Route::get('/', CarsIndexController::class)
+                ->name('index');
+            Route::post('/', CarsStoreController::class)
+                ->name('store');
+            Route::put('/{car}', CarsUpdateController::class)
+                ->name('update');
+            Route::delete('/bulk', CarsBulkDeleteController::class)
+                ->name('bulk-delete');
+            Route::delete('/{car}', CarsDeleteController::class)
+                ->name('delete');
+        });
+
+        Route::prefix('/analytics')->name('analytics.')->group(function () {
+            Route::get('/income', IncomeController::class)
+                ->name('income');
+            Route::get('/orders', OrdersController::class)
+                ->name('orders');
+            Route::get('/products', ProductsController::class)
+                ->name('products');
         });
     });
 });
