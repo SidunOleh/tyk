@@ -14,6 +14,7 @@ use App\Http\Controllers\Clients\DeleteAddressController;
 use App\Http\Controllers\Clients\UpdatePersonalInfoController;
 use App\Http\Controllers\Fragments\RefreshController;
 use App\Http\Controllers\Orders\CheckoutController as OrdersCheckoutController;
+use App\Http\Controllers\Orders\OrderCarController as OrdersOrderCarController;
 use App\Http\Controllers\Orders\RepeatController;
 use App\Http\Controllers\Pages\AboutUsController;
 use App\Http\Controllers\Pages\CabinetController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Pages\CompleteController;
 use App\Http\Controllers\Pages\EstablishmentsController;
 use App\Http\Controllers\Pages\GetCatalogHtmlController;
 use App\Http\Controllers\Pages\HomeController;
+use App\Http\Controllers\Pages\OrderCarController;
 use App\Http\Controllers\Pages\ProductsController;
 use App\Http\Controllers\Pages\PromotionController;
 use Illuminate\Support\Facades\Route;
@@ -58,7 +60,7 @@ Route::post('/logout', AuthLogOutController::class)
  */
 Route::get('/', HomeController::class)
     ->name('pages.home'); 
-Route::get('/about-us', AboutUsController::class)
+Route::get('/pro-nas', AboutUsController::class)
     ->name('pages.about-us'); 
 Route::get('/akciyi/{promotion:slug}', PromotionController::class)
     ->name('pages.promotion'); 
@@ -75,8 +77,10 @@ Route::get('/korzyna', CartController::class)
     ->name('pages.cart'); 
 Route::get('/oformlennya', CheckoutController::class)
     ->name('pages.checkout');  
-Route::get('/complete', CompleteController::class)
+Route::get('/zaversheno', CompleteController::class)
     ->name('pages.complete'); 
+Route::get('/zamoviti-avto', OrderCarController::class)
+    ->name('pages.order-car'); 
 
 /**
  * Fragments
@@ -124,9 +128,16 @@ Route::prefix('/cart')->name('cart.')->group(function () {
 /**
  * Repeat order
  */
-Route::post('/orders/{order}/repeat/', RepeatController::class)
+Route::post('/orders/{order}/repeat', RepeatController::class)
     ->middleware(['auth:web',])
     ->name('orders.repeat'); 
+
+/**
+ * Order car
+ */
+Route::post('/orders/order-car', OrdersOrderCarController::class)
+    ->middleware(['auth:web',])
+    ->name('orders.order-car'); 
 
 /**
  * Checkout

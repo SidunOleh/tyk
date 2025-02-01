@@ -171,7 +171,7 @@
                 <a-button
                     v-if="action == 'edit'"
                     type="primary"
-                    @click="copyToClipboard">
+                    @click="copy">
                     Копіювати
                 </a-button>
             </a-flex>
@@ -320,10 +320,6 @@ export default {
             data.service = data.type
 
             if (data.service == 'Доставка їжі') {
-                data.details.food_to = data.details
-                    .food_to
-                    .map(address => address.address)
-
                 data.order_items = data.order_items?.map(item => {
                     return {
                         id: item.id,
@@ -332,25 +328,7 @@ export default {
                         amount: item.product.price,
                         product_id: item.product.id,
                     }
-                })
-            }
-
-            if (data.service == 'Кур\'єр') {
-                data.details.shipping_from = data.details
-                    .shipping_from
-                    .address
-                data.details.shipping_to = data.details
-                    .shipping_to
-                    .map(address => address.address)
-            }
-
-            if (data.service == 'Таксі') {
-                data.details.taxi_from = data.details
-                    .taxi_from
-                    .address
-                data.details.taxi_to = data.details
-                    .taxi_to
-                    .map(address => address.address)
+                }) ?? []
             }
 
             this.data = data
@@ -368,12 +346,9 @@ export default {
         },
         repeatOrder(order) {
             this.data.service = order.type
+            this.data.details = order.details
 
             if (this.data.service == 'Доставка їжі') {
-                this.data.details.food_to = order.details
-                    .food_to
-                    .map(address => address.address)
-
                 this.data.order_items = order.order_items?.map(item => {
                     return {
                         id: item.id,
@@ -382,25 +357,7 @@ export default {
                         amount: item.product.price,
                         product_id: item.product.id,
                     }
-                })
-            }
-
-            if (this.data.service == 'Кур\'єр') {
-                this.data.details.shipping_from = order.details
-                    .shipping_from
-                    .address
-                this.data.details.shipping_to = order.details
-                    .shipping_to
-                    .map(address => address.address)
-            }
-
-            if (this.data.service == 'Таксі') {
-                this.data.details.taxi_from = order.details
-                    .taxi_from
-                    .address
-                this.data.details.taxi_to = order.details
-                    .taxi_to
-                    .map(address => address.address)
+                }) ?? []
             }
         },
         async create() {
@@ -447,7 +404,7 @@ export default {
 
             return data
         },
-        copyToClipboard() {
+        copy() {
             let text = ''
             switch (this.data.service) {
                 case 'Доставка їжі':
@@ -469,21 +426,21 @@ export default {
             return `${this.data.service} №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
 Товари: ${this.data.order_items?.map(orderItem => `${orderItem.name} x ${orderItem.quantity}`).join(' | ')}
-Куди: ${this.data.details.food_to}
+Куди: ${this.data.details.food_to?.map(address => address.address).join(' | ')}
 Метод оплати: ${this.data.payment_method ?? ''}`
         },
         shippingText() {
             return `${this.data.service} №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
-Звідки: ${this.data.details.shipping_from}
-Куди: ${this.data.details.shipping_to?.join(' | ')}
+Звідки: ${this.data.details.shipping_from?.address}
+Куди: ${this.data.details.shipping_to?.map(address => address.address).join(' | ')}
 Метод оплати: ${this.data.payment_method ?? ''}`
         },
         taxiText() {
             return `${this.data.service} №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
-Звідки: ${this.data.details.taxi_from}
-Куди: ${this.data.details.taxi_to?.join(' | ')}
+Звідки: ${this.data.details.taxi_from?.address}
+Куди: ${this.data.details.taxi_to?.map(address => address.address).join(' | ')}
 Метод оплати: ${this.data.payment_method ?? ''}`
         },
     },

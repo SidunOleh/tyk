@@ -48,7 +48,19 @@
                 </ul>
             </div>
             <div class="col">
-                <a href="#" class="btn">Замовити кур’єра</a>
+                @auth('web')
+                <a 
+                    href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" 
+                    class="btn delivery_btn">
+                    Замовити кур’єра
+                </a>
+                @endauth
+
+                @guest('web')
+                <div class="btn delivery_btn unlogged">
+                    Замовити кур’єра
+                </div>
+                @endguest
                 <div class="download">
                     <p class="title">Завантажити додаток</p>
                     <div class="download-buttons">

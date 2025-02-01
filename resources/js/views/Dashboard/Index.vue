@@ -20,9 +20,9 @@
         <a-button @click="create.open = true">
             <PlusOutlined/>
         </a-button>
-        <!-- <a-button @click="map.open = true">
+        <a-button @click="map.open = true">
             <EnvironmentOutlined />
-        </a-button> -->
+        </a-button>
     </a-flex>
 
     <a-spin :spinning="loading">

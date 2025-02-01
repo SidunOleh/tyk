@@ -23,7 +23,7 @@ class AnalyticsService
             WHERE o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,]);
 
         $data['total'] = DB::select("
             SELECT SUM(total) total
@@ -31,7 +31,7 @@ class AnalyticsService
             WHERE DATE(created_at) >= DATE(:start) AND DATE(created_at) <= DATE(:end)
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,])[0]->total;
 
         $data['food_shipping_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, SUM(o.total) total
@@ -43,7 +43,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => Order::CANCELED,]);
 
         $data['food_shipping_total'] = DB::select("
             SELECT SUM(total) total
@@ -52,7 +52,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => Order::CANCELED,])[0]->total;
 
         $data['shipping_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, SUM(o.total) total
@@ -64,7 +64,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => Order::CANCELED,]);
 
         $data['shipping_total'] = DB::select("
             SELECT SUM(total) total
@@ -73,7 +73,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => Order::CANCELED,])[0]->total;
 
         $data['taxi_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, SUM(o.total) total
@@ -85,7 +85,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => Order::CANCELED,]);
 
         $data['taxi_total'] = DB::select("
             SELECT SUM(total) total
@@ -94,7 +94,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => Order::CANCELED,])[0]->total;
 
         return $data;
     }
@@ -115,7 +115,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,]);
 
         $data['total'] = DB::select("
             SELECT COUNT(id) total
@@ -123,7 +123,7 @@ class AnalyticsService
             WHERE DATE(created_at) >= DATE(:start) AND DATE(created_at) <= DATE(:end)
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,])[0]->total;
 
         $data['food_shipping_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, COUNT(o.id) total
@@ -135,7 +135,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => Order::CANCELED,]);
 
         $data['food_shipping_total'] = DB::select("
             SELECT COUNT(id) total
@@ -144,7 +144,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::FOOD_SHIPPING, 'status' => Order::CANCELED,])[0]->total;
 
         $data['shipping_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, COUNT(o.id) total
@@ -156,7 +156,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => Order::CANCELED,]);
 
         $data['shipping_total'] = DB::select("
             SELECT COUNT(id) total
@@ -165,7 +165,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::SHIPPING, 'status' => Order::CANCELED,])[0]->total;
 
         $data['taxi_data'] = DB::select($this->cteDateRange() . "
             SELECT dr.date date, COUNT(o.id) total
@@ -177,7 +177,7 @@ class AnalyticsService
             AND o.deleted_at IS NULL
             GROUP BY dr.date
             ORDER BY dr.date
-        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => Order::CANCELED,]);
 
         $data['taxi_total'] = DB::select("
             SELECT COUNT(id) total
@@ -186,7 +186,7 @@ class AnalyticsService
             AND type = :type
             AND status != :status
             AND deleted_at IS NULL
-        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => 'Скасовано',])[0]->total;
+        ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => Order::CANCELED,])[0]->total;
 
         return $data;
     }
@@ -221,7 +221,7 @@ class AnalyticsService
             GROUP BY o_i.product_id
             ORDER BY SUM(o_i.amount * o_i.quantity) DESC
             LIMIT 15
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,]);
 
         $data['zaklady_top'] = DB::select("
             SELECT c.name, SUM(o_i.quantity) quantity, SUM(o_i.amount * o_i.quantity) total
@@ -239,7 +239,7 @@ class AnalyticsService
             GROUP BY c.id
             ORDER BY SUM(o_i.amount * o_i.quantity) DESC
             LIMIT 15
-        ", ['start' => $start, 'end' => $end, 'status' => 'Скасовано',]);
+        ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED,]);
 
         return $data;
     }

@@ -6,24 +6,19 @@
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
         <a-select
-            v-model:value="details.food_to"
+            v-model:value="to"
             placeholder="Виберіть адресу"
             mode="tags"
             :options="addressOptions">
             <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu" />
-                <a-divider style="margin: 4px 0" />
+                <component :is="menu"/>
+                <a-divider style="margin: 4px 0"/>
                 <a-flex 
                     style="padding: 4px 8px"
                     :gap="5">
                     <AddressInput 
-                        v-model:address="newAddress"/>
-                    <a-button @click="addAddress">
-                        <template #icon>
-                            <PlusOutlined/>
-                        </template>
-                        Додати
-                    </a-button>
+                        v-model:address="address"
+                        @placeChanged="address => {addAddress(); to.push(address.address)}"/>
                 </a-flex>
             </template>
         </a-select>
@@ -45,14 +40,10 @@
 </template>
 
 <script>
-import {
-    PlusOutlined,
-} from '@ant-design/icons-vue'
 import AddressInput from '../../components/AddressInput.vue'
 
 export default {
     components: {
-        PlusOutlined,
         AddressInput,
     },
     props: [
@@ -62,27 +53,33 @@ export default {
     ],
     data() {
         return {
+            to: [],
             addresses: [],
-            newAddress: '',
+            address: {
+                address: '',
+                lat: null,
+                lng: null,
+            },
         }
     },
     computed: {
         addressOptions() {
             return this.addresses.map(address => {
                 return {
-                    value: address,
+                    value: address.address,
                 }
             })
         },
         toErrors() {
             const errors = []
             for (const field in this.errors) {
-                if (field.match(/^details\.food_to\.\d$/)) {
-                    errors.push(`${this.errors[field]} №${Number(field.split('.').pop())+1}`)
+                if (field == 'details.food_to') {
+                    errors.push(this.errors[field])
                 }
 
-                if (field.match(/^details\.food_to$/)) {
-                    errors.push(`${this.errors[field]}`)
+                let matches = field.match(/^details\.food_to\.(\d)\.(address|lat|lng)$/)
+                if (matches) {
+                    errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
             }
 
@@ -91,32 +88,52 @@ export default {
     },
     methods: {
         setAddresses() {
-            this.addresses = this.client
-                .addresses
-                ?.map(address => address.address) ?? []
+            this.addresses = [
+                ...this.client?.addresses ?? [],
+                ...this.details.food_to
+            ]
         },
         addAddress() {
-            if (this.newAddress) {
-                this.addresses.push(this.newAddress)
-                this.newAddress = ''
+            this.addresses.push(this.address)
+
+            this.address = {
+                address: '',
+                lat: null,
+                lng: null,
             }
         },
     },
     watch: {
         client: {
-            handler() {
+            handler(client) {
                 this.setAddresses()
+            },
+            deep: true,
+        },
+        to: {
+            handler(to) {
+                this.details.food_to = to.map(to => {
+                    const address = this.addresses.find(address => address.address == to)
+                    
+                    return {
+                        address: to,
+                        lat: address?.lat ?? null,
+                        lng: address?.lng ?? null,
+                    }
+                })
             },
             deep: true,
         },
     },
     mounted() {
-        this.details.food_to = this.details.food_to ?? []
-        this.details.delivery_time = this.details.delivery_time 
-            ? this.details.delivery_time 
-            : ''
+        this.details.food_to = 
+            this.details.food_to ?? []
+        this.details.delivery_time = 
+            this.details.delivery_time ? this.details.delivery_time : ''
 
         this.setAddresses()
+
+        this.to = this.details.food_to.map(address => address.address)
     },
 }
 </script>

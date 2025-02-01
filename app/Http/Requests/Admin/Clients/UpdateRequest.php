@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin\Clients;
 
-use App\Rules\ExistsAddress;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -35,11 +34,10 @@ class UpdateRequest extends FormRequest
                     ->id),
             ],
             'addresses' => 'array',
-            'addresses.*' => [
-                'required',
-                'string',
-                new ExistsAddress,
-            ],
+            'addresses.*' => 'array',
+            'addresses.*.address' => 'required|string',
+            'addresses.*.lat' => 'required|between:-90,90',
+            'addresses.*.lng' => 'required|between:-180,180',
             'description' => 'string|nullable',
         ];
     }

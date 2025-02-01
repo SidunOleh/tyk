@@ -6973,6 +6973,27 @@ form.error .error-txt {
     background: white;
     display: none;
     box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+    max-height: 155px;
+    overflow: auto;
+}
+
+.addresses-history::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+}
+
+.addresses-history::-webkit-scrollbar-track {
+    background: white;
+}
+
+.addresses-history:hover::-webkit-scrollbar-thumb {
+    background-color: hsl(0deg 0% 78.43%);
+}
+
+.addresses-history::-webkit-scrollbar-thumb {
+    background-color: hsl(0deg 0% 83.53%);
+    border-radius: 20px;
+    border: 3px solid white;
 }
 
 .addresses-history .address {

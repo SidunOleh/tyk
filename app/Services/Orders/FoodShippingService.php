@@ -10,7 +10,6 @@ use App\Services\Cart\Cart;
 use App\Services\Cart\CartItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class FoodShippingService extends OrderService
 {
@@ -20,15 +19,8 @@ class FoodShippingService extends OrderService
 
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
-        $addresses = [];
-        foreach ($data['details']['food_to'] as $address) {
-            $addresses[] = array_merge(['address' => $address], $this->getLatLng($address));
-        }
-        $details['food_to'] = $addresses;
-        $details['delivery_time'] = 
-            $data['details']['delivery_time'] ?? null;
-
-        Client::find($data['client_id'])->addAddresses($details['food_to']);
+        $details['food_to'] = $data['details']['food_to'];
+        $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
 
         $order = Order::create([
             'type' => $data['service'],
@@ -37,16 +29,16 @@ class FoodShippingService extends OrderService
             'time' => $time,
             'duration' => $data['duration'],
             'notes' => $data['notes'] ?? '',
-            'status' => 'Створено',
+            'status' => Order::CREATED,
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
         ]);
-
         $order->orderItems()->createMany($request['order_items']);
-
         $order->updateAmount();
+
+        Client::find($data['client_id'])->addAddresses($details['food_to']);
 
         return $order;
     }
@@ -55,15 +47,8 @@ class FoodShippingService extends OrderService
     {
         $data = $request->validated();
 
-        $addresses = [];
-        foreach ($data['details']['food_to'] as $address) {
-            $addresses[] = array_merge(['address' => $address], $this->getLatLng($address));
-        }
-        $details['food_to'] = $addresses;
-        $details['delivery_time'] = 
-            $data['details']['delivery_time'] ?? null;
-
-        Client::find($data['client_id'])->addAddresses($details['food_to']);
+        $details['food_to'] = $data['details']['food_to'];
+        $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
 
         $order->update([
             'type' => $data['service'],
@@ -97,6 +82,8 @@ class FoodShippingService extends OrderService
         }, $data['order_items']);
 
         $order->updateAmount();
+
+        Client::find($data['client_id'])->addAddresses($details['food_to']);
     }
 
     public function repeat(Order $order): void
@@ -119,27 +106,17 @@ class FoodShippingService extends OrderService
     
     public function checkout(CheckoutRequest $request): Order
     {
-        $validated = $request->validated();
+        $data = $request->validated();
 
-        if (Auth::guard('web')->check()) {
-            $client = Auth::guard('web')->user();
-        } else {
-            $client = Client::firstOrCreate([
-                'phone' => $validated['phone']
-            ]);
-        }
+        $client = Client::firstOrCreate(['phone' => $data['phone']]);
+        $client->update(['full_name' => $data['full_name']]);
 
-        $client->update([
-            'full_name' => $request['full_name']
-        ]);
+        $address = $this->getLatLng($data['address']);
+        $address['address'] = $data['address'];
 
-        $foodTo = $this->getLatLng($validated['address']);
-        $foodTo['address'] = $validated['address'];
+        $client->addAddresses([$address]);
 
-        $client->addAddresses([$foodTo]);
-
-        $delivetyTime = $validated['delivery_time'];
-        if ($delivetyTime) {
+        if ($delivetyTime = $data['delivery_time'] ?? null) {
             $delivetyTime = now()
                 ->hour((int) explode(':', $delivetyTime)[0])
                 ->minute((int) explode(':', $delivetyTime)[1])
@@ -151,12 +128,12 @@ class FoodShippingService extends OrderService
             'time' => now()->format('Y-m-d H:i:s'),
             'duration' => 30,
             'notes' => $validated['notes'] ?? '',
-            'status' => 'Створено',
+            'status' => Order::CREATED,
             'client_id' => $client->id,
-            'payment_method' => $validated['payment_method'],
+            'payment_method' => $data['payment_method'],
             'details' => [
                 'food_to' => [
-                    $foodTo
+                    $address
                 ],
                 'delivery_time' => $delivetyTime,
             ],
@@ -171,8 +148,9 @@ class FoodShippingService extends OrderService
             'order_id' => $order->id,
             'product_id' => $cartItem->product->id,
         ], $cart->items));
+        
         $order->updateAmount();
-
+        
         $cart->empty();
 
         return $order;

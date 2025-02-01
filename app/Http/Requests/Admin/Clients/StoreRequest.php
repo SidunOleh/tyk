@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin\Clients;
 
-use App\Rules\ExistsAddress;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -26,10 +25,10 @@ class StoreRequest extends FormRequest
             'full_name' => 'required|string',
             'phone' => 'required|string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/|unique:clients,phone',
             'addresses' => 'array',
-            'addresses.*' => [
-                'string',
-                new ExistsAddress,
-            ],
+            'addresses.*' => 'array',
+            'addresses.*.address' => 'required|string',
+            'addresses.*.lat' => 'required|between:-90,90',
+            'addresses.*.lng' => 'required|between:-180,180',
             'description' => 'string|nullable',
         ];
     }

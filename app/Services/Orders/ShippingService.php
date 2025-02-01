@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\Http\Requests\Orders\OrderCarRequest;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
@@ -16,17 +17,8 @@ class ShippingService extends OrderService
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
         $details['shipping_type'] = $data['details']['shipping_type']; 
-        $details['shipping_from'] = array_merge(['address' => $data['details']['shipping_from']], $this->getLatLng($data['details']['shipping_from']));
-        $addresses = [];
-        foreach ($data['details']['shipping_to'] as $address) {
-            $addresses[] = array_merge(['address' => $address], $this->getLatLng($address));
-        }
-        $details['shipping_to'] = $addresses;
-
-        Client::find($data['client_id'])->addAddresses([
-            $details['shipping_from'],
-            ...$details['shipping_to'],
-        ]);
+        $details['shipping_from'] = $data['details']['shipping_from'];
+        $details['shipping_to'] = $data['details']['shipping_to'];
 
         $order = Order::create([
             'type' => $data['service'],
@@ -35,14 +27,16 @@ class ShippingService extends OrderService
             'time' => $time,
             'duration' => $data['duration'],
             'notes' => $data['notes'] ?? '',
-            'status' => 'Створено',
+            'status' => Order::CREATED,
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
         ]);
-
         $order->updateAmount();
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
 
         return $order;
     }
@@ -50,19 +44,10 @@ class ShippingService extends OrderService
     public function update(Model $order, FormRequest $request): void
     {
         $data = $request->validated();
-
+        
         $details['shipping_type'] = $data['details']['shipping_type']; 
-        $details['shipping_from'] = array_merge(['address' => $data['details']['shipping_from']], $this->getLatLng($data['details']['shipping_from']));
-        $addresses = [];
-        foreach ($data['details']['shipping_to'] as $address) {
-            $addresses[] = array_merge(['address' => $address], $this->getLatLng($address));
-        }
-        $details['shipping_to'] = $addresses;
-
-        Client::find($data['client_id'])->addAddresses([
-            $details['shipping_from'],
-            ...$details['shipping_to'],
-        ]);
+        $details['shipping_from'] = $data['details']['shipping_from'];
+        $details['shipping_to'] = $data['details']['shipping_to'];
 
         $order->update([
             'type' => $data['service'],
@@ -76,12 +61,41 @@ class ShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
         ]);
-
         $order->updateAmount();
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
     }
 
     public function repeat(Order $order): void
     {
         
+    }
+
+    public function orderCar(OrderCarRequest $request): Order
+    {
+        $data = $request->validated();
+
+        $time = $data['time'] ?? now()->format('Y-m-d H:m:i');
+        $duration = 30;
+
+        $details['shipping_from'] = $data['from'];
+        $details['shipping_to'] = [$data['to']];
+
+        $client = auth('web')->user();
+
+        $order = Order::create([
+            'type' => $data['service'],
+            'time' => $time,
+            'duration' => $duration,
+            'status' => Order::CREATED,
+            'client_id' => $client->id,
+            'payment_method' => $data['payment_method'],
+            'details' => $details,
+        ]);
+
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+
+        return $order;
     }
 }

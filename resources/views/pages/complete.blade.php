@@ -23,6 +23,8 @@
                     <img src="{{ asset('/assets/img/delMan.svg') }}" alt="" class="man" />
                 </div>
             </div>
+
+            @if ($order->type == App\Models\Order::FOOD_SHIPPING)
             <div class="cartSubtotal">
                 <div class="subtotal-list">
                     <div class="subtotal-item">
@@ -54,6 +56,53 @@
                     </p>
                 </div>
             </div>
+            @endif
+
+            @if ($order->type == App\Models\Order::SHIPPING)
+            <div class="cartSubtotal">
+                <div class="subtotal-list">
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Звідки
+                        </p>
+                        <p class="sum">
+                            {{ $order->details['shipping_from']['address'] }}
+                        </p>
+                    </div>
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Куди
+                        </p>
+                        <p class="sum">
+                            {{ implode(', ', array_map(fn ($address) => $address['address'], $order->details['shipping_to'])) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if ($order->type == App\Models\Order::TAXI)
+            <div class="cartSubtotal">
+                <div class="subtotal-list">
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Звідки
+                        </p>
+                        <p class="sum">
+                            {{ $order->details['taxi_from']['address'] }}
+                        </p>
+                    </div>
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Куди
+                        </p>
+                        <p class="sum">
+                            {{ implode(', ', array_map(fn ($address) => $address['address'], $order->details['taxi_to'])) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
         <a href="{{ route('pages.home') }}" class="btn">
             Повернутися на головну

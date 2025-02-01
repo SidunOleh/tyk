@@ -35,6 +35,8 @@ return [
         ],
     ],
 
+    'google_maps_key' => env('GOOGLE_MAPS_KEY'),
+
     'mapon_api_key' => env('MAPON_API_KEY'),
 
     'phonet' => [

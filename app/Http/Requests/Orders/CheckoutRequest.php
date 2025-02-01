@@ -29,7 +29,9 @@ class CheckoutRequest extends FormRequest
             'phone' => [
                 'required',
                 'regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
-                Rule::unique('clients', 'phone')->ignore(Auth::guard('web')->id()),
+                auth('web')->check() 
+                    ?  Rule::unique('clients', 'phone')->ignore(Auth::guard('web')->id()) 
+                    : '',
             ],
             'address' => [
                 'required',

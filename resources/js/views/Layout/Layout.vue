@@ -17,21 +17,21 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="clients">
-                    <template #icon>
-                        <WalletOutlined/>
-                    </template>
-                    <router-link :to="{name: 'clients.index'}">
-                        Клієнти
-                    </router-link>
-                </a-menu-item>
-
                 <a-menu-item key="orders">
                     <template #icon>
                         <ShoppingCartOutlined/>
                     </template>
                     <router-link :to="{name: 'orders.index'}">
                         Замовлення
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="clients">
+                    <template #icon>
+                        <WalletOutlined/>
+                    </template>
+                    <router-link :to="{name: 'clients.index'}">
+                        Клієнти
                     </router-link>
                 </a-menu-item>
 
@@ -44,14 +44,14 @@
                     </router-link>
                 </a-menu-item>
 
-                <!-- <a-menu-item key="cars">
+                <a-menu-item key="cars">
                     <template #icon>
                         <CarOutlined/>
                     </template>
                     <router-link :to="{name: 'cars.index'}">
                         Автомобілі
                     </router-link>
-                </a-menu-item> -->
+                </a-menu-item>
 
                 <a-sub-menu>
                     <template #icon>
@@ -197,29 +197,29 @@ export default {
 
         this.selectedKeys.push(this.$router.currentRoute.value.meta.key)
 
-        // if (typeof phonetConf !== 'undefined') {
-        //     const phonet = new Phonet(phonetConf)
+        if (typeof phonetConf !== 'undefined') {
+            const phonet = new Phonet(phonetConf)
 
-        //     phonet.listen('call.bridge', async call => {
-        //         const client = {}
-        //         const phone = call.otherLegs[0].num
-        //         client.phone = `(${phone[3] + phone[4] + phone[5]}) ${phone[6] + phone[7] + phone[8]}-${phone[9] + phone[10]}-${phone[11] + phone[12]}`
-        //         client.full_name = call.otherLegs[0].name
+            phonet.listen('call.bridge', async call => {
+                const client = {}
+                const phone = call.otherLegs[0].num
+                client.phone = `(${phone[3] + phone[4] + phone[5]}) ${phone[6] + phone[7] + phone[8]}-${phone[9] + phone[10]}-${phone[11] + phone[12]}`
+                client.full_name = call.otherLegs[0].name
 
-        //         if (client.phone == this.order.client?.phone && this.order.create) {
-        //             return
-        //         }
+                if (client.phone == this.order.client?.phone && this.order.create) {
+                    return
+                }
 
-        //         this.order.create = false
+                this.order.create = false
 
-        //         const res = await clientsApi.findOrCreate(client)
-        //         this.order.client = res.client
+                const res = await clientsApi.findOrCreate(client)
+                this.order.client = res.client
 
-        //         setTimeout(() => {
-        //             this.order.create = true
-        //         })
-        //     })
-        // }
+                setTimeout(() => {
+                    this.order.create = true
+                })
+            })
+        }
     },
 }
 </script>

@@ -107,7 +107,11 @@ export default {
             data: {
                 full_name: '',
                 phone: '',
-                addresses: [''],
+                addresses: [{
+                    address: '',
+                    lat: null,
+                    lng: null,
+                }],
                 description: '',
             },
             errors: {},
@@ -118,12 +122,13 @@ export default {
         addressesErrors() {
             const errors = []
             for (const field in this.errors) {
-                if (field.match(/^addresses\.\d$/)) {
-                    errors.push(`${this.errors[field]} №${Number(field.split('.').pop())+1}`)
+                if (field == 'addresses') {
+                    errors.push(this.errors[field])
                 }
 
-                if (field.match(/^addresses$/)) {
-                    errors.push(`${this.errors[field]}`)
+                let matches = field.match(/^addresses\.(\d)\.(address|lat|lng)$/)
+                if (matches) {
+                    errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
             }
 
@@ -133,7 +138,11 @@ export default {
     methods: {
         formatPhone,
         addAddress() {
-            this.data.addresses.push('')
+            this.data.addresses.push({
+                address: '',
+                lat: null,
+                lng: null,
+            })
         },
         removeAddress(i) {
             this.data.addresses.splice(i, 1)
@@ -143,7 +152,7 @@ export default {
                 this.loading = true
                 this.errors = {}
                 const data = JSON.parse(JSON.stringify(this.data))
-                data.addresses = data.addresses.filter(address => address)
+                data.addresses = data.addresses.filter(address => address.address)
                 const res = await api.create(data)
                 message.success('Успішно створено.')
                 this.$emit('create', res.client)
@@ -163,7 +172,7 @@ export default {
                 this.loading = true
                 this.errors = {}
                 const data = JSON.parse(JSON.stringify(this.data))
-                data.addresses = data.addresses.filter(address => address)
+                data.addresses = data.addresses.filter(address => address.address)
                 const res = await api.edit(this.data.id, data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
@@ -181,9 +190,6 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
-            this.data.addresses = this.data
-                .addresses
-                .map(address => address.address)
         }
     },
 }

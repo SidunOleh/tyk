@@ -46,12 +46,12 @@ abstract class OrderService extends Service
 
     public function changeStatus(Order $order, string $status): void
     {
-        $order->update(['status' => $status,]);
+        $order->update(['status' => $status]);
     }
 
     public function changeCourier(Order $order, ?int $courierId): void
     {
-        $order->update(['courier_id' => $courierId,]);
+        $order->update(['courier_id' => $courierId]);
     }
 
     abstract public function repeat(Order $order): void;
@@ -59,11 +59,11 @@ abstract class OrderService extends Service
     public static function make(string $type): self
     {
         switch ($type) {
-            case 'Доставка їжі':
+            case Order::FOOD_SHIPPING:
                 return new FoodShippingService;
-            case 'Кур\'єр':
+            case Order::SHIPPING:
                 return new ShippingService;
-            case 'Таксі':
+            case Order::TAXI:
                 return new TaxiService;
             default:
                 throw new Exception('Unexpected type: ' . $type);

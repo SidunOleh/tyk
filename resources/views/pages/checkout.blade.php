@@ -33,7 +33,8 @@
                     <div class="address-select">
                         <div class="form-group input-box">
                             <input  
-                                autocomplete="__away"
+                                data-with-history
+                                autocomplete="off"
                                 class="autocomplete"
                                 type="text" 
                                 name="address" 
@@ -151,6 +152,6 @@
     </div>
 </section>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.key') }}&libraries=places&language=uk&region=ua"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places&language=uk&region=ua"></script>
 
 @include('templates.footer')

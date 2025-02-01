@@ -346,6 +346,17 @@ $(document).on('click', '.additions-item .add', async function() {
  * Login
  */
 $('.account_btn.unlogged').on('click', () => {
+    $('#login').attr('data-redirect', '/cabinet')
+    $('.popUp-Wrapper.signIn').addClass('open')
+})
+
+$('.delivery_btn.unlogged').on('click', () => {
+    $('#login').attr('data-redirect', '/zamoviti-avto?service=Кур\'єр')
+    $('.popUp-Wrapper.signIn').addClass('open')
+})
+
+$('.taxi_btn.unlogged').on('click', () => {
+    $('#login').attr('data-redirect', '/zamoviti-avto?service=Таксі')
     $('.popUp-Wrapper.signIn').addClass('open')
 })
 
@@ -380,7 +391,7 @@ $('#login').on('submit', async function(e) {
         resetFormErrors($(this))
         loading($('.signIn-popUp'))
         await login($(this).find('input[name=code]').val())
-        location.href = '/cabinet'
+        location.href = $('#login').data('redirect')
     } catch (err) {
         console.error(err)
         showFormErrors($(this), err)
@@ -463,7 +474,12 @@ $('.autocomplete').each((i, item) => {
     new google
         .maps
         .places
-        .Autocomplete(item, {componentRestrictions: {country: 'ua'}})
+        .Autocomplete(item, {
+            componentRestrictions: {
+                country: 'ua',
+            }, 
+            types: ['geocode'],
+        })
 })
 
 $('.addNew').on('click', () => {
@@ -519,6 +535,32 @@ $('.delete-popUp .btn.clear').on('click', async function () {
 })
 
 /**
+ * Address history
+ */
+ $('[data-with-history]').on('focus input', function () {
+    if (! $(this).val()) {
+        $(this).closest('.address-select').addClass('show-history')
+    } else {
+        $(this).closest('.address-select').removeClass('show-history')
+    }
+})
+
+$('.addresses-history .address').on('click', function () {
+    $(this).closest('.address-select').find('input').val(
+        $(this).data('address')
+    )
+    $(this).closest('.address-select').removeClass('show-history')
+})
+
+$(document).on('click', '*', function (e) {
+    $('.address-select').not($(this).closest('.address-select')).removeClass('show-history')
+
+    if ($(this).closest('.address-select').length) {
+        e.stopPropagation()
+    }
+})
+
+/**
  * Checkout 
  */
 $('#checkout-form input[name=phone]').on('input', function() {
@@ -539,36 +581,13 @@ $('#delivery-time').on('input', function() {
     }
 })
 
-$('.addresses-history .address').on('click', function () {
-    $('#checkout-form input[name=address]').val(
-        $(this).data('address')
-    )
-    $('.address-select').removeClass('show-history')
-})
-
-$('#checkout-form input[name=address]').on('focus input', function () {
-    if (! $(this).val()) {
-        $('.address-select').addClass('show-history')
-    } else {
-        $('.address-select').removeClass('show-history')
-    }
-})
-
-$(document).on('click', '*', function (e) {
-    if (! $(this).closest('.address-select').length) {
-        $('.address-select').removeClass('show-history')
-    } else {
-        e.stopPropagation()
-    }
-})
-
 $('#checkout-form').on('submit', async function (e) {
     try {
         e.preventDefault()
         resetFormErrors($(this))
         loading($('.checkout .container'))
         const res = await checkout($(this).serialize())
-        location.href = `/complete?order=${res.id}`
+        location.href = `/zaversheno?order=${res.id}`
     } catch (err) {
         console.error(err)
         showFormErrors($(this), err)

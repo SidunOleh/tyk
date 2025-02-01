@@ -74,6 +74,10 @@ class Order extends Model
     public const SHIPPING = 'Кур\'єр';
 
     public const TAXI = 'Таксі';
+    
+    public const CREATED = 'Створено';
+
+    public const CANCELED = 'Скасовано';
 
     protected static function booted(): void
     {

@@ -55,14 +55,14 @@
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
                             </p>
-                            <button class="btn">
+                            <button class="btn food">
                                 Повторити
                             </button>
                         </div>
                         @endif
 
                         @if ($order->type == App\Models\Order::SHIPPING)
-                        <div class="history-item" data-id="{{ $order->id }}">
+                        <div class="history-item">
                             <p class="date">
                                 {{ $order->created_at->format('d.m.Y') }}
                             </p>
@@ -78,14 +78,14 @@
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
                             </p>
-                            <button class="btn">
+                            <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити
-                            </button>
+                            </a>
                         </div>
                         @endif
 
                         @if ($order->type == App\Models\Order::TAXI)
-                        <div class="history-item" data-id="{{ $order->id }}">
+                        <div class="history-item">
                             <p class="date">
                                 {{ $order->created_at->format('d.m.Y') }}
                             </p>
@@ -101,9 +101,9 @@
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
                             </p>
-                            <button class="btn">
+                            <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити
-                            </button>
+                            </a>
                         </div>
                         @endif
 
@@ -245,7 +245,7 @@
     </div>
 </section>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.key') }}&libraries=places&language=uk&region=ua"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places&language=uk&region=ua"></script>
 
 @include('modals.delete')
 
