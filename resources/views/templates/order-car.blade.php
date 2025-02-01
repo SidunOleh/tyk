@@ -745,6 +745,7 @@ const orderCar = {
             zoom: 13,
             mapId: '1',
             disableDefaultUI: true,
+            scrollwheel: true,
         })
 
         this.addresses.push({
