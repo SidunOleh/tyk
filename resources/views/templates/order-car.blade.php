@@ -307,6 +307,7 @@
             padding: 0;
             min-height: auto;
             height: 100vh;
+            overflow: hidden;
         }
 
         .order-car .container {
@@ -334,7 +335,7 @@
             left: 50%;
             z-index: 3;
             transform: translate(-50%, 0);
-            background-color: white;
+            background-color: #f8f8f8;
             border-radius: 10px 10px 0 0;
             display: flex;
             justify-content: center;
@@ -344,7 +345,7 @@
         .order-car__body.close .order-car__left {
            flex: 0;
            padding: 0;
-           border: 0;
+           /* border: 0; */
         }
 
         .order-car__body.close .arrow svg {
