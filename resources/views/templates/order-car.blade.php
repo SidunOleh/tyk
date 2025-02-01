@@ -296,6 +296,23 @@
         margin: 15px 0; 
         font-size: 12px;
     }
+
+    @media (max-width: 425px) {
+        .order-car {
+            margin: 0;
+            padding: 0;
+            min-height: auto;
+        }
+
+        .order-car .container {
+            padding: 0 !important;
+        }
+
+        .order-car__body {
+            height: 100vh;
+            gap: 0;
+        }
+    }
 </style>
 
 <section 

@@ -80,7 +80,19 @@
                 <div class="info">
                     <p class="title_32">Таксі</p>
                     <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
-                    <div class="btn open-taxi">Замовити таксі</div>
+                    @auth('web')
+                    <a 
+                        href="{{ route('pages.order-car', ['service' => 'Таксі']) }}" 
+                        class="btn taxi_btn">
+                        Замовити таксі
+                    </a>
+                    @endauth
+
+                    @guest('web')
+                    <div class="btn taxi_btn unlogged">
+                        Замовити таксі
+                    </div>
+                    @endguest
                 </div>
             </div>
             <div class="hero__item">
@@ -89,7 +101,19 @@
                 <div class="info">
                     <p class="title_32">Кур’єрські послуги</p>
                     <p class="text_18">Створюємо зручний та якісний сервіс для заощадження вашого часу</p>
-                    <div class="btn open-delivery">Викликати кур’єра</div>
+                    @auth('web')
+                    <a 
+                        href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" 
+                        class="btn delivery_btn">
+                        Викликати кур’єра
+                    </a>
+                    @endauth
+
+                    @guest('web')
+                    <div class="btn delivery_btn unlogged">
+                        Викликати кур’єра
+                    </div>
+                    @endguest
                 </div>
             </div>
         </div>
