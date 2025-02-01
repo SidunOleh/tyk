@@ -333,7 +333,7 @@
             position: absolute;
             top: -20px;
             left: 50%;
-            z-index: 3;
+            z-index: 2;
             transform: translate(-50%, 0);
             background-color: #f8f8f8;
             border-radius: 10px 10px 0 0;
