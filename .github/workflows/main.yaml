@@ -61,7 +61,7 @@ jobs:
           port: 22
           script: |
               cd /var/www/tyk
-              chown -R daemon:daemon .
+              chown -R www-data:www-data .
               find . -type d -exec chmod 755 {} \;
               chmod -R 775 storage bootstrap/cache
               find . -type f -exec chmod 644 {} \;
