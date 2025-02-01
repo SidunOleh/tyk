@@ -302,6 +302,7 @@
             margin: 0;
             padding: 0;
             min-height: auto;
+            height: 100vh;
         }
 
         .order-car .container {
@@ -311,6 +312,10 @@
         .order-car__body {
             height: 100vh;
             gap: 0;
+        }
+
+        .footer {
+            display: none;
         }
     }
 </style>
