@@ -151,11 +151,11 @@ export default {
         setAddresses() {
             this.addresses = [
                 ...this.client?.addresses ?? [],
-                ...this.details.shipping_to
+                ...this.details.shipping_to,
             ]
 
             if (this.details.shipping_from.address) {
-                this.addresses.push(this.details.shipping_from.address)
+                this.addresses.push(this.details.shipping_from)
             }
         },
         addAddress() {

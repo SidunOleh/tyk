@@ -120,7 +120,7 @@ export default {
             ]
 
             if (this.details.taxi_from.address) {
-                this.addresses.push(this.details.taxi_from.address)
+                this.addresses.push(this.details.taxi_from)
             }
         },
         addAddress() {
