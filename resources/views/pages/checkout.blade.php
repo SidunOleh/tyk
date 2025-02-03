@@ -44,7 +44,7 @@
 
                         @if ($client?->addresses)
                         <div class="addresses-history">
-                            @foreach ($client->addresses ?? [] as $address)
+                            @foreach ($client->addresses as $address)
                             <div class="address" data-address="{{ $address['address'] }}">
                                 <svg width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
                                     <path d="M15.5 15.4996C15.2 15.4996 15 15.3996 14.8 15.1996L11.8 12.1996C11.6 11.9996 11.5 11.7996 11.5 11.4996V6.59961C11.5 5.99961 11.9 5.59961 12.5 5.59961C13.1 5.59961 13.5 5.99961 13.5 6.59961V10.9996L16.2 13.6996C16.6 14.0996 16.6 14.6996 16.2 15.0996C16 15.3996 15.8 15.4996 15.5 15.4996Z" fill="#454754"></path>

@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Categories\GetTreeController;
 use App\Http\Controllers\Admin\Categories\IndexController as CategoriesIndexController;
 use App\Http\Controllers\Admin\Categories\ReorderController;
 use App\Http\Controllers\Admin\Categories\ReorderProductsController;
+use App\Http\Controllers\Admin\Categories\SearchZakladyController;
 use App\Http\Controllers\Admin\Categories\StoreController as CategoriesStoreController;
 use App\Http\Controllers\Admin\Categories\Tags\DeleteController as TagsDeleteController;
 use App\Http\Controllers\Admin\Categories\Tags\GetController;
@@ -141,6 +142,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('tree');
             Route::get('/{category}/products', GetProducts::class)
                 ->name('products');
+            Route::get('/search-zaklady', SearchZakladyController::class)
+                ->name('search-zaklady');
             Route::post('/', CategoriesStoreController::class)
                 ->name('store');
             Route::put('/{category}', CategoriesUpdateController::class)

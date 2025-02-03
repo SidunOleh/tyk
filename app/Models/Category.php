@@ -79,6 +79,11 @@ class Category extends Model
         ], 'like', "%{$s}%");
     }
 
+    public function scopeZaklad(Builder $query): void
+    {
+        $query->whereNull('parent_id');
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(CategoryTag::class);

@@ -6,12 +6,28 @@
         :validate-status="errors['order_items'] ? 'error' : ''"
         :help="errors['order_items']">
         <a-select
+            style="width: 100%; margin-bottom: 5px;"
+            placeholder="Знайдіть заклад"
+            :filter-option="false"
+            :options="zakladOptions"
+            :showSearch="true"
+            v-model:value="zaklady.selected"
+            @search="fetchZaklady">
+            <template 
+                v-if="zaklady.fetching" 
+                #notFoundContent>
+                <a-spin 
+                    style="width: 100%" 
+                    size="small"/>
+            </template>
+        </a-select>
+        <a-select
             style="width: 100%"
             placeholder="Знайдіть товар"
             :filter-option="false"
             :options="productOptions"
             :showSearch="true"
-            v-model:value="selected"
+            v-model:value="products.selected"
             @search="fetchProducts"
             @select="addToCart">
             <template 
@@ -85,6 +101,7 @@
 
 <script>
 import productsApi from '../../../api/products'
+import categoriesApi from '../../../api/categories'
 import { formatPrice } from '../../../helpers/helpers'
 
 export default {
@@ -94,14 +111,27 @@ export default {
     ],
     data() {
         return {
+            zaklady: {
+                data: [],
+                fetching: false,
+                selected: null,
+            },
             products: {
                 data: [],
                 fetching: false,
+                selected: null,
             },
-            selected: null,
         }
     },
     computed: {
+        zakladOptions() {
+            return this.zaklady.data.map(zaklad => {
+                return {
+                    label: zaklad.name,
+                    value: zaklad.id, 
+                }
+            })
+        },
         productOptions() {
             return this.products.data.map(product => {
                 let label = product.name
@@ -119,9 +149,15 @@ export default {
     },
     methods: {
         formatPrice,
+        async fetchZaklady(s) {
+            this.zaklady.fetching = true
+            const res = await categoriesApi.searchZaklady(s)
+            this.zaklady.data = res
+            this.zaklady.fetching = false
+        },
         async fetchProducts(s) {
             this.products.fetching = true
-            const res = await productsApi.search(s)
+            const res = await productsApi.search(s, this.zaklady.selected)
             this.products.data = res
             this.products.fetching = false
         },
@@ -136,7 +172,6 @@ export default {
                     })
                 }
             })
-            this.selected = null
         },
         removeFromCart(i) {
             this.orderItems.splice(i, 1)

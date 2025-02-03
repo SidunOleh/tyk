@@ -5,6 +5,7 @@ namespace App\Services\Products;
 use App\Models\Product;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
@@ -44,5 +45,10 @@ class ProductService extends Service
             ->paginate($perpage, ['*'], 'page', $page);
 
         return $models;
+    }
+
+    public function searchInCategory(string $s, int $categoryId): Collection
+    {        
+        return Product::search($s)->categories([$categoryId])->get();
     }
 }

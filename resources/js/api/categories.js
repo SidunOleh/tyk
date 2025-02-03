@@ -56,6 +56,15 @@ export default {
 
         return res.data
     },
+    async searchZaklady(s) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get(`/api/categories/search-zaklady?s=${s}`)
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

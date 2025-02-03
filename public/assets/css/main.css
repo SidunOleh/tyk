@@ -7056,3 +7056,7 @@ form.error .error-txt {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.pac-logo::after {
+    display: none !important;
+}

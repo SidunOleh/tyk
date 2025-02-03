@@ -18,7 +18,13 @@ class SearchController extends Controller
 
     public function __invoke(Request $request)
     {
-        $products = $this->productService->search($request->query('s', ''));
+        $categoryId = $request->query('category_id', null);
+
+        if ($categoryId) {
+            $products = $this->productService->searchInCategory($request->query('s', ''), $categoryId);
+        } else {
+            $products = $this->productService->search($request->query('s', ''));
+        }
 
         return response(new ProductsSearchCollection($products));
     }

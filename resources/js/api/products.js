@@ -29,12 +29,18 @@ export default {
 
         return res.data
     },
-    async search(s) {
+    async search(s, categoryId) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')
         }
 
-        const res = await axios.get(`/api/products/search?s=${s}`)
+        const query = new URLSearchParams({s,})
+
+        if (categoryId) {
+            query.append('category_id', categoryId)
+        }
+
+        const res = await axios.get(`/api/products/search?${query}`)
 
         return res.data
     },

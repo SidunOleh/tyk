@@ -190,6 +190,7 @@ export default {
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
+            this.data.addresses = this.data.addresses ?? []
         }
     },
 }

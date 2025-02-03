@@ -83,7 +83,7 @@ class Client extends Authenticatable implements ILogUser
         }
 
         if ($new) {
-            $this->update(['addresses' => array_merge($this->addresses ?? [], $new)]);
+            $this->update(['addresses' => array_merge($new, $this->addresses ?? [])]);
         }
     }
 

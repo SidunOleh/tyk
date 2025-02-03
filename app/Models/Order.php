@@ -77,6 +77,12 @@ class Order extends Model
     
     public const CREATED = 'Створено';
 
+    public const COOKING = 'Готується';
+
+    public const DELIVERING = 'Доставляється';
+
+    public const DONE = 'Виконано';
+
     public const CANCELED = 'Скасовано';
 
     protected static function booted(): void
@@ -184,7 +190,7 @@ class Order extends Model
 
     public function scopeBetweenDate(Builder $query, string $start, string $end): void
     {
-        $query->whereRaw("DATE(created_at) BETWEEN ? AND ?", [$start, $end]);
+        $query->whereRaw('DATE(created_at) BETWEEN ? AND ?', [$start, $end]);
     }
 
     public function client(): BelongsTo

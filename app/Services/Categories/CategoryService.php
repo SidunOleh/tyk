@@ -38,9 +38,7 @@ class CategoryService extends Service
 
     public function all(): Collection
     {
-        $categories = Category::select('id', 'name', 'parent_id')->get();
-
-        return $categories;
+        return Category::select('id', 'name', 'parent_id')->get();
     }
 
     public function tree(): array
@@ -158,6 +156,17 @@ class CategoryService extends Service
             'product_id', 
             'category_id'
         );
+    }
+
+    public function searchZaklady(string $s): Collection
+    {
+        if ($s) {
+            $categories = Category::zaklad()->search($s)->get();
+        } else {
+            $categories = new Collection;
+        }
+
+        return $categories;
     }
 
     public function getTags(): Collection

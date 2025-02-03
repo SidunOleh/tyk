@@ -2,7 +2,6 @@
     .order-car {
         margin-top: 80px;
         height: calc(100vh - 132px);
-        min-height: 800px;
     }
 
     @media (max-width: 1024px) {
@@ -305,7 +304,6 @@
         .order-car {
             margin: 0;
             padding: 0;
-            min-height: auto;
             height: 100vh;
             overflow: hidden;
         }
@@ -345,7 +343,7 @@
         .order-car__body.close .order-car__left {
            flex: 0;
            padding: 0;
-           /* border: 0; */
+           border: 0;
         }
 
         .order-car__body.close .arrow svg {
@@ -433,9 +431,9 @@
 
                             @endverbatim
 
-                            @if ($history)
+                            @if ($address_history)
                             <div class="addresses-history">
-                                @foreach ($history as $address)
+                                @foreach ($address_history as $address)
                                 <div 
                                     class="address"
                                     data-address="{{ $address['address'] }}"
@@ -478,9 +476,9 @@
 
                             @endverbatim
 
-                            @if ($history)
+                            @if ($address_history)
                             <div class="addresses-history">
-                                @foreach ($history as $address)
+                                @foreach ($address_history as $address)
                                 <div 
                                     class="address"
                                     data-address="{{ $address['address'] }}"
@@ -496,6 +494,12 @@
                             @endif
 
                             @verbatim
+                        </div>
+
+                        <div 
+                            v-if="route.route"
+                            class="route">
+                            Відстань: {{ route.distance }} Тривалість: {{ route.duration }}
                         </div>
 
                         <div class="form-group">
@@ -537,16 +541,9 @@
                         </div>
                     </div>
 
-                    <div 
-                        v-if="route.route"
-                        class="route">
-                        <b>Відстань:</b> {{ route.distance }}
-                        <b>Тривалість:</b> {{ route.duration }}
-                    </div>
-
                     <button 
                         class="btn"
-                        :disabled="route.route ? false : true"
+                        :disabled="! route.route"
                         @click="send">
                         Замовити
                     </button>
@@ -630,6 +627,7 @@ const orderCar = {
             this.addresses[1].address
         ) {
             this.addresses.forEach(item => this.removeMarker(item.marker))
+            this.route.route?.setMap(null)
             this.renderRoute()
         } else {
             this.addresses.forEach(item => item === address && this.removeMarker(item.marker))
@@ -660,7 +658,6 @@ const orderCar = {
     renderRoute() { 
         const directionsService = new google.maps.DirectionsService()
 
-        this.route.route?.setMap(null)
         this.route.route = new google.maps.DirectionsRenderer()
         this.route.route.setMap(this.map)
 
@@ -887,7 +884,8 @@ const orderCar = {
             locale: {
                 daysMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
                 months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-                clear: 'Очистити',
+                monthsShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
+                lear: 'Очистити',
             },
             buttons: ['clear'],
         })
