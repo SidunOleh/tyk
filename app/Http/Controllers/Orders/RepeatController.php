@@ -22,10 +22,6 @@ class RepeatController extends Controller
 
         $this->cart->retrieveItems();
 
-        return response([
-            '.cart_btn' => view('templates.cart-icon', [
-                'cartTotal' => $this->cart->formattedTotal(),
-            ])->render(),
-        ]);
+        return response(['message' => 'OK',]);
     }
 }
