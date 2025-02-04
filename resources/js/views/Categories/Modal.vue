@@ -46,10 +46,7 @@
                 has-feedback
                 :validate-status="errors['image'] ? 'error' : ''"
                 :help="errors.image">
-                <Upload 
-                    :maxCount="1"
-                    :uploaded="uploaded"
-                    @changeFileList="changeFileList"/>
+                <Upload v-model:uploaded="data.image"/>
             </a-form-item>
 
             <a-form-item
@@ -169,7 +166,6 @@ export default {
                 data: [],
                 fetching: false,
             },
-            uploaded: [],
             errors: {},
             showTagsModal: false,
             loading: false,
@@ -250,20 +246,6 @@ export default {
                 this.loading = false
             }
         },
-        changeFileList(info) {
-            const images = []
-            info.fileList.forEach(file => {
-                if (file.status == 'done') {
-                    images.push(file.response.path)
-                }
-
-                if (file.status == 'uploaded') {
-                    images.push(file.path)
-                }
-            })
-
-            this.data.image = images[0] ?? null
-        },
         makeCategoryOptions(categories, parent) {
             let options = []
             categories.forEach(category => {
@@ -288,14 +270,6 @@ export default {
             this.data.tags = this.data.tags.map(tag => tag.id)
             this.products.data = this.item.upsells
             this.data.upsells = this.data.upsells.map(product => product.id)
-
-            if (this.item.image) {
-                this.uploaded.push({
-                    url: this.item.image,
-                    path: this.item.image,
-                    status: 'uploaded',
-                })
-           } 
         }
     },
 }
