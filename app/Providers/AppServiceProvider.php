@@ -29,12 +29,12 @@ class AppServiceProvider extends ServiceProvider
             return Cart::make(Auth::guard('web')->check() ? 'db' : 'session');
         });
 
-        View::composer(['*'], function (ViewView $view) {
+        View::composer(['pages.*', 'errors::*'], function (ViewView $view) {
             $cart = app()->make(Cart::class);
 
             $view->with('cartTotal', $cart->formattedTotal());
         });
 
-        // DB::listen(fn($sql) => $GLOBALS['sql'][] = $sql);
+        DB::listen(fn($sql) => $GLOBALS['sql'][] = $sql);
     }
 }

@@ -54,6 +54,11 @@ abstract class OrderService extends Service
         $order->update(['courier_id' => $courierId]);
     }
 
+    public function calcPriceForDistance(array $start, array $end): float
+    {
+        
+    }
+
     abstract public function repeat(Order $order): void;
 
     public static function make(string $type): self

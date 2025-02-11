@@ -6,7 +6,6 @@ export default class {
 
         this.wc.onmessage = e => {
             const data = JSON.parse(e.data)
-            console.log(data)
 
             if (data.lgDirection == 4) {
                 this.callbacks[data.event]?.forEach(callback => callback(data))

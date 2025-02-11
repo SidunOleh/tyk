@@ -207,8 +207,8 @@ export default {
 }
 
 .uploaded img {
-    width: 295px;
-    height: 295px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     border-radius: 6px;
 }
@@ -264,8 +264,8 @@ export default {
 }
 
 .uploading {
-    width: 295px;
-    height: 295px;
+    width: 150px;
+    height: 150px;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     display: flex;

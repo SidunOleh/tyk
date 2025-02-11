@@ -36,6 +36,8 @@ use App\Http\Controllers\Admin\Clients\IndexController as ClientsIndexController
 use App\Http\Controllers\Admin\Clients\SearchController;
 use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController;
 use App\Http\Controllers\Admin\Clients\UpdateController as ClientsUpdateController;
+use App\Http\Controllers\Admin\Content\GetController as ContentGetController;
+use App\Http\Controllers\Admin\Content\SaveController;
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Admin\Couriers\GetAllController as CouriersGetAllController;
@@ -245,6 +247,13 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('orders');
             Route::get('/products', ProductsController::class)
                 ->name('products');
+        });
+
+        Route::prefix('/content')->name('content.')->group(function () {
+            Route::get('/', ContentGetController::class)
+                ->name('get');
+            Route::post('/', SaveController::class)
+                ->name('save');
         });
     });
 });

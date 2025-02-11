@@ -157,6 +157,15 @@ export default {
             if (this.details.shipping_from.address) {
                 this.addresses.push(this.details.shipping_from)
             }
+
+            const unique = []
+            this.addresses.forEach(address => {
+                const exists = unique.find((v, i) => v.address == address.address)
+                if (exists === undefined) {
+                    unique.push(address)
+                }
+            })
+            this.addresses = unique
         },
         addAddress() {
             this.addresses.push(this.address)

@@ -98,6 +98,24 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-menu-item key="content">
+                    <template #icon>
+                        <EditOutlined/>
+                    </template>
+                    <router-link :to="{name: 'content.index'}">
+                        Контент
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="settings">
+                    <template #icon>
+                        <SettingOutlined/>
+                    </template>
+                    <router-link :to="{name: 'settings.index'}">
+                        Налаштування
+                    </router-link>
+                </a-menu-item>
+
                 <a-menu-item key="users">
                     <template #icon>
                         <UserOutlined/>
@@ -153,13 +171,21 @@ import {
   SoundOutlined,
   DragOutlined,
   LineChartOutlined,
+  PhoneOutlined,
+  EditOutlined,
+  SettingOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
 import { auth } from '../../helpers/helpers'
 import Phonet from '../../helpers/phonet'
 import clientsApi from '../../api/clients'
-import { message } from 'ant-design-vue'
+import { 
+    message,
+    notification, 
+    Button,
+} from 'ant-design-vue'
+import { h } from 'vue'
 
 export default {
     components: {
@@ -178,6 +204,8 @@ export default {
         SoundOutlined,
         DragOutlined,
         LineChartOutlined,
+        EditOutlined,
+        SettingOutlined,
     },
     data() {
         return {
@@ -187,10 +215,66 @@ export default {
                 create: false,
                 client: null,
             },
+            caller: null,
         }
     },
     methods: {
         auth,
+        async handleCall(call) {
+            if (this.caller === call.otherLegs[0].num) {
+                return
+            }
+
+            this.caller = call.otherLegs[0].num
+
+            const client = {}
+            const phone = call.otherLegs[0].num
+            client.phone = `(${phone[3] + phone[4] + phone[5]}) ${phone[6] + phone[7] + phone[8]}-${phone[9] + phone[10]}-${phone[11] + phone[12]}`
+            client.full_name = call.otherLegs[0].name
+
+            const res = await clientsApi.findOrCreate(client)
+
+            if (! this.order.create) {
+                this.order.create = true
+                this.order.client = res.client
+                return
+            }
+
+            const key = Date.now()
+
+            notification.open({
+                message: `Дзвінок від ${res.client.full_name}, ${res.client.phone}`,
+                duration: 0,
+                key,
+                icon: () => h(
+                    PhoneOutlined, 
+                    { 
+                        style: 'color: #108ee9' 
+                    }
+                ),
+                btn: () => h(
+                    Button,
+                    {
+                        type: 'primary',
+                        size: 'small',
+                        onClick: () => {
+                            notification.close(key)
+                            this.order.create = false
+                            setTimeout(() => {
+                                this.order.create = true
+                                this.order.client = res.client
+                            })
+                        }
+                    },
+                    { 
+                        default: () => 'Відкрити',
+                    },
+                ),
+            })
+        },
+    },
+    handleHangup(call) {
+        this.caller = null
     },
     async mounted() {
         await this.$router.isReady()
@@ -200,25 +284,8 @@ export default {
         if (typeof phonetConf !== 'undefined') {
             const phonet = new Phonet(phonetConf)
 
-            phonet.listen('call.bridge', async call => {
-                const client = {}
-                const phone = call.otherLegs[0].num
-                client.phone = `(${phone[3] + phone[4] + phone[5]}) ${phone[6] + phone[7] + phone[8]}-${phone[9] + phone[10]}-${phone[11] + phone[12]}`
-                client.full_name = call.otherLegs[0].name
-
-                if (client.phone == this.order.client?.phone && this.order.create) {
-                    return
-                }
-
-                this.order.create = false
-
-                const res = await clientsApi.findOrCreate(client)
-                this.order.client = res.client
-
-                setTimeout(() => {
-                    this.order.create = true
-                })
-            })
+            phonet.listen('call.bridge', this.handleCall)
+            phonet.listen('call.hangup', this.handleHangup)
         }
     },
 }

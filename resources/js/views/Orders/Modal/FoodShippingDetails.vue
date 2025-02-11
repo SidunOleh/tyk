@@ -92,6 +92,15 @@ export default {
                 ...this.client?.addresses ?? [],
                 ...this.details.food_to
             ]
+
+            const unique = []
+            this.addresses.forEach(address => {
+                const exists = unique.find((v, i) => v.address == address.address)
+                if (exists === undefined) {
+                    unique.push(address)
+                }
+            })
+            this.addresses = unique
         },
         addAddress() {
             this.addresses.push(this.address)

@@ -86,6 +86,8 @@
         width: 100%;
         font-size: 16px;
         padding: 12px 24px;
+        display: flex;
+        gap: 5px;
     }
 
     .order-car__left .btn:disabled {
@@ -291,11 +293,6 @@
         align-items: center;
     }
 
-    .route {
-        margin: 15px 0; 
-        font-size: 12px;
-    }
-
     .order-car__left .arrow {
         display: none;
     }
@@ -357,6 +354,10 @@
         .order-car__body.close .order-car__set-on-map {
             display: none;
         }
+    }
+
+    .order-car__left.loading {
+        border-radius: 5px;
     }
 </style>
 
@@ -496,12 +497,6 @@
                             @verbatim
                         </div>
 
-                        <div 
-                            v-if="route.route"
-                            class="route">
-                            Відстань: {{ route.distance }} Тривалість: {{ route.duration }}
-                        </div>
-
                         <div class="form-group">
                             <input  
                                 readonly
@@ -545,7 +540,7 @@
                         class="btn"
                         :disabled="! route.route"
                         @click="send">
-                        Замовити
+                        Замовити <span v-if="price !== null"> {{ price }}₴</span>
                     </button>
                 </div>
 
@@ -599,6 +594,7 @@ const orderCar = {
         distance: null,
         duration: null,
     },
+    price: null,
     data: {
         service: 'Таксі',
         time: null,
@@ -676,6 +672,7 @@ const orderCar = {
                 this.route.route.setDirections(result)
                 this.route.distance = result.routes[0].legs[0].distance.text
                 this.route.duration = result.routes[0].legs[0].duration.text
+                this.price = 0
             }
         })
     },

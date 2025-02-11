@@ -1,7 +1,7 @@
 <section class="discounts">
     <div class="container">
         <h2 class="section_title">
-            Знижки, від яких <span>апетит</span> зростає ще більше
+            {!! get_content_value('home_promotion_title') !!}
         </h2>
         <div class="slider-wrapper">
             <div class="discounts-slider">

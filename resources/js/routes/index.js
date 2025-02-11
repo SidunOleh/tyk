@@ -196,6 +196,32 @@ const routes = [{
         title: 'Аналітика',
     },
 }, {
+    path: '/content',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Content/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'content.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'content',
+        title: 'Контент',
+    },
+}, {
+    path: '/settings',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Settings/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'settings.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'settings',
+        title: 'Налаштування',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

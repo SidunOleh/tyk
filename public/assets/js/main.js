@@ -35,7 +35,7 @@ function loading(el, bool = true) {
 
 function resetFormErrors(form) {
     form.removeClass('error')
-    form.find('.input-box') .removeClass('error')
+    form.find('.input-box').removeClass('error')
 }
 
 function showFormErrors(form, res) {
@@ -45,11 +45,11 @@ function showFormErrors(form, res) {
             for (const field in errors) {
                 showFieldError(form.find(`[name=${field}]`), errors[field])
             }
-        break
+            break
         default:
             form.addClass('error')
             let errorEl = form.find('.error-txt')
-            if (! errorEl.length) {
+            if (!errorEl.length) {
                 errorEl = form.append('<div class="error-txt"></div>')
                 errorEl = form.find('.error-txt')
             }
@@ -61,7 +61,7 @@ function showFieldError(field, error) {
     const fieldBox = field.closest('.input-box')
     fieldBox.addClass('error')
     let msgEl = fieldBox.find('.validation-msg')
-    if (! msgEl.length) {
+    if (!msgEl.length) {
         fieldBox.append('<div class="validation-msg"></div>')
         msgEl = fieldBox.find('.validation-msg')
     }
@@ -162,7 +162,7 @@ async function checkout(data) {
 }
 
 async function repearOrder(id) {
-    return await $.post(`/orders/${id}/repeat`,)
+    return await $.post(`/orders/${id}/repeat`, )
 }
 
 async function deleteAccount() {
@@ -170,6 +170,10 @@ async function deleteAccount() {
         url: '/delete-account',
         type: 'DELETE',
     })
+}
+
+async function handleForm(data) {
+    return await $.post('/form', data)
 }
 
 /**
@@ -261,13 +265,13 @@ $(document).on('click', '.quantity-btn--minus, .quantity-btn--plus', async funct
         const input = $(this).closest('.quantity-counter').find('input')
         let currentValue = parseInt(input.val(), 10)
         let newValue = currentValue
-    
+
         if ($(this).hasClass('quantity-btn--minus')) {
             newValue -= 1
         } else {
             newValue += 1
         }
-    
+
         if (newValue >= 0) {
             input.val(newValue)
             const productId = $(this).closest('.dish__item').data('id')
@@ -277,7 +281,7 @@ $(document).on('click', '.quantity-btn--minus, .quantity-btn--plus', async funct
     } catch (err) {
         console.error(err)
     } finally {
-        loading($(this), false)   
+        loading($(this), false)
     }
 })
 
@@ -364,7 +368,7 @@ $('.popUp-Wrapper .close').on('click', () => {
     $('.popUp-Wrapper').removeClass('open')
 })
 
-$('#send-code input[name=phone]').on('input', function() {
+$('[type=tel]').on('input', function() {
     $(this).val(formatPhone($(this).val()))
 })
 
@@ -434,7 +438,7 @@ $('#logOut').on('click', async() => {
 /**
  * Repeat order
  */
-$('.history-item .btn').on('click', async function () {
+$('.history-item .btn').on('click', async function() {
     try {
         const el = $(this).closest('.history-item')
         loading(el)
@@ -449,10 +453,6 @@ $('.history-item .btn').on('click', async function () {
 /**
  * Update personal info 
  */
- $('#update-personal-info input[name=phone]').on('input', function() {
-    $(this).val(formatPhone($(this).val()))
-})
-
 $('#update-personal-info').on('submit', async function(e) {
     try {
         e.preventDefault()
@@ -477,7 +477,7 @@ $('.autocomplete').each((i, item) => {
         .Autocomplete(item, {
             componentRestrictions: {
                 country: 'ua',
-            }, 
+            },
             types: ['geocode'],
         })
 })
@@ -516,7 +516,7 @@ $(document).on('click', '.addressData .delete', async function() {
 /**
  * Delete account
  */
- $('#deleteAcc').on('click', () => {
+$('#deleteAcc').on('click', () => {
     $('.popUp-Wrapper.delete').addClass('open')
 })
 
@@ -524,7 +524,7 @@ $('.delete-popUp .btn.cancel').on('click', () => {
     $('.popUp-Wrapper.delete').removeClass('open')
 })
 
-$('.delete-popUp .btn.clear').on('click', async function () {
+$('.delete-popUp .btn.clear').on('click', async function() {
     try {
         loading($('.delete-popUp'))
         await deleteAccount()
@@ -537,22 +537,22 @@ $('.delete-popUp .btn.clear').on('click', async function () {
 /**
  * Address history
  */
- $('[data-with-history]').on('focus input', function () {
-    if (! $(this).val()) {
+$('[data-with-history]').on('focus input', function() {
+    if (!$(this).val()) {
         $(this).closest('.address-select').addClass('show-history')
     } else {
         $(this).closest('.address-select').removeClass('show-history')
     }
 })
 
-$('.addresses-history .address').on('click', function () {
+$('.addresses-history .address').on('click', function() {
     $(this).closest('.address-select').find('input').val(
         $(this).data('address')
     )
     $(this).closest('.address-select').removeClass('show-history')
 })
 
-$(document).on('click', '*', function (e) {
+$(document).on('click', '*', function(e) {
     $('.address-select').not($(this).closest('.address-select')).removeClass('show-history')
 
     if ($(this).closest('.address-select').length) {
@@ -563,13 +563,9 @@ $(document).on('click', '*', function (e) {
 /**
  * Checkout 
  */
-$('#checkout-form input[name=phone]').on('input', function() {
-    $(this).val(formatPhone($(this).val()))
-})
-
 $('#delivery-time').on('input', function() {
     let value = $(this).val().replace(/\D/g, '')
-    
+
     if (value.length > 4) {
         value = value.slice(0, 4)
     }
@@ -581,7 +577,7 @@ $('#delivery-time').on('input', function() {
     }
 })
 
-$('#checkout-form').on('submit', async function (e) {
+$('#checkout-form').on('submit', async function(e) {
     try {
         e.preventDefault()
         resetFormErrors($(this))
@@ -598,6 +594,24 @@ $('#checkout-form').on('submit', async function (e) {
 })
 
 $('#checkout-form-btn').on('click', () => $('#checkout-form').trigger('submit'))
+
+/**
+ * Handle form
+ */
+ $('#main-form').on('submit', async function(e) {
+    try {
+        e.preventDefault()
+        resetFormErrors($(this))
+        loading($('.contactUs .wrapper'))
+        await handleForm($(this).serialize())
+        this.reset()
+    } catch (err) {
+        console.error(err)
+        showFormErrors($(this), err)
+    } finally {
+        loading($('.contactUs .wrapper'), false)
+    }
+})
 
 //=================================================================================
 

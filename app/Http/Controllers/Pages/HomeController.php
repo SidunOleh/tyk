@@ -13,7 +13,8 @@ class HomeController extends Controller
     {
         $tags = CategoryTag::orderByRaw('-category_tags.order DESC')
             ->get();
-        $zaklady = Category::establishment()
+        $zaklady = Category::with('tags')
+            ->establishment()
             ->visible()
             ->orderBy('order', 'ASC')
             ->get();

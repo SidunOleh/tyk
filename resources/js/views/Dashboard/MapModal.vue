@@ -1,13 +1,13 @@
 <template>
     <a-modal 
-        width="1000px"
+        width="1400px"
         :title="title"
         :open="open"
         :footer="null"
         @cancel="$emit('update:open', false)">
 
         <div 
-            style="height: 500px;"
+            style="height: 700px;"
             id="couriers-map"></div>
 
     </a-modal>

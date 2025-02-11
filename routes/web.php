@@ -12,6 +12,7 @@ use App\Http\Controllers\Clients\AddAddressController;
 use App\Http\Controllers\Clients\DeleteAccountController;
 use App\Http\Controllers\Clients\DeleteAddressController;
 use App\Http\Controllers\Clients\UpdatePersonalInfoController;
+use App\Http\Controllers\Forms\HandleController;
 use App\Http\Controllers\Fragments\RefreshController;
 use App\Http\Controllers\Orders\CheckoutController as OrdersCheckoutController;
 use App\Http\Controllers\Orders\OrderCarController as OrdersOrderCarController;
@@ -144,3 +145,9 @@ Route::post('/orders/order-car', OrdersOrderCarController::class)
  */
 Route::post('/checkout', OrdersCheckoutController::class)
     ->name('checkout'); 
+
+/**
+ * Form
+ */
+Route::post('/form', HandleController::class)
+    ->name('form');
