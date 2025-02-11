@@ -301,14 +301,19 @@
         .order-car {
             margin: 0;
             padding: 0;
-            height: 100svh;
+            height: 100vh;
             overflow: hidden;
         }
 
         .order-car .container {
             padding: 0 !important;
         }
-        
+
+        .order-car__body {
+            height: 100vh;
+            gap: 0;
+        }
+
         .footer {
             display: none;
         }

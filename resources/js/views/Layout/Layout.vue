@@ -98,24 +98,6 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="content">
-                    <template #icon>
-                        <EditOutlined/>
-                    </template>
-                    <router-link :to="{name: 'content.index'}">
-                        Контент
-                    </router-link>
-                </a-menu-item>
-
-                <a-menu-item key="settings">
-                    <template #icon>
-                        <SettingOutlined/>
-                    </template>
-                    <router-link :to="{name: 'settings.index'}">
-                        Налаштування
-                    </router-link>
-                </a-menu-item>
-
                 <a-menu-item key="users">
                     <template #icon>
                         <UserOutlined/>
