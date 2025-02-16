@@ -21,6 +21,7 @@
                         :options="clientOptions"
                         v-model:value="data.client_id"
                         :showSearch="true"
+                        :showArrow="false"
                         @search="fetchClients">
                         <template 
                             v-if="clients.fetching" 
@@ -79,6 +80,12 @@
                     placeholder="Введіть суму доставки"
                     :min="0"
                     v-model:value="data.shipping_price"/>
+                <a-button 
+                    style="margin-top: 10px;"
+                    :loading="calcingPrice"
+                    @click="calcShippingPrice">
+                    Розрахувати
+                </a-button>
             </a-form-item>
 
             <a-form-item 
@@ -190,6 +197,7 @@
 import { message } from 'ant-design-vue'
 import api from '../../../api/orders'
 import clientsApi from '../../../api/clients'
+import priceApi from '../../../api/price'
 import OrdersList from './OrdersList.vue'
 import FoodShippingDetails from './FoodShippingDetails.vue'
 import Cart from './Cart.vue'
@@ -227,7 +235,7 @@ export default {
                 shipping_price: 0,
                 additional_costs: 0,
                 time: null,
-                duration: null,
+                duration: 30,
                 paid: false,
                 payment_method: null,
                 notes: '',
@@ -250,6 +258,7 @@ export default {
             ],
             errors: {},
             loading: false,
+            calcingPrice: false,
         }
     },    
     computed: {
@@ -444,6 +453,61 @@ export default {
 Звідки: ${this.data.details.taxi_from?.address}
 Куди: ${this.data.details.taxi_to?.map(address => address.address).join(' | ')}
 Метод оплати: ${this.data.payment_method ?? ''}`
+        },
+        async calcShippingPrice() {
+            const request = {
+                route: [],
+                service: this.data.service,
+            }
+
+            if (this.data.service == 'Доставка їжі') {
+                request.route.push({
+                    lat: 49.8094, 
+                    lng: 24.9014, 
+                })
+                request.route = request.route.concat(this.data.details.food_to)
+            }
+
+            if (this.data.service == 'Кур\'єр') {
+                if (this.data.details.shipping_from) {
+                    request.route.push(this.data.details.shipping_from)
+                }
+
+                if (this.data.details.shipping_to.length) {
+                    request.route = request.route.concat(this.data.details.shipping_to)
+                }
+
+                request.courier_service = this.data.details.shipping_type
+            }
+
+            if (this.data.service == 'Таксі') {
+                if (this.data.details.taxi_from) {
+                    request.route.push(this.data.details.taxi_from)
+                }
+
+                if (this.data.details.taxi_to.length) {
+                    request.route = request.route.concat(this.data.details.taxi_to)
+                }
+            }
+
+            if (
+                ! request.service ||
+                request.route.length < 2 ||
+                (this.data.service == 'Кур\'єр' && ! request.courier_service)
+            ) {
+                message.error('Заповніть необхідні поля.')
+                return
+            }
+
+            try {
+                this.calcingPrice = true
+                const data = await priceApi.calcForRoute(request)
+                this.data.shipping_price = data.price
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            } finally {
+                this.calcingPrice = false
+            }
         },
     },
     mounted() {

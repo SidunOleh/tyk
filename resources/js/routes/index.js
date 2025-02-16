@@ -209,17 +209,43 @@ const routes = [{
         title: 'Контент',
     },
 }, {
-    path: '/settings',
+    path: '/tariffs',
     component: defineAsyncComponent({
         loader: () =>
-            import ('../views/Settings/Index.vue'),
+            import ('../views/Tariffs/Index.vue'),
         loadingComponent: Loader,
     }),
-    name: 'settings.index',
+    name: 'tariffs.index',
     meta: {
         roles: ['адмін', ],
-        key: 'settings',
-        title: 'Налаштування',
+        key: 'tariffs',
+        title: 'Тарифи',
+    },
+}, {
+    path: '/regions',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Regions/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'regions.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'regions',
+        title: 'Області',
+    },
+}, {
+    path: '/price/settings',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Price/Settings.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'price.settings',
+    meta: {
+        roles: ['адмін', ],
+        key: 'price.settings',
+        title: 'Налаштування ціни',
     },
 }, {
     path: '/:pathMatch(.*)*',

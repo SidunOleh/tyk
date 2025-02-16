@@ -28,7 +28,7 @@
 
                 <a-menu-item key="clients">
                     <template #icon>
-                        <WalletOutlined/>
+                        <TeamOutlined/>
                     </template>
                     <router-link :to="{name: 'clients.index'}">
                         Клієнти
@@ -52,6 +52,33 @@
                         Автомобілі
                     </router-link>
                 </a-menu-item>
+
+                <a-sub-menu>
+                    <template #icon>
+                        <CreditCardOutlined/>
+                    </template>
+                    <template #title>
+                        Тарифи
+                    </template>
+
+                    <a-menu-item key="tariffs">
+                        <router-link :to="{name: 'tariffs.index'}">
+                            Тарифи
+                        </router-link>
+                    </a-menu-item>
+
+                    <a-menu-item key="regions">
+                        <router-link :to="{name: 'regions.index'}">
+                            Області
+                        </router-link>
+                    </a-menu-item>
+
+                    <a-menu-item key="price.settings">
+                        <router-link :to="{name: 'price.settings'}">
+                            Ціни
+                        </router-link>
+                    </a-menu-item>
+                </a-sub-menu>
 
                 <a-sub-menu>
                     <template #icon>
@@ -98,6 +125,15 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-menu-item key="content">
+                    <template #icon>
+                        <EditOutlined/>
+                    </template>
+                    <router-link :to="{name: 'content.index'}">
+                        Контент
+                    </router-link>
+                </a-menu-item>
+
                 <a-menu-item key="users">
                     <template #icon>
                         <UserOutlined/>
@@ -116,7 +152,7 @@
         <a-layout-content class="content" :style="{margin: '24px 16px', padding: '24px', background: '#fff',  'border-radius': '5px',}">
             <slot></slot>
 
-            <a-float-button 
+            <!-- <a-float-button 
                 type="primary"
                 @click="order.create = true">
                 <template #icon>
@@ -126,7 +162,7 @@
                 <template #tooltip>
                     Створити замовлення
                 </template>
-            </a-float-button>
+            </a-float-button> -->
         </a-layout-content>
     </a-layout>
 
@@ -149,13 +185,14 @@ import {
   PlusOutlined,
   UserAddOutlined,
   CarOutlined,
-  WalletOutlined,
+  TeamOutlined,
   SoundOutlined,
   DragOutlined,
   LineChartOutlined,
   PhoneOutlined,
   EditOutlined,
   SettingOutlined,
+  CreditCardOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
@@ -181,13 +218,14 @@ export default {
         PlusOutlined,
         UserAddOutlined,
         CarOutlined,
-        WalletOutlined,
+        TeamOutlined,
         OrderModal,
         SoundOutlined,
         DragOutlined,
         LineChartOutlined,
         EditOutlined,
         SettingOutlined,
+        CreditCardOutlined,
     },
     data() {
         return {

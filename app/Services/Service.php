@@ -62,6 +62,11 @@ class Service
         return $models;
     }
 
+    public function all(): Collection
+    {
+        return $this->model::all();
+    }
+
     protected function getLatLng(string $address): array
     {
         $response = (new MapsService)->geocoding($address);

@@ -668,6 +668,7 @@ const orderCar = {
             },
             travelMode: google.maps.TravelMode.DRIVING,
         }, (result, status) => {
+            console.log(result)
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.route.setDirections(result)
                 this.route.distance = result.routes[0].legs[0].distance.text

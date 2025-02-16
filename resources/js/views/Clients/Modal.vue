@@ -37,29 +37,10 @@
                 has-feedback
                 :validate-status="addressesErrors.length ? 'error' : ''"
                 :help="addressesErrors">
-                <a-flex
-                    :vertical="true"
-                    :gap="5">
-                    <a-flex 
-                        v-for="(address, i) in data.addresses"
-                        :gap="5"
-                        :align="'center'">
-                        <AddressInput v-model:address="data.addresses[i]"/>
-                        <a-button
-                            danger
-                            type="text"
-                            size="small"
-                            @click="removeAddress(i)">
-                            X
-                        </a-button>
-                    </a-flex>
-
-                    <a-button 
-                        style="align-self: start;"
-                        @click="addAddress">
-                        Додати адресу
-                    </a-button>
-                </a-flex>
+                <AddressSelect
+                    :addresses="addresses"
+                    :multiple="true"
+                    v-model:value="data.addresses"/>
             </a-form-item>
 
             <a-form-item 
@@ -90,7 +71,7 @@ import api from '../../api/clients'
 import { 
     formatPhone,
 } from '../../helpers/helpers'
-import AddressInput from '../components/AddressInput.vue'
+import AddressSelect from '../components/AddressSelect.vue'
 
 export default {
     props: [
@@ -100,20 +81,17 @@ export default {
         'item',
     ],
     components: {
-        AddressInput,
+        AddressSelect,
     },
     data() {
         return {
             data: {
                 full_name: '',
                 phone: '',
-                addresses: [{
-                    address: '',
-                    lat: null,
-                    lng: null,
-                }],
+                addresses: [],
                 description: '',
             },
+            addresses: [],
             errors: {},
             loading: false,
         }
@@ -126,7 +104,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^addresses\.(\d)\.(address|lat|lng)$/)
+                let matches = field.match(/^addresses\.(\d)\.address$/)
                 if (matches) {
                     errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
@@ -137,23 +115,11 @@ export default {
     },
     methods: {
         formatPhone,
-        addAddress() {
-            this.data.addresses.push({
-                address: '',
-                lat: null,
-                lng: null,
-            })
-        },
-        removeAddress(i) {
-            this.data.addresses.splice(i, 1)
-        },
         async create() {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.addresses = data.addresses.filter(address => address.address)
-                const res = await api.create(data)
+                const res = await api.create(this.data)
                 message.success('Успішно створено.')
                 this.$emit('create', res.client)
                 this.$emit('update:open', false)
@@ -171,9 +137,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.addresses = data.addresses.filter(address => address.address)
-                const res = await api.edit(this.data.id, data)
+                const res = await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -191,6 +155,7 @@ export default {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
             this.data.addresses = this.data.addresses ?? []
+            this.addresses = this.data.addresses
         }
     },
 }

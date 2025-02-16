@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Order;
 
-use App\Http\Resources\Courier\CourierResource;
 use App\Http\Resources\OrderItem\OrderItemResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -19,19 +18,19 @@ class OrderResource extends JsonResource
     {
         $data = $this->orderToArray($this->resource);
 
-        $client = $this->client()->withTrashed()->first();
-
         $data['client'] = [
-            'id' => $client->id,
-            'phone' => $client->phone,
-            'full_name' => $client->full_name,
-            'addresses' => $client->addresses,
+            'id' => $this->client->id,
+            'phone' => $this->client->phone,
+            'full_name' => $this->client->full_name,
+            'addresses' => $this->client->addresses,
             'description' => $this->description,
-            'bonuses' => $client->bonuses,
+            'bonuses' => $this->client->bonuses,
             'history' => $this->history,
         ];
 
-        foreach ($client->orders()
+        foreach ($this->client->orders()
+            ->with('courier')
+            ->with('orderItems')
             ->orderBy('created_at', 'DESC')
             ->get() as $order) {
             $data['client']['orders'][] = $this->orderToArray($order);
@@ -60,7 +59,7 @@ class OrderResource extends JsonResource
             'payment_method' => $order->payment_method,
             'created_at' => $order->created_at,
             'history' => $order->history,
-            'courier' => new CourierResource($this->courier),
+            'courier' => $order->courier,
         ];
 
         if ($data['type'] == Order::FOOD_SHIPPING) {

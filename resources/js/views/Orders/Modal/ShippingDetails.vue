@@ -19,22 +19,9 @@
         has-feedback
         :validate-status="fromErrors.length ? 'error' : ''"
         :help="fromErrors">
-        <a-select
-            v-model:value="from"
-            placeholder="Виберіть адресу"
-            :options="addressOptions">
-            <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu"/>
-                <a-divider style="margin: 4px 0"/>
-                <a-flex 
-                    style="padding: 4px 8px"
-                    :gap="5">
-                    <AddressInput 
-                        v-model:address="address"
-                        @placeChanged="address => {addAddress(); from = address.address}"/>
-                </a-flex>
-            </template>
-        </a-select>
+        <AddressSelect
+            :addresses="addresses"
+            v-model:value="details.shipping_from"/>
     </a-form-item>
 
     <a-form-item 
@@ -43,32 +30,20 @@
         has-feedback
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
-        <a-select
-            v-model:value="to"
-            placeholder="Виберіть адресу"
-            mode="multiple"
-            :options="addressOptions">
-            <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu" />
-                <a-divider style="margin: 4px 0" />
-                <a-flex 
-                    style="padding: 4px 8px"
-                    :gap="5">
-                    <AddressInput 
-                        v-model:address="address"
-                        @placeChanged="address => {addAddress(); to.push(address.address)}"/>
-                </a-flex>
-            </template>
-        </a-select>
+        <AddressSelect
+            :addresses="addresses"
+            :multiple="true"
+            v-model:value="details.shipping_to"/>
     </a-form-item>
 </template>
 
 <script>
-import AddressInput from '../../components/AddressInput.vue'
+import AddressSelect from '../../components/AddressSelect.vue'
+import shippingTypes from '../../../data/courierServices'
 
 export default {
     components: {
-        AddressInput,
+        AddressSelect,
     },
     props: [
         'details',
@@ -77,40 +52,12 @@ export default {
     ],
     data() {
         return {
-            from: null,
-            to: [],
             addresses: [],
-            address: {
-                address: '',
-                lat: null,
-                lng: null,
-            },
-            shippingTypes: [
-                'Посилка з пошти',
-                'Посилка з маршрутки',
-                'Закуп продуктів',
-                'Вручення квітів/подарунків',
-                'Забрати замовлення',
-                'Набрати води',
-                'Набрати бензин',
-                'Розвіз зелені',
-                'Розвіз хліб',
-                'Вантажні перевезення',
-                'Тверезий водій',
-                'Прикурити авто',
-            ],
         }
     },
     computed: {
-        addressOptions() {
-            return this.addresses.map(address => {
-                return {
-                    value: address.address,
-                }
-            })
-        },
         shippingTypeOptions() {
-            return this.shippingTypes.map(shippingType => {
+            return shippingTypes.map(shippingType => {
                 return {
                     value: shippingType,
                 }
@@ -123,7 +70,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^details\.shipping_from\.(address|lat|lng)$/)
+                let matches = field.match(/^details\.shipping_from\.address$/)
                 if (matches) {
                     errors.push(this.errors[field])
                 }
@@ -138,7 +85,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^details\.shipping_to\.(\d)\.(address|lat|lng)$/)
+                let matches = field.match(/^details\.shipping_to\.(\d)\.address$/)
                 if (matches) {
                     errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
@@ -167,41 +114,11 @@ export default {
             })
             this.addresses = unique
         },
-        addAddress() {
-            this.addresses.push(this.address)
-
-            this.address = {
-                address: '',
-                lat: null,
-                lng: null,
-            }
-        },
     },
     watch: {
         client: {
             handler(client) {
                 this.setAddresses()
-            },
-            deep: true,
-        },
-        from(from) {
-            this.details.shipping_from = this.addresses.find(address => address.address == from) ?? {
-                address: '',
-                lat: null,
-                lng: null,
-            }
-        },
-        to: {
-            handler(to) {
-                this.details.shipping_to = to.map(to => {
-                    const address = this.addresses.find(address => address.address == to)
-                    
-                    return {
-                        address: to,
-                        lat: address?.lat ?? null,
-                        lng: address?.lng ?? null,
-                    }
-                })
             },
             deep: true,
         },
@@ -218,9 +135,6 @@ export default {
         this.details.shipping_to = this.details.shipping_to ?? []
 
         this.setAddresses()
-
-        this.from = this.details.shipping_from.address
-        this.to = this.details.shipping_to.map(address => address.address)
     },
 }
 </script>

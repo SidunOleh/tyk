@@ -5,22 +5,9 @@
         has-feedback
         :validate-status="fromErrors.length ? 'error' : ''"
         :help="fromErrors">
-        <a-select
-            v-model:value="from"
-            placeholder="Виберіть адресу"
-            :options="addressOptions">
-            <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu"/>
-                <a-divider style="margin: 4px 0"/>
-                <a-flex 
-                    style="padding: 4px 8px"
-                    :gap="5">
-                    <AddressInput 
-                        v-model:address="address"
-                        @placeChanged="address => {addAddress(); from = address.address}"/>
-                </a-flex>
-            </template>
-        </a-select>
+        <AddressSelect
+            :addresses="addresses"
+            v-model:value="details.taxi_from"/>
     </a-form-item>
 
     <a-form-item 
@@ -29,32 +16,19 @@
         has-feedback
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
-        <a-select
-            v-model:value="to"
-            placeholder="Виберіть адресу"
-            mode="multiple"
-            :options="addressOptions">
-            <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu" />
-                <a-divider style="margin: 4px 0" />
-                <a-flex 
-                    style="padding: 4px 8px"
-                    :gap="5">
-                    <AddressInput 
-                        v-model:address="address"
-                        @placeChanged="address => {addAddress(); to.push(address.address)}"/>
-                </a-flex>
-            </template>
-        </a-select>
+        <AddressSelect
+            :addresses="addresses"
+            :multiple="true"
+            v-model:value="details.taxi_to"/>
     </a-form-item>
 </template>
 
 <script>
-import AddressInput from '../../components/AddressInput.vue'
+import AddressSelect from '../../components/AddressSelect.vue'
 
 export default {
     components: {
-        AddressInput,
+        AddressSelect,
     },
     props: [
         'details',
@@ -63,14 +37,7 @@ export default {
     ],
     data() {
         return {
-            from: null,
-            to: [],
             addresses: [],
-            address: {
-                address: '',
-                lat: null,
-                lng: null,
-            },
         }
     },
     computed: {
@@ -88,7 +55,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^details\.taxi_from\.(address|lat|lng)$/)
+                let matches = field.match(/^details\.taxi_from\.address$/)
                 if (matches) {
                     errors.push(this.errors[field])
                 }
@@ -103,7 +70,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^details\.taxi_to\.(\d)\.(address|lat|lng)$/)
+                let matches = field.match(/^details\.taxi_to\.(\d)\.address$/)
                 if (matches) {
                     errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
@@ -132,41 +99,11 @@ export default {
             })
             this.addresses = unique
         },
-        addAddress() {
-            this.addresses.push(this.address)
-
-            this.address = {
-                address: '',
-                lat: null,
-                lng: null,
-            }
-        },
     },
     watch: {
         client: {
             handler(client) {
                 this.setAddresses()
-            },
-            deep: true,
-        },
-        from(from) {
-            this.details.taxi_from = this.addresses.find(address => address.address == from) ?? {
-                address: '',
-                lat: null,
-                lng: null,
-            }
-        },
-        to: {
-            handler(to) {
-                this.details.taxi_to = to.map(to => {
-                    const address = this.addresses.find(address => address.address == to)
-                    
-                    return {
-                        address: to,
-                        lat: address?.lat ?? null,
-                        lng: address?.lng ?? null,
-                    }
-                })
             },
             deep: true,
         },
@@ -181,9 +118,6 @@ export default {
         this.details.taxi_to = this.details.taxi_to ?? []
 
         this.setAddresses()
-
-        this.from = this.details.taxi_from.address
-        this.to = this.details.taxi_to.map(address => address.address)
     },
 }
 </script>

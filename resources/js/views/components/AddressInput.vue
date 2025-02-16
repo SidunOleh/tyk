@@ -22,12 +22,19 @@ export default {
         },
     },
     mounted() {
+        const bounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(49.06547728491617, 22.9082275452199),
+            new google.maps.LatLng(50.44206318762908, 25.3252197327199)
+        )
+
         const autocomplete = new google.maps.places.Autocomplete(
             document.querySelector(`#${this.id}`), {
                 componentRestrictions: {
                     country: 'ua',
                 },
                 types: ['geocode'],
+                bounds: bounds,
+                strictBounds: true,
             }
         )
         autocomplete.addListener('place_changed', () => {

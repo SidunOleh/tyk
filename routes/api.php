@@ -65,11 +65,25 @@ use App\Http\Controllers\Admin\Promotions\DeleteController as PromotionsDeleteCo
 use App\Http\Controllers\Admin\Promotions\IndexController as PromotionsIndexController;
 use App\Http\Controllers\Admin\Promotions\StoreController as PromotionsStoreController;
 use App\Http\Controllers\Admin\Promotions\UpdateController as PromotionsUpdateController;
+use App\Http\Controllers\Admin\Regions\DeleteController as RegionsDeleteController;
+use App\Http\Controllers\Admin\Regions\GetAllController as RegionsGetAllController;
+use App\Http\Controllers\Admin\Regions\StoreController as RegionsStoreController;
+use App\Http\Controllers\Admin\Regions\UpdateController as RegionsUpdateController;
+use App\Http\Controllers\Admin\Tariffs\BulkDeleteController as TariffsBulkDeleteController;
+use App\Http\Controllers\Admin\Tariffs\DeleteController as TariffsDeleteController;
+use App\Http\Controllers\Admin\Tariffs\GetAllController as TariffsGetAllController;
+use App\Http\Controllers\Admin\Tariffs\IndexController as TariffsIndexController;
+use App\Http\Controllers\Admin\Tariffs\SetDefaultController;
+use App\Http\Controllers\Admin\Tariffs\StoreController as TariffsStoreController;
+use App\Http\Controllers\Admin\Tariffs\UpdateController as TariffsUpdateController;
 use App\Http\Controllers\Admin\Users\BulkDeleteController;
 use App\Http\Controllers\Admin\Users\DeleteController;
 use App\Http\Controllers\Admin\Users\IndexController;
 use App\Http\Controllers\Admin\Users\StoreController;
 use App\Http\Controllers\Admin\Users\UpdateController;
+use App\Http\Controllers\Price\CalcForRouteController;
+use App\Http\Controllers\Price\GetSettingsController;
+use App\Http\Controllers\Price\SaveSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::domain(config('app.admin_domain'))->group(function () {
@@ -254,6 +268,43 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('get');
             Route::post('/', SaveController::class)
                 ->name('save');
+        });
+
+        Route::prefix('/tariffs')->name('tariffs.')->group(function () {
+            Route::get('/', TariffsIndexController::class)
+                ->name('index');
+            Route::get('/all', TariffsGetAllController::class)
+                ->name('all');
+            Route::post('/', TariffsStoreController::class)
+                ->name('store');
+            Route::put('/{tariff}', TariffsUpdateController::class)
+                ->name('update');
+            Route::post('/{tariff}/set-default', SetDefaultController::class)
+                ->name('set-default');
+            Route::delete('/bulk', TariffsBulkDeleteController::class)
+                ->name('bulk-delete');
+            Route::delete('/{tariff}', TariffsDeleteController::class)
+                ->name('delete');
+        });
+
+        Route::prefix('/regions')->name('regions.')->group(function () {
+            Route::get('/all', RegionsGetAllController::class)
+                ->name('all');
+            Route::post('/', RegionsStoreController::class)
+                ->name('store');
+            Route::put('/{region}', RegionsUpdateController::class)
+                ->name('update');
+            Route::delete('/{region}', RegionsDeleteController::class)
+                ->name('delete');
+        });
+
+        Route::prefix('/price')->name('price.')->group(function () {
+            Route::post('/calc-for-route', CalcForRouteController::class)
+                ->name('price-for-route');
+            Route::get('/settings', GetSettingsController::class)
+                ->name('settings.get');
+            Route::post('/settings', SaveSettingsController::class)
+                ->name('settings.save');
         });
     });
 });

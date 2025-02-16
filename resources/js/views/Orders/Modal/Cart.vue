@@ -11,6 +11,7 @@
             :filter-option="false"
             :options="zakladOptions"
             :showSearch="true"
+            :showArrow="false"
             v-model:value="zaklady.selected"
             @search="fetchZaklady">
             <template 
@@ -27,6 +28,7 @@
             :filter-option="false"
             :options="productOptions"
             :showSearch="true"
+            :showArrow="false"
             v-model:value="products.selected"
             @search="fetchProducts"
             @select="addToCart">

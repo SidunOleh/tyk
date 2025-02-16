@@ -5,23 +5,10 @@
         has-feedback
         :validate-status="toErrors.length ? 'error' : ''"
         :help="toErrors">
-        <a-select
-            v-model:value="to"
-            placeholder="Виберіть адресу"
-            mode="tags"
-            :options="addressOptions">
-            <template #dropdownRender="{ menuNode: menu }">
-                <component :is="menu"/>
-                <a-divider style="margin: 4px 0"/>
-                <a-flex 
-                    style="padding: 4px 8px"
-                    :gap="5">
-                    <AddressInput 
-                        v-model:address="address"
-                        @placeChanged="address => {addAddress(); to.push(address.address)}"/>
-                </a-flex>
-            </template>
-        </a-select>
+        <AddressSelect
+            :addresses="addresses"
+            :multiple="true"
+            v-model:value="details.food_to"/>
     </a-form-item>
 
     <a-form-item 
@@ -40,11 +27,11 @@
 </template>
 
 <script>
-import AddressInput from '../../components/AddressInput.vue'
+import AddressSelect from '../../components/AddressSelect.vue'
 
 export default {
     components: {
-        AddressInput,
+        AddressSelect,
     },
     props: [
         'details',
@@ -53,23 +40,10 @@ export default {
     ],
     data() {
         return {
-            to: [],
             addresses: [],
-            address: {
-                address: '',
-                lat: null,
-                lng: null,
-            },
         }
     },
     computed: {
-        addressOptions() {
-            return this.addresses.map(address => {
-                return {
-                    value: address.address,
-                }
-            })
-        },
         toErrors() {
             const errors = []
             for (const field in this.errors) {
@@ -77,7 +51,7 @@ export default {
                     errors.push(this.errors[field])
                 }
 
-                let matches = field.match(/^details\.food_to\.(\d)\.(address|lat|lng)$/)
+                let matches = field.match(/^details\.food_to\.(\d)\.address$/)
                 if (matches) {
                     errors.push(`${this.errors[field]} №${Number(matches[1])+1}`)
                 }
@@ -102,34 +76,11 @@ export default {
             })
             this.addresses = unique
         },
-        addAddress() {
-            this.addresses.push(this.address)
-
-            this.address = {
-                address: '',
-                lat: null,
-                lng: null,
-            }
-        },
     },
     watch: {
         client: {
             handler(client) {
                 this.setAddresses()
-            },
-            deep: true,
-        },
-        to: {
-            handler(to) {
-                this.details.food_to = to.map(to => {
-                    const address = this.addresses.find(address => address.address == to)
-                    
-                    return {
-                        address: to,
-                        lat: address?.lat ?? null,
-                        lng: address?.lng ?? null,
-                    }
-                })
             },
             deep: true,
         },
@@ -141,8 +92,6 @@ export default {
             this.details.delivery_time ? this.details.delivery_time : ''
 
         this.setAddresses()
-
-        this.to = this.details.food_to.map(address => address.address)
     },
 }
 </script>
