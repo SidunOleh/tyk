@@ -38,11 +38,13 @@
                 </a-flex>
             </a-form-item>
 
-            <OrdersList 
-                v-if="selectedClient"
-                :orders="selectedClient?.orders"
-                :current="item?.id"
-                @repeat="repeatOrder"/>
+            <a-spin :spinning="fetchingClientOrders">
+                <OrdersList 
+                    v-if="selectedClient"
+                    :orders="selectedClient?.orders"
+                    :current="item?.id"
+                    @repeat="repeatOrder"/>
+            </a-spin>
 
             <a-form-item 
                 label="Сервіс"
@@ -259,6 +261,7 @@ export default {
             errors: {},
             loading: false,
             calcingPrice: false,
+            fetchingClientOrders: false,
         }
     },    
     computed: {
@@ -318,6 +321,18 @@ export default {
            return subtotal + this.data.shipping_price + this.data.additional_costs
         },
     },
+    watch: {
+        'data.client_id': function () {
+            if (
+                this.selectedClient 
+                && ! this.selectedClient.orders
+            ) {
+               this.selectedClient.orders = []
+
+               this.fetchClientOrders()
+            }
+        },
+    },
     methods: {
         formatPrice,
         setData(data) {
@@ -352,6 +367,17 @@ export default {
             this.clients.data = [client]
             this.data.client_id = client.id
             this.clientsModal.open = false
+        },
+        async fetchClientOrders() {
+            try {
+                this.fetchingClientOrders = true
+                const res = await clientsApi.getOrders(this.selectedClient.id)
+                this.selectedClient.orders = res.orders
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            } finally {
+                this.fetchingClientOrders = false
+            }
         },
         repeatOrder(order) {
             this.data.service = order.type

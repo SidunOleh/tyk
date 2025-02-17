@@ -407,95 +407,37 @@
                     </div>
 
                     <div class="order-car__form">
-                        <div class="address-select" style="margin-bottom: 15px;">
+                        
+                        <div style="margin-bottom: 15px;">
                             <div class="form-group">
                                 <input 
-                                    data-with-history
                                     autocomplete="off"
                                     type="text" 
                                     name="from" 
                                     placeholder="Звідки*" 
-                                    required
-                                    v-model="addresses[0].value"
-                                    @focusout="addresses[0].value = addresses[0].address"/>
-                                    <span title="Вказати на карті">
-                                        <svg @click="openSetOnMap(addresses[0])" class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="20px" width="20px" version="1.1" id="Capa_1" viewBox="0 0 293.334 293.334" xml:space="preserve">
-                                            <g>
-                                                <g>
-                                                    <path style="fill:#010002;" d="M146.667,0C94.903,0,52.946,41.957,52.946,93.721c0,22.322,7.849,42.789,20.891,58.878    c4.204,5.178,11.237,13.331,14.903,18.906c21.109,32.069,48.19,78.643,56.082,116.864c1.354,6.527,2.986,6.641,4.743,0.212    c5.629-20.609,20.228-65.639,50.377-112.757c3.595-5.619,10.884-13.483,15.409-18.379c6.554-7.098,12.009-15.224,16.154-24.084    c5.651-12.086,8.882-25.466,8.882-39.629C240.387,41.962,198.43,0,146.667,0z M146.667,144.358    c-28.892,0-52.313-23.421-52.313-52.313c0-28.887,23.421-52.307,52.313-52.307s52.313,23.421,52.313,52.307    C198.98,120.938,175.559,144.358,146.667,144.358z"/>
-                                                    <circle style="fill:#010002;" cx="146.667" cy="90.196" r="21.756"/>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </span>
+                                    v-model="data.from.address"/>
                             </div>
-
-                            @endverbatim
-
-                            @if ($address_history)
-                            <div class="addresses-history">
-                                @foreach ($address_history as $address)
-                                <div 
-                                    class="address"
-                                    data-address="{{ $address['address'] }}"
-                                    @click="changeAddress(addresses[0], {{ Js::from($address) }})">
-                                    <svg width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
-                                        <path d="M15.5 15.4996C15.2 15.4996 15 15.3996 14.8 15.1996L11.8 12.1996C11.6 11.9996 11.5 11.7996 11.5 11.4996V6.59961C11.5 5.99961 11.9 5.59961 12.5 5.59961C13.1 5.59961 13.5 5.99961 13.5 6.59961V10.9996L16.2 13.6996C16.6 14.0996 16.6 14.6996 16.2 15.0996C16 15.3996 15.8 15.4996 15.5 15.4996Z" fill="#454754"></path>
-                                        <path d="M21.6 8.70038C20 3.70038 14.7 0.900385 9.7 2.50038C4.7 4.10038 1.9 9.40038 3.5 14.4004C3.9 15.8004 4.7 17.0004 5.7 18.1004H4C3.4 18.1004 3 18.5004 3 19.1004C3 19.7004 3.4 20.1004 4 20.1004H8C8.6 20.1004 9 19.7004 9 19.1004V15.1004C9 14.5004 8.6 14.1004 8 14.1004C7.4 14.1004 7 14.5004 7 15.1004V16.7004C6.2 15.9004 5.7 14.9004 5.3 13.9004C4.1 10.0004 6.3 5.70038 10.2 4.50038C14.1 3.30038 18.4 5.50038 19.6 9.40038C20.8 13.3004 18.6 17.6004 14.7 18.8004C13.9 19.0004 13.1 19.2004 12.3 19.1004C11.7 19.1004 11.3 19.5004 11.3 20.1004C11.3 20.7004 11.7 21.1004 12.3 21.1004C12.4 21.1004 12.4 21.1004 12.5 21.1004C13.5 21.1004 14.4 21.0004 15.3 20.7004C20.3 19.0004 23.1 13.7004 21.6 8.70038Z" fill="#454754"></path>
-                                    </svg>
-                                    <span>{{ $address['address'] }}</span>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
-
-                            @verbatim
                         </div>
 
-                        <div class="address-select" style="margin-bottom: 15px;">
+                        <div
+                            v-for="(address, i) in data.to" 
+                            style="margin-bottom: 15px;">
                             <div class="form-group">
                                 <input
-                                    data-with-history
                                     autocomplete="off"
                                     type="text" 
-                                    name="to" 
+                                    name="to[]"
+                                    :to="`i${i}`" 
                                     placeholder="Куди*" 
-                                    required
-                                    v-model="addresses[1].value"
-                                    @focusout="addresses[1].value = addresses[1].address"/>
-                                    <span title="Вказати на карті">
-                                        <svg @click="openSetOnMap(addresses[1])" class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="20px" width="20px" version="1.1" id="Capa_1" viewBox="0 0 293.334 293.334" xml:space="preserve">
-                                            <g>
-                                                <g>
-                                                    <path style="fill:#010002;" d="M146.667,0C94.903,0,52.946,41.957,52.946,93.721c0,22.322,7.849,42.789,20.891,58.878    c4.204,5.178,11.237,13.331,14.903,18.906c21.109,32.069,48.19,78.643,56.082,116.864c1.354,6.527,2.986,6.641,4.743,0.212    c5.629-20.609,20.228-65.639,50.377-112.757c3.595-5.619,10.884-13.483,15.409-18.379c6.554-7.098,12.009-15.224,16.154-24.084    c5.651-12.086,8.882-25.466,8.882-39.629C240.387,41.962,198.43,0,146.667,0z M146.667,144.358    c-28.892,0-52.313-23.421-52.313-52.313c0-28.887,23.421-52.307,52.313-52.307s52.313,23.421,52.313,52.307    C198.98,120.938,175.559,144.358,146.667,144.358z"/>
-                                                    <circle style="fill:#010002;" cx="146.667" cy="90.196" r="21.756"/>
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </span>
+                                    v-model="address.address"/>
                             </div>
-
-                            @endverbatim
-
-                            @if ($address_history)
-                            <div class="addresses-history">
-                                @foreach ($address_history as $address)
-                                <div 
-                                    class="address"
-                                    data-address="{{ $address['address'] }}"
-                                    @click="changeAddress(addresses[1], {{ Js::from($address) }})">
-                                    <svg width="15px" height="15px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
-                                        <path d="M15.5 15.4996C15.2 15.4996 15 15.3996 14.8 15.1996L11.8 12.1996C11.6 11.9996 11.5 11.7996 11.5 11.4996V6.59961C11.5 5.99961 11.9 5.59961 12.5 5.59961C13.1 5.59961 13.5 5.99961 13.5 6.59961V10.9996L16.2 13.6996C16.6 14.0996 16.6 14.6996 16.2 15.0996C16 15.3996 15.8 15.4996 15.5 15.4996Z" fill="#454754"></path>
-                                        <path d="M21.6 8.70038C20 3.70038 14.7 0.900385 9.7 2.50038C4.7 4.10038 1.9 9.40038 3.5 14.4004C3.9 15.8004 4.7 17.0004 5.7 18.1004H4C3.4 18.1004 3 18.5004 3 19.1004C3 19.7004 3.4 20.1004 4 20.1004H8C8.6 20.1004 9 19.7004 9 19.1004V15.1004C9 14.5004 8.6 14.1004 8 14.1004C7.4 14.1004 7 14.5004 7 15.1004V16.7004C6.2 15.9004 5.7 14.9004 5.3 13.9004C4.1 10.0004 6.3 5.70038 10.2 4.50038C14.1 3.30038 18.4 5.50038 19.6 9.40038C20.8 13.3004 18.6 17.6004 14.7 18.8004C13.9 19.0004 13.1 19.2004 12.3 19.1004C11.7 19.1004 11.3 19.5004 11.3 20.1004C11.3 20.7004 11.7 21.1004 12.3 21.1004C12.4 21.1004 12.4 21.1004 12.5 21.1004C13.5 21.1004 14.4 21.0004 15.3 20.7004C20.3 19.0004 23.1 13.7004 21.6 8.70038Z" fill="#454754"></path>
-                                    </svg>
-                                    <span>{{ $address['address'] }}</span>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
-
-                            @verbatim
                         </div>
+
+                        <div @click="initToAddress(data.to.length)">+</div>
+
+
+
+
 
                         <div class="form-group">
                             <input  
@@ -587,19 +529,6 @@
 import { createApp } from 'https://unpkg.com/petite-vue?module'
 
 const orderCar = {
-    map: null,
-    addresses: [],
-    route: {
-        route: null,
-        distance: null,
-        duration: null,
-    },
-    price: null,
-    data: {
-        service: 'Таксі',
-        time: null,
-        payment_method: 'Готівка',
-    },
     datePicker: null,
     setOnMap: {
         open: false,
@@ -612,23 +541,132 @@ const orderCar = {
         }
     },
     openPanel: true,
+
+
+
+    map: null,
+    data: {
+        service: 'Таксі',
+        from: null,
+        to: [],
+        time: null,
+        payment_method: 'Готівка',
+    },
+    route: {
+        route: null,
+        price: null,
+    },
+    autocompleteOptions: {
+        componentRestrictions: {
+            country: 'ua'
+        },
+        types: ['geocode'],
+        bounds: new google.maps.LatLngBounds(
+            new google.maps.LatLng(49.06547728491617, 22.9082275452199),
+            new google.maps.LatLng(50.44206318762908, 25.3252197327199)
+        ),
+        strictBounds: true,
+    },
+    iniFromAddress() {
+        const address = {
+            address: null,
+            lat: null,
+            lng: null,
+            autocomplete: null,
+            marker: null,
+        }
+
+        this.data.from = address
+
+        address.autocomplete = new google
+            .maps
+            .places
+            .Autocomplete(
+                document.querySelector('[name=from]'), 
+                this.autocompleteOptions
+            )
+
+        address.autocomplete.addListener('place_changed', () => {
+            const place = address.autocomplete.getPlace()
+
+            this.changeAddress(address, {
+                address: this.formatAddress(place.formatted_address, place.address_components),
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+            })
+        })
+    },
+    initToAddress(index) {
+        const address = {
+            address: null,
+            lat: null,
+            lng: null,
+            autocomplete: null,
+            marker: null,
+        }
+
+        this.data.to[index] = address
+
+        setTimeout(() => {
+            address.autocomplete = new google
+                .maps
+                .places
+                .Autocomplete(
+                    document.querySelector(`[to=i${index}]`), 
+                    this.autocompleteOptions
+                )
+            address.autocomplete.addListener('place_changed', () => {
+                const place = address.autocomplete.getPlace()
+
+                this.changeAddress(address, {
+                    address: this.formatAddress(place.formatted_address, place.address_components),
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng(),
+                })
+            })
+        })
+    },
+    formatAddress(address, components) {
+        const country = components.find(
+            component => component.types.includes('country')
+        )
+        const zip = components.find(
+            component => component.types.includes('postal_code')
+        )
+
+        if (country) {
+            address = address.replace(`, ${country.long_name}`, '').trim()
+        }
+
+        if (zip) {
+            address = address.replace(`, ${zip.long_name}`, '').trim()
+        }
+
+        return address
+    },
     changeAddress(address, data) {
         address.address = data.address
         address.lat = data.lat
         address.lng = data.lng
-        address.value = data.address
 
+        this.showOnMap(address)
+    },
+    showOnMap(address) {
         if (
-            this.addresses[0].address && 
-            this.addresses[1].address
+            this.data.from.address
+            && ! this.data.to.some(address => ! address.address)
         ) {
-            this.addresses.forEach(item => this.removeMarker(item.marker))
-            this.route.route?.setMap(null)
+            this.clearMap()
             this.renderRoute()
         } else {
-            this.addresses.forEach(item => item === address && this.removeMarker(item.marker))
+            this.removeMarker(address.marker)
             this.renderMarker(address)
         }
+    },
+    clearMap() {
+        this.removeMarker(this.data.from.marker)
+        this.data.to.forEach(address => this.removeMarker(address.marker))
+        this.route.route?.setMap(null)
     },
     removeMarker(marker) {
         marker?.setVisible(false)
@@ -652,31 +690,46 @@ const orderCar = {
         this.map.setZoom(16)
     },
     renderRoute() { 
-        const directionsService = new google.maps.DirectionsService()
+        const directions = new google.maps.DirectionsService()
 
         this.route.route = new google.maps.DirectionsRenderer()
         this.route.route.setMap(this.map)
 
-        directionsService.route({
-            origin: {
-                lat: this.addresses[0].lat,
-                lng: this.addresses[0].lng,
-            },
-            destination: {
-                lat: this.addresses[1].lat,
-                lng: this.addresses[1].lng,
-            },
+        const origin = {
+            lat: this.data.from.lat,
+            lng: this.data.from.lng,
+        }
+
+        const destination = {
+            lat: this.data.to[this.data.to.length-1].lat,
+            lng: this.data.to[this.data.to.length-1].lng,
+        }
+
+        const waypoints = []
+        for (let i = 0; i < this.data.to.length-1; i++) {
+            waypoints.push({
+                location: {
+                    lat: this.data.to[i].lat,
+                    lng: this.data.to[i].lng,
+                }
+            })
+        }
+
+        directions.route({
+            origin,
+            destination,
+            waypoints,
             travelMode: google.maps.TravelMode.DRIVING,
         }, (result, status) => {
-            console.log(result)
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.route.setDirections(result)
-                this.route.distance = result.routes[0].legs[0].distance.text
-                this.route.duration = result.routes[0].legs[0].duration.text
-                this.price = 0
+                this.route.price = 0
             }
         })
     },
+
+
+
     openSetOnMap(address) {
         this.setOnMap.open = true  
         this.setOnMap.for = address  
@@ -738,24 +791,6 @@ const orderCar = {
         })
 
         return res.results[0]
-    },
-    formatAddress(address, components) {
-        const country = components.find(
-            component => component.types.includes('country')
-        )
-        const zip = components.find(
-            component => component.types.includes('postal_code')
-        )
-
-        if (country) {
-            address = address.replace(`, ${country.long_name}`, '').trim()
-        }
-
-        if (zip) {
-            address = address.replace(`, ${zip.long_name}`, '').trim()
-        }
-
-        return address
     },
     async send() {
         try {
@@ -819,60 +854,8 @@ const orderCar = {
             gestureHandling: 'greedy',
         })
 
-        this.addresses.push({
-            address: null,
-            lat: null,
-            lng: null,
-            value: null,
-            autocomplete: null,
-            marker: null,
-        })
-        this.addresses.push({
-            address: null,
-            lat: null,
-            lng: null,
-            value: null,
-            autocomplete: null,
-            marker: null,
-        })
-
-        this.addresses[0].autocomplete = new google
-            .maps
-            .places
-            .Autocomplete(document.querySelector('[name=from]'), {
-                componentRestrictions: {
-                    country: 'ua'
-                },
-                types: ['geocode'],
-            })
-        this.addresses[0].autocomplete.addListener('place_changed', () => {
-            const place = this.addresses[0].autocomplete.getPlace()
-
-            this.changeAddress(this.addresses[0], {
-                address: this.formatAddress(place.formatted_address, place.address_components),
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            })
-        })
-        
-        this.addresses[1].autocomplete = new google
-            .maps
-            .places
-            .Autocomplete(document.querySelector('[name=to]'), {
-                componentRestrictions: {
-                    country: 'ua'
-                },
-                types: ['geocode'],
-            })
-        this.addresses[1].autocomplete.addListener('place_changed', () => {
-            const place = this.addresses[1].autocomplete.getPlace()
-
-            this.changeAddress(this.addresses[1], {
-                address: this.formatAddress(place.formatted_address, place.address_components),
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            })
-        })
+        this.iniFromAddress()
+        this.initToAddress(0)
 
         this.datePicker = new AirDatepicker('#time', {
             timepicker: true,

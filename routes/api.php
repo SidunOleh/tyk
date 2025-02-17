@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\Categories\UpdateController as CategoriesUpdateCo
 use App\Http\Controllers\Admin\Clients\BulkDeleteController as ClientsBulkDeleteController;
 use App\Http\Controllers\Admin\Clients\DeleteController as ClientsDeleteController;
 use App\Http\Controllers\Admin\Clients\FindOrCreateController;
+use App\Http\Controllers\Admin\Clients\GetOrdersController;
 use App\Http\Controllers\Admin\Clients\IndexController as ClientsIndexController;
 use App\Http\Controllers\Admin\Clients\SearchController;
 use App\Http\Controllers\Admin\Clients\StoreController as ClientsStoreController;
@@ -197,6 +198,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('index');
             Route::get('/search', SearchController::class)
                 ->name('search');
+            Route::get('/{client}/orders', GetOrdersController::class)
+                ->name('orders.get');
             Route::post('/', ClientsStoreController::class)
                 ->name('store');
             Route::post('/find-or-create', FindOrCreateController::class)

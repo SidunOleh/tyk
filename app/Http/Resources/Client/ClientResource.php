@@ -17,17 +17,16 @@ class ClientResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $client = $this->clientData();
+        
         $orders = [];
         foreach ($this->ordersByDate as $order) {
             $orders[] = $this->orderToArray($order);
         }
-
-        $client = $this->clientData();
         $client['orders'] = $orders;
 
         foreach ($client['orders'] as &$order) {
             $order['client'] = $this->clientData();
-            $order['client']['orders'] = $orders;
         }
 
         return $client;

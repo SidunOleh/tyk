@@ -9,6 +9,7 @@ use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
 use App\Models\Client;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class ClientService extends Service
@@ -57,5 +58,10 @@ class ClientService extends Service
         unset($addresses[$request->index]);
 
         $client->update(['addresses' => $addresses]);
+    }
+
+    public function getOrders(Client $client): Collection
+    {
+        return $client->ordersByDate;
     }
 }
