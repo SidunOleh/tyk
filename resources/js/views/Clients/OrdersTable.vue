@@ -2,7 +2,7 @@
     <a-table
         :columns="columns"
         :dataSource="data"
-        :pagination="false"
+        :pagination="{pageSize: 15}"
         :bordered="true">
 
         <template #expandedRowRender="{ record }">

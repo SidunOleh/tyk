@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Client;
 
 use App\Http\Resources\Courier\CourierResource;
-use App\Http\Resources\Order\OrderResource;
 use App\Http\Resources\OrderItem\OrderItemResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -67,7 +66,7 @@ class ClientResource extends JsonResource
             'payment_method' => $order->payment_method,
             'created_at' => $order->created_at,
             'history' => $order->history,
-            'courier' => new CourierResource($this->courier),
+            'courier' => $order->courier,
         ];
 
         if ($data['type'] == Order::FOOD_SHIPPING) {

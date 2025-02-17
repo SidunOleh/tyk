@@ -121,11 +121,6 @@
                     </a>
                     <template #overlay>
                         <a-menu>
-                            <a-menu-item @click="$emit('cashes', record)">
-                                <a href="javascript:;">
-                                    Каса
-                                </a>
-                            </a-menu-item>
                             <a-menu-item @click="$emit('history', record)">
                                 <a href="javascript:;">
                                     Історія

@@ -289,7 +289,7 @@ export default {
                     client = item
                 }
             })
-
+            
             return client
         },
         serviceOptions() {
@@ -368,8 +368,6 @@ export default {
                     }
                 }) ?? []
             }
-
-            console.log(this.data.details)
         },
         async create() {
             try {

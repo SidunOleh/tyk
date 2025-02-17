@@ -29,15 +29,6 @@
         :item="edit.record"
         @edit="$refs.table.updateData()"/>
 
-    <CashesModal
-        v-if="cashes.open"
-        :title="`Каса ${cashes.record.first_name} ${cashes.record.last_name}`"
-        v-model:open="cashes.open"
-        :courier="cashes.record"
-        @create="$refs.table.updateData()"
-        @edit="$refs.table.updateData()"
-        @delete="$refs.table.updateData()"/>
-
     <History
         v-model:open="history.open"
         :history="history.record?.history"/>
@@ -47,14 +38,12 @@
 <script>
 import Table from './Table.vue'
 import Modal from './Modal.vue'
-import CashesModal from './CashesModal.vue'
 import History from '../components/History.vue'
 
 export default {
     components: {
         Table, 
         Modal, 
-        CashesModal,
         History,
     },
     data() {
@@ -63,10 +52,6 @@ export default {
                 open: false,
             },
             edit: {
-                open: false,
-                record: null,
-            },
-            cashes: {
                 open: false,
                 record: null,
             },
