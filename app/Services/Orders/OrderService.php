@@ -25,7 +25,11 @@ abstract class OrderService extends Service
         $paid = $request->query('paid', []);
         $paid = array_map(fn ($paid) => $paid == 'true' ? true : false, $paid);
 
-        $models = $this->model::orderBy($orderby, $order)
+        $models = $this->model::with('client')
+            ->with('client.ordersByDate')
+            ->with('client.ordersByDate.courier')
+            ->with('courier')
+            ->orderBy($orderby, $order)
             ->search($s)
             ->types($types)
             ->statuses($statuses)
@@ -52,11 +56,6 @@ abstract class OrderService extends Service
     public function changeCourier(Order $order, ?int $courierId): void
     {
         $order->update(['courier_id' => $courierId]);
-    }
-
-    public function calcPriceForDistance(array $start, array $end): float
-    {
-        
     }
 
     abstract public function repeat(Order $order): void;

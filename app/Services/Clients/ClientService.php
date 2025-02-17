@@ -8,10 +8,29 @@ use App\Http\Requests\Clients\DeleteAddressRequest;
 use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
 use App\Models\Client;
 use App\Services\Service;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class ClientService extends Service
 {
     protected string $model = Client::class;
+
+    public function index(Request $request): LengthAwarePaginator
+    {
+        $page = $request->query('page', 1);
+        $perpage = $request->query('perpage', 15);
+        $orderby = $request->query('orderby', 'created_at');
+        $order = $request->query('order', 'DESC');
+        $s = $request->query('s', '');
+
+        $models = Client::with('ordersByDate')
+            ->with('ordersByDate.courier')
+            ->orderBy($orderby, $order)
+            ->search($s)
+            ->paginate($perpage, ['*'], 'page', $page);
+
+        return $models;
+    }
 
     public function findOrCreate(FindOrCreateRequest $request): Client
     {

@@ -28,11 +28,7 @@ class OrderResource extends JsonResource
             'history' => $this->history,
         ];
 
-        foreach ($this->client->orders()
-            ->with('courier')
-            ->with('orderItems')
-            ->orderBy('created_at', 'DESC')
-            ->get() as $order) {
+        foreach ($this->client->ordersByDate as $order) {
             $data['client']['orders'][] = $this->orderToArray($order);
         }
 

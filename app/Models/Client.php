@@ -63,6 +63,11 @@ class Client extends Authenticatable implements ILogUser
         return $this->hasMany(Order::class);
     }
 
+    public function ordersByDate(): HasMany
+    {
+        return $this->hasMany(Order::class)->orderBy('created_at', 'desc');
+    }
+
     public function formattedBonuses(string $symb = '₴'): string
     {
         return number_format($this->bonuses, 2) . $symb;
