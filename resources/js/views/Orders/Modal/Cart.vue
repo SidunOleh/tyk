@@ -5,41 +5,45 @@
         has-feedback
         :validate-status="errors['order_items'] ? 'error' : ''"
         :help="errors['order_items']">
-        <a-select
-            style="width: 100%; margin-bottom: 5px;"
-            placeholder="Знайдіть заклад"
-            :filter-option="false"
-            :options="zakladOptions"
-            :showSearch="true"
-            :showArrow="false"
-            v-model:value="zaklady.selected"
-            @search="fetchZaklady">
-            <template 
-                v-if="zaklady.fetching" 
-                #notFoundContent>
-                <a-spin 
-                    style="width: 100%" 
-                    size="small"/>
-            </template>
-        </a-select>
-        <a-select
-            style="width: 100%"
-            placeholder="Знайдіть товар"
-            :filter-option="false"
-            :options="productOptions"
-            :showSearch="true"
-            :showArrow="false"
-            v-model:value="products.selected"
-            @search="fetchProducts"
-            @select="addToCart">
-            <template 
-                v-if="products.fetching" 
-                #notFoundContent>
-                <a-spin 
-                    style="width: 100%" 
-                    size="small"/>
-            </template>
-        </a-select>
+        <a-flex :gap="5">
+            <a-select
+                style="width: 30%;"
+                placeholder="Знайдіть заклад"
+                :allowClear="true"
+                :filter-option="false"
+                :options="zakladOptions"
+                :showSearch="true"
+                :showArrow="false"
+                v-model:value="zaklady.selected"
+                @search="fetchZaklady">
+                <template 
+                    v-if="zaklady.fetching" 
+                    #notFoundContent>
+                    <a-spin 
+                        style="width: 100%" 
+                        size="small"/>
+                </template>
+            </a-select>
+            <a-select
+                style="width: 70%"
+                placeholder="Знайдіть товар"
+                :allowClear="true"
+                :filter-option="false"
+                :options="productOptions"
+                :showSearch="true"
+                :showArrow="false"
+                v-model:value="products.selected"
+                @search="fetchProducts"
+                @select="addToCart">
+                <template 
+                    v-if="products.fetching" 
+                    #notFoundContent>
+                    <a-spin 
+                        style="width: 100%" 
+                        size="small"/>
+                </template>
+            </a-select>
+    </a-flex>
     </a-form-item>
 
     <a-list
