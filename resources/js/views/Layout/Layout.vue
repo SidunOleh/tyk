@@ -125,14 +125,14 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="content">
+                <!-- <a-menu-item key="content">
                     <template #icon>
                         <EditOutlined/>
                     </template>
                     <router-link :to="{name: 'content.index'}">
                         Контент
                     </router-link>
-                </a-menu-item>
+                </a-menu-item> -->
 
                 <a-menu-item key="users">
                     <template #icon>
