@@ -230,5 +230,10 @@ return [
         'courier_services.*.price' => 'ціна',
         'courier_service' => 'кур\'єрська послуга',
         'route' => 'маршрут',
+        'car_id' => 'автомобіль',
+        'start' => 'початок',
+        'end' => 'кінець',
+        'exchange_office' => 'розмінна каса',
+        'comment' => 'комент',
     ],
 ];

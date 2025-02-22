@@ -17,6 +17,27 @@
                     </router-link>
                 </a-menu-item>
 
+                <a-sub-menu>
+                    <template #icon>
+                        <FieldTimeOutlined/>
+                    </template>
+                    <template #title>
+                        Зміна
+                    </template>
+
+                    <a-menu-item key="work-drifts.current">
+                        <router-link :to="{name: 'work-drifts.current'}">
+                            Зміна
+                        </router-link>
+                    </a-menu-item>
+
+                    <a-menu-item key="work-drifts.index">
+                        <router-link :to="{name: 'work-drifts.index'}">
+                            Архів
+                        </router-link>
+                    </a-menu-item>
+                </a-sub-menu>
+
                 <a-menu-item key="orders">
                     <template #icon>
                         <ShoppingCartOutlined/>
@@ -125,14 +146,14 @@
                     </router-link>
                 </a-menu-item>
 
-                <!-- <a-menu-item key="content">
+                <a-menu-item key="content">
                     <template #icon>
                         <EditOutlined/>
                     </template>
                     <router-link :to="{name: 'content.index'}">
                         Контент
                     </router-link>
-                </a-menu-item> -->
+                </a-menu-item>
 
                 <a-menu-item key="users">
                     <template #icon>
@@ -193,6 +214,7 @@ import {
   EditOutlined,
   SettingOutlined,
   CreditCardOutlined,
+  FieldTimeOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
@@ -226,6 +248,7 @@ export default {
         EditOutlined,
         SettingOutlined,
         CreditCardOutlined,
+        FieldTimeOutlined,
     },
     data() {
         return {

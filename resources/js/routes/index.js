@@ -248,6 +248,32 @@ const routes = [{
         title: 'Налаштування ціни',
     },
 }, {
+    path: '/work-drifts/current',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/WorkDrifts/Current.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'work-drifts.current',
+    meta: {
+        roles: ['адмін', ],
+        key: 'work-drifts.current',
+        title: 'Зміна',
+    },
+}, {
+    path: '/work-drifts',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/WorkDrifts/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'work-drifts.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'work-drifts.index',
+        title: 'Зміни',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

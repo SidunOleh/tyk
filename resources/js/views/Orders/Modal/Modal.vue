@@ -17,6 +17,7 @@
                     <a-select
                         style="width: 100%"
                         placeholder="Виберіть користувача"
+                        :allowClear="true"
                         :filter-option="false"
                         :options="clientOptions"
                         v-model:value="data.client_id"

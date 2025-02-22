@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\Auth\SendResetLinkController;
 use App\Http\Controllers\Admin\Cars\BulkDeleteController as CarsBulkDeleteController;
 use App\Http\Controllers\Admin\Cars\DeleteController as CarsDeleteController;
+use App\Http\Controllers\Admin\Cars\GetAllController as CarsGetAllController;
 use App\Http\Controllers\Admin\Cars\IndexController as CarsIndexController;
 use App\Http\Controllers\Admin\Cars\StoreController as CarsStoreController;
 use App\Http\Controllers\Admin\Cars\UpdateController as CarsUpdateController;
@@ -82,6 +83,16 @@ use App\Http\Controllers\Admin\Users\DeleteController;
 use App\Http\Controllers\Admin\Users\IndexController;
 use App\Http\Controllers\Admin\Users\StoreController;
 use App\Http\Controllers\Admin\Users\UpdateController;
+use App\Http\Controllers\Admin\WorkShifts\Drivers\GetStatController;
+use App\Http\Controllers\Admin\WorkShifts\CloseController;
+use App\Http\Controllers\Admin\WorkShifts\Drivers\CloseController as DriversCloseController;
+use App\Http\Controllers\Admin\WorkShifts\Drivers\OpenController as DriversOpenController;
+use App\Http\Controllers\Admin\WorkShifts\Drivers\UpdateController as DriversUpdateController;
+use App\Http\Controllers\Admin\WorkShifts\GetCurrentController;
+use App\Http\Controllers\Admin\WorkShifts\GetStatController as WorkShiftsGetStatController;
+use App\Http\Controllers\Admin\WorkShifts\IndexController as WorkShiftsIndexController;
+use App\Http\Controllers\Admin\WorkShifts\OpenController;
+use App\Http\Controllers\Admin\WorkShifts\ZakladReports\UpdateController as ZakladReportsUpdateController;
 use App\Http\Controllers\Price\CalcForRouteController;
 use App\Http\Controllers\Price\GetSettingsController;
 use App\Http\Controllers\Price\SaveSettingsController;
@@ -247,6 +258,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/cars')->name('cars.')->group(function () {
             Route::get('/', CarsIndexController::class)
                 ->name('index');
+            Route::get('/all', CarsGetAllController::class)
+                ->name('all');
             Route::post('/', CarsStoreController::class)
                 ->name('store');
             Route::put('/{car}', CarsUpdateController::class)
@@ -308,6 +321,29 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('settings.get');
             Route::post('/settings', SaveSettingsController::class)
                 ->name('settings.save');
+        });
+
+        Route::prefix('/work-shifts')->name('work-shifts.')->group(function () {
+            Route::get('/', WorkShiftsIndexController::class)
+                ->name('index');
+            Route::get('/current', GetCurrentController::class)
+                ->name('current');
+            Route::post('/open', OpenController::class)
+                ->name('open');
+            Route::get('/{workShift}/stat', WorkShiftsGetStatController::class)
+                ->name('stat');
+            Route::post('/{workShift}/close', CloseController::class)
+                ->name('close');
+            Route::post('/{workShift}/drivers/open', DriversOpenController::class)
+                ->name('drivers.open');
+            Route::get('/drivers/{driverWorkShift}/stat', GetStatController::class)
+                ->name('drivers.stat');
+            Route::post('/drivers/{driverWorkShift}/close', DriversCloseController::class)
+                ->name('drivers.close');
+            Route::post('/drivers/{driverWorkShift}', DriversUpdateController::class)
+                ->name('drivers.update');
+            Route::post('/zaklad-reports/{zakladReport}', ZakladReportsUpdateController::class)
+                ->name('zaklad-reports.update');
         });
     });
 });
