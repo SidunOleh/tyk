@@ -2,7 +2,8 @@
     <a-list
         item-layout="horizontal"
         bordered
-        :data-source="drivers">
+        :data-source="drivers"
+        :locale="{emptyText: 'Немає водіїв'}">
         <template #renderItem="{ item }">
             <a-list-item>
                 <a-list-item-meta>

@@ -6,7 +6,7 @@
                 :gap="10">
                 <a-typography-title 
                     style="margin-bottom: 0;"
-                    :level="4">
+                    :level="5">
                     Відкрита {{ formatDate(current.start) }}
                 </a-typography-title>
 
@@ -33,15 +33,19 @@
         </template>
 
         <template v-else>
-            <a-typography-title :level="4">
-                Немає відкритої зміни
-            </a-typography-title>
+            <a-flex
+                :align="'center'"
+                :gap="10">
+                <a-typography-title 
+                    style="margin-bottom: 0;"
+                    :level="5">
+                    Немає відкритої зміни
+                </a-typography-title>
 
-            <a-button 
-                type="primary"
-                @click="confirmPopup(open, 'Ви впевнені що хочете відкрити зміну?')">
-                Відкрити 
-            </a-button>
+                <a-typography-link @click="confirmPopup(open, 'Ви впевнені що хочете відкрити зміну?')">
+                    Відкрити 
+                </a-typography-link >
+            </a-flex>
         </template>
     </a-spin>
 
