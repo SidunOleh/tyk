@@ -10,12 +10,12 @@
         <a-button 
             v-if="component == 'Kanban'"
             @click="component = 'Timeline'">
-            <FieldTimeOutlined/>
+            <CarOutlined/>
         </a-button>
         <a-button 
             v-if="component == 'Timeline'"
             @click="component = 'Kanban'">
-            <ShoppingOutlined/>
+            <ShoppingCartOutlined/>
         </a-button>
         <a-button @click="create.open = true">
             <PlusOutlined/>
@@ -61,8 +61,8 @@
 import Kanban from './Kanban.vue'
 import Timeline from './Timeline.vue'
 import { 
-    FieldTimeOutlined,
-    ShoppingOutlined,
+    CarOutlined,
+    ShoppingCartOutlined,
     PlusOutlined,
     EnvironmentOutlined,
 } from '@ant-design/icons-vue'
@@ -77,8 +77,8 @@ export default {
     components: {
         Kanban,
         Timeline,
-        FieldTimeOutlined,
-        ShoppingOutlined,
+        CarOutlined,
+        ShoppingCartOutlined,
         Modal,
         PlusOutlined,
         EnvironmentOutlined,
@@ -102,6 +102,7 @@ export default {
                 open: false,
             },
             interval: null,
+            currentLocationsInterval: null,
             loading: false,
         }
     },
@@ -153,29 +154,15 @@ export default {
         },
         async fetchCouriers() {
             try {
-                this.couriers = await couriersApi.all()
+                this.couriers = await couriersApi.current()
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
         async fetchCouriersCurrentLocations() {
             try {
-                // this.locations = await couriersApi.currentLocations()
-                this.locations = [{
-                    first_name: 'Іван',
-                    last_name: 'Ганапольський',
-                    car: 'Dacia біла Sandero',
-                    state: 'Стоїть',
-                    lat: 49.8094, 
-                    lng: 24.9014,
-                }, {
-                    first_name: 'Петро',
-                    last_name: 'Ганапольський',
-                    car: 'Dacia біла Sandero',
-                    state: 'Стоїть',
-                    lat: 49.8195, 
-                    lng: 24.9014,
-                }]
+                const res = await couriersApi.currentLocations()
+                this.locations = res.data
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             }
@@ -198,9 +185,16 @@ export default {
                 this.fetchOrders(false, true)
             }
         }, 10 * 1000)
+
+        this.currentLocationsInterval = setInterval(() => {
+            if (this.map.open) {
+                this.fetchCouriersCurrentLocations()
+            }
+        }, 5 * 1000)
     },
     unmounted() {
         clearInterval(this.interval)
+        clearInterval(this.currentLocationsInterval)
     },
 }
 </script>

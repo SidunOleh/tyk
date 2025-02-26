@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin\Couriers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Courier\CouriersSearchCollection;
 use App\Services\Couriers\CourierService;
 
-class GetCurrentLocationsController extends Controller
+class GetCurrentController extends Controller
 {
     public function __construct(
         public CourierService $courierService
@@ -16,8 +17,8 @@ class GetCurrentLocationsController extends Controller
 
     public function __invoke()
     {
-        $data = $this->courierService->getCurrentLocations();
+        $couriers = $this->courierService->current();
 
-        return response(['data' => $data,]);
+        return response(new CouriersSearchCollection($couriers));
     }
 }

@@ -30,6 +30,7 @@
                 </a-descriptions-item> 
                 <a-descriptions-item label="Заклади">
                     <a-descriptions 
+                        v-if="record.zaklady_reports.length"
                         style="margin-top: 10px;"
                         size="small"
                         bordered
@@ -37,7 +38,10 @@
                         <a-descriptions-item 
                             v-for="report in record.zaklady_reports"
                             :label="report.zaklad.name">
-                            Загалом - {{ formatPrice(report.total) }}, Повернуто - {{ formatPrice(report.returned_amount) }}  <a-typography-link @click="$emit('zakladReport', report)"><EditOutlined/></a-typography-link>
+                            Загалом - {{ formatPrice(report.total) }}, Повернуто - {{ formatPrice(report.returned_amount) }} 
+                            <a-typography-link @click="$emit('zakladReport', report)">
+                                <EditOutlined/>
+                            </a-typography-link>
                         </a-descriptions-item> 
                     </a-descriptions>
                 </a-descriptions-item> 
@@ -94,7 +98,6 @@
         </template>
 
         <template #bodyCell="{column, record}">
-
             <template v-if="column.key === 'start'">
                 {{ formatDate(record.start) }}
             </template>

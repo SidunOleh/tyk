@@ -11,9 +11,6 @@ use App\Http\Controllers\Admin\Cars\GetAllController as CarsGetAllController;
 use App\Http\Controllers\Admin\Cars\IndexController as CarsIndexController;
 use App\Http\Controllers\Admin\Cars\StoreController as CarsStoreController;
 use App\Http\Controllers\Admin\Cars\UpdateController as CarsUpdateController;
-use App\Http\Controllers\Admin\Couriers\Cashes\DeleteController as CashesDeleteController;
-use App\Http\Controllers\Admin\Couriers\Cashes\StoreController as CashesStoreController;
-use App\Http\Controllers\Admin\Couriers\Cashes\UpdateController as CashesUpdateController;
 use App\Http\Controllers\Admin\Categories\BulkDeleteController as CategoriesBulkDeleteController;
 use App\Http\Controllers\Admin\Categories\DeleteController as CategoriesDeleteController;
 use App\Http\Controllers\Admin\Categories\GetAllController;
@@ -43,6 +40,7 @@ use App\Http\Controllers\Admin\Content\SaveController;
 use App\Http\Controllers\Admin\Couriers\BulkDeleteController as CouriersBulkDeleteController;
 use App\Http\Controllers\Admin\Couriers\DeleteController as CouriersDeleteController;
 use App\Http\Controllers\Admin\Couriers\GetAllController as CouriersGetAllController;
+use App\Http\Controllers\Admin\Couriers\GetCurrentController as CouriersGetCurrentController;
 use App\Http\Controllers\Admin\Couriers\GetCurrentLocationsController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
@@ -125,6 +123,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('index');
             Route::get('/all', CouriersGetAllController::class)
                 ->name('all');
+            Route::get('/current', CouriersGetCurrentController::class)
+                ->name('current');
             Route::get('/current-locations', GetCurrentLocationsController::class)
                 ->name('current-locations');
             Route::post('/', CouriersStoreController::class)
@@ -135,15 +135,6 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('bulk-delete');
             Route::delete('/{courier}', CouriersDeleteController::class)
                 ->name('delete');
-
-            Route::prefix('/{courier}/cashes')->name('cashes.')->group(function () {
-                Route::post('/', CashesStoreController::class)
-                    ->name('store');
-                Route::put('/{cash}', CashesUpdateController::class)
-                    ->name('update');
-                Route::delete('/{cash}', CashesDeleteController::class)
-                    ->name('delete');
-            });
         });
 
         Route::prefix('/products')->name('products.')->group(function () {

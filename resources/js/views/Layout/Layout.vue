@@ -19,20 +19,20 @@
 
                 <a-sub-menu>
                     <template #icon>
-                        <FieldTimeOutlined/>
+                        <ClockCircleOutlined/>
                     </template>
                     <template #title>
                         Зміна
                     </template>
 
-                    <a-menu-item key="work-drifts.current">
-                        <router-link :to="{name: 'work-drifts.current'}">
+                    <a-menu-item key="work-shifts.current">
+                        <router-link :to="{name: 'work-shifts.current'}">
                             Зміна
                         </router-link>
                     </a-menu-item>
 
                     <a-menu-item key="work-drifts.index">
-                        <router-link :to="{name: 'work-drifts.index'}">
+                        <router-link :to="{name: 'work-shifts.index'}">
                             Архів
                         </router-link>
                     </a-menu-item>
@@ -146,14 +146,14 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="content">
+                <!-- <a-menu-item key="content">
                     <template #icon>
                         <EditOutlined/>
                     </template>
                     <router-link :to="{name: 'content.index'}">
                         Контент
                     </router-link>
-                </a-menu-item>
+                </a-menu-item> -->
 
                 <a-menu-item key="users">
                     <template #icon>
@@ -214,7 +214,7 @@ import {
   EditOutlined,
   SettingOutlined,
   CreditCardOutlined,
-  FieldTimeOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
@@ -227,6 +227,7 @@ import {
     Button,
 } from 'ant-design-vue'
 import { h } from 'vue'
+import workShiftsApi from '../../api/work-shifts'
 
 export default {
     components: {
@@ -248,7 +249,7 @@ export default {
         EditOutlined,
         SettingOutlined,
         CreditCardOutlined,
-        FieldTimeOutlined,
+        ClockCircleOutlined,
     },
     data() {
         return {
@@ -315,9 +316,43 @@ export default {
                 ),
             })
         },
-    },
-    handleHangup(call) {
-        this.caller = null
+        handleHangup(call) {
+            this.caller = null
+        },
+        showWorkShiftNotification() {
+            const key = Date.now()
+
+            notification.open({
+                message: 'Немає відкритої зміни',
+                duration: 0,
+                key,
+                placement: 'top',
+                btn: () => h(
+                    Button,
+                    {
+                        type: 'primary',
+                        size: 'small',
+                        onClick: async () => {
+                            try {
+                                await workShiftsApi.open()
+                                notification.close(key)
+                                if (this.$route.name == 'work-shifts.current') {
+                                    location.reload()
+                                } else {
+                                    this.$router.push({name: 'work-shifts.current'})
+                                }
+                                hasOpenWorkShift = true
+                            } catch (err) {
+                                message.error(err?.response?.data?.message ?? err.message)
+                            }
+                        }
+                    },
+                    { 
+                        default: () => 'Відкрити',
+                    },
+                ),
+            })
+        },
     },
     async mounted() {
         await this.$router.isReady()
@@ -329,6 +364,10 @@ export default {
 
             phonet.listen('call.bridge', this.handleCall)
             phonet.listen('call.hangup', this.handleHangup)
+        }
+
+        if (! hasOpenWorkShift && auth.isLogged()) {
+            this.showWorkShiftNotification()
         }
     },
 }

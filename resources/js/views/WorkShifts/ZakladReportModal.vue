@@ -41,6 +41,7 @@
                 :help="errors.comment">
                 <a-textarea
                     placeholder="Введіть комент"
+                    :rows="5"
                     v-model:value="data.comment"/>
             </a-form-item>
             

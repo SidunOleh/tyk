@@ -90,6 +90,10 @@
         @endif
     @endauth
 
+    <script>
+        let hasOpenWorkShift = {{ \App\Models\WorkShift::hasOpen() ? 'true' : 'false' }}
+    </script>
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places,drawing&language=uk&region=ua"></script>
 
     <link rel="stylesheet" href="/assets/css/jkanban.min.css">

@@ -248,29 +248,29 @@ const routes = [{
         title: 'Налаштування ціни',
     },
 }, {
-    path: '/work-drifts/current',
+    path: '/work-shifts/current',
     component: defineAsyncComponent({
         loader: () =>
-            import ('../views/WorkDrifts/Current.vue'),
+            import ('../views/WorkShifts/Current.vue'),
         loadingComponent: Loader,
     }),
-    name: 'work-drifts.current',
+    name: 'work-shifts.current',
     meta: {
         roles: ['адмін', ],
-        key: 'work-drifts.current',
+        key: 'work-shifts.current',
         title: 'Зміна',
     },
 }, {
-    path: '/work-drifts',
+    path: '/work-shifts',
     component: defineAsyncComponent({
         loader: () =>
-            import ('../views/WorkDrifts/Index.vue'),
+            import ('../views/WorkShifts/Index.vue'),
         loadingComponent: Loader,
     }),
-    name: 'work-drifts.index',
+    name: 'work-shifts.index',
     meta: {
         roles: ['адмін', ],
-        key: 'work-drifts.index',
+        key: 'work-shifts.index',
         title: 'Зміни',
     },
 }, {

@@ -1,5 +1,5 @@
 <template>
-    <spin :spinning="loading">
+    <a-spin :spinning="loading">
         <template v-if="current">
             <a-flex
                 :align="'center'"
@@ -37,15 +37,17 @@
                 Немає відкритої зміни
             </a-typography-title>
 
-            <a-button @click="confirmPopup(open, 'Ви впевнені що хочете відкрити зміну?')">
+            <a-button 
+                type="primary"
+                @click="confirmPopup(open, 'Ви впевнені що хочете відкрити зміну?')">
                 Відкрити 
             </a-button>
         </template>
-    </spin>
+    </a-spin>
 
     <DriverModal
         v-if="addDriver.open"
-        title="Вікрити зміну для водія"
+        title="Відкриття зміни для водія"
         v-model:open="addDriver.open"
         action="open"
         :couriers="freeCouriers"
@@ -55,7 +57,7 @@
 
     <DriverModal
         v-if="editDriver.open"
-        title="Редагувати зміну водія"
+        :title="`Редагування зміни водія ${editDriver.record.courier.first_name} ${editDriver.record.courier.last_name}`"
         v-model:open="editDriver.open"
         action="edit"
         :couriers="freeCouriers"
@@ -66,14 +68,14 @@
 
     <CloseDriverModal
         v-if="closeDriver.open"
-        title="Закрити зміну водія"
+        :title="`Закриття зміни водія ${closeDriver.record.courier.first_name} ${closeDriver.record.courier.last_name}`"
         v-model:open="closeDriver.open"
         :item="closeDriver.record"
         @close="fetchCurrent"/>
 
     <CloseModal
         v-if="close.open"
-        title="Закрити зміну"
+        title="Закриття зміни"
         v-model:open="close.open"
         :item="current"
         @close="fetchCurrent"/>

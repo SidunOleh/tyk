@@ -62,4 +62,9 @@ class WorkShift extends Model
             'status',
         ], 'like', "%{$s}%");
     }
+
+    public static function hasOpen(): bool
+    {
+        return (bool) self::open()->first();
+    }
 }

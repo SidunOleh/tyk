@@ -25,6 +25,6 @@ class MaponService
             throw new Exception($result['error']['msg'], $result['error']['code']);
         }
 
-        return $result;
+        return $result['data']['units'];
     }
 }

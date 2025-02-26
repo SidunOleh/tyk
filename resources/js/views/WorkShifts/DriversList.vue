@@ -1,6 +1,7 @@
 <template>
     <a-list
         item-layout="horizontal"
+        bordered
         :data-source="drivers">
         <template #renderItem="{ item }">
             <a-list-item>

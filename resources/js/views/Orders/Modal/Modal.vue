@@ -3,7 +3,8 @@
         :title="title"
         :open="open"
         :footer="null"
-        @cancel="e => {if (! e.target.classList.contains('ant-modal-wrap')) $emit('update:open', false);}">
+        :maskClosable="false"
+        @cancel="$emit('update:open', false)">
         <a-form layout="vertical">
             <a-form-item 
                 label="Клієнт"

@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'returned_amount'=> 'required|numeric|min:0',
             'payment_method' => 'required|string',
-            'comment' => 'required|string|nullable',
+            'comment' => 'string|nullable',
         ];
     }
 }

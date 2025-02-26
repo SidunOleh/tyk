@@ -76,11 +76,6 @@ class Courier extends Model
         }
     }
 
-    public function cashes(): HasMany
-    {
-        return $this->hasMany(Cash::class);
-    }
-
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

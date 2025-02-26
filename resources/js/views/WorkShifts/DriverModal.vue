@@ -8,13 +8,13 @@
         <a-form layout="vertical">
 
             <a-form-item
+                v-if="action == 'open'"
                 label="Кур'єр"
                 :required="true"
                 has-feedback
                 :validate-status="errors['courier_id'] ? 'error' : ''"
                 :help="errors.courier_id">
                 <a-select
-                    :disabled="action == 'edit'"
                     placeholder="Виберіть кур'єр"
                     :options="courierOptions"
                     v-model:value="data.courier_id"/>

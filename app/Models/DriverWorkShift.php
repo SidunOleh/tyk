@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Builder;
 
 class DriverWorkShift extends Model
 {
@@ -52,5 +53,10 @@ class DriverWorkShift extends Model
     public function car(): BelongsTo
     {
         return $this->belongsTo(Car::class);
+    }
+
+    public function scopeOpen(Builder $query): void
+    {
+        $query->where('status', 'open');
     }
 }
