@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Courier extends Model
 {
@@ -20,6 +21,8 @@ class Courier extends Model
         'phone',
         'tg',
         'vehicles',
+        'tg_key',
+        'chat_id',
         'history',
     ];
 
@@ -38,6 +41,10 @@ class Courier extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (self $courier) {
+            $courier->tg_key = self::generateTgKey();
+        });
+
         static::created(function (self $courier) {
             $courier->log('створено', Auth::user());
         });
@@ -49,6 +56,15 @@ class Courier extends Model
         static::deleted(function (self $courier) {
             $courier->log('видалено', Auth::user());
         });
+    }
+
+    public static function generateTgKey(): string
+    {
+        do {
+            $key = Str::random(10);
+        } while (Courier::firstWhere('tg_key', $key));
+
+        return $key;
     }
 
     public function scopeSearch(Builder $query, string $s): void
@@ -80,4 +96,9 @@ class Courier extends Model
     {
         return $this->hasMany(Order::class);
     } 
+
+    public function tgLink(): string
+    {
+        return 'https://t.me/'.config('services.tg.bot_username').'?start='.$this->tg_key;
+    }
 }

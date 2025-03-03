@@ -31,6 +31,7 @@ class Order extends Model
         'details',
         'client_id',
         'courier_id',
+        'user_id',
         'history',
     ];
 
@@ -200,6 +201,11 @@ class Order extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function orderItems(): HasMany

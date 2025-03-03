@@ -43,4 +43,10 @@ return [
         'domain' => env('PHONET_DOMAIN'),
         'apiKey' => env('PHONET_API_KEY'),
     ],
+
+    'tg' => [
+        'bot_username' => env('TG_BOT_USERNAME'),
+        'bot_token' => env('TG_BOT_TOKEN'),
+        'bot_webhook' => env('TG_BOT_WEBHOOK'),
+    ],
 ];

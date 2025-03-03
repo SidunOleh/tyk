@@ -28,6 +28,7 @@ use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Pages\OrderCarController;
 use App\Http\Controllers\Pages\ProductsController;
 use App\Http\Controllers\Pages\PromotionController;
+use App\Http\Controllers\Tg\HandlerController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
@@ -151,3 +152,8 @@ Route::post('/checkout', OrdersCheckoutController::class)
  */
 Route::post('/form', HandleController::class)
     ->name('form');
+
+/**
+ * Tg 
+ */
+Route::post('/tg', HandlerController::class);

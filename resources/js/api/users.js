@@ -29,6 +29,15 @@ export default {
 
         return res.data
     },
+    async dispatchers() {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/users/dispatchers')
+
+        return res.data
+    },
     async show(id) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

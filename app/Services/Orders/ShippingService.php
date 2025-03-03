@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ShippingService extends OrderService
 {
@@ -32,6 +33,7 @@ class ShippingService extends OrderService
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
+            'user_id' => Auth::guard('admin')->id(),
         ]);
         $order->updateAmount();
 

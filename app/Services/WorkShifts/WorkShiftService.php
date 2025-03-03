@@ -2,31 +2,65 @@
 
 namespace App\Services\WorkShifts;
 
+use App\Events\DriverWorkShiftClosed;
 use App\Http\Requests\Admin\WorkShifts\CloseRequest as WorkShiftsCloseRequest;
+use App\Http\Requests\Admin\WorkShifts\Dispatchers\CloseRequest as DispatchersCloseRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\CloseRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\OpenRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\UpdateRequest;
 use App\Http\Requests\Admin\WorkShifts\ZakladReports\UpdateRequest as ZakladReportsUpdateRequest;
-use App\Models\Category;
+use App\Http\Requests\Admin\WorkShifts\Dispatchers\OpenRequest as DispatchersOpenRequest;
+use App\Models\DispatcherWorkShift;
 use App\Models\DriverWorkShift;
-use App\Models\Order;
 use App\Models\WorkShift;
 use App\Models\ZakladReport;
+use App\Repositories\WorkShiftRepository;
 use App\Services\Service;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class WorkShiftService extends Service
 {
     protected string $model = WorkShift::class;
 
+    public function __construct(
+        public WorkShiftRepository $workShiftRepository
+    )
+    {
+        
+    }
+
+    public function index(Request $request): LengthAwarePaginator
+    {
+        $page = $request->query('page', 1);
+        $perpage = $request->query('perpage', 15);
+        $orderby = $request->query('orderby', 'created_at');
+        $order = $request->query('order', 'DESC');
+        $s = $request->query('s', '');
+
+        $models = WorkShift::with('drivers')
+            ->with('drivers.courier')
+            ->with('dispatchers')
+            ->with('dispatchers.dispatcher')
+            ->with('zakladyReports')
+            ->with('zakladyReports.zaklad')
+            ->close()
+            ->search($s)
+            ->orderBy($orderby, $order)
+            ->paginate($perpage, ['*'], 'page', $page);
+
+        return $models;
+    }
+
     public function current(): ?WorkShift
     {
         return WorkShift::open()
+            ->with('drivers')
             ->with('drivers.courier')
             ->with('drivers.car')
+            ->with('dispatchers')
+            ->with('dispatchers.dispatcher')
             ->first();
     }
 
@@ -34,10 +68,45 @@ class WorkShiftService extends Service
     {
         $workShift = WorkShift::create([
             'start' => now()->format('Y-m-d H:i:s'),
-            'status' => 'open',
+            'status' => WorkShift::OPEN,
         ]);
 
         return $workShift;
+    }
+
+    public function workShiftStat(WorkShift $workShift): array
+    {
+        return $this->workShiftRepository->getWorkShiftStat($workShift);
+    }
+
+    public function close(
+        WorkShift $workShift,
+        WorkShiftsCloseRequest $request
+    ): void
+    {
+        if (! $workShift->allDispatchersWorkShiftsClosed()) {
+            throw new Exception('Закрийте зміни диспетчерів.');
+        }
+
+        if (! $workShift->allDriversWorkShiftsClosed()) {
+            throw new Exception('Закрийте зміни водіїв.');
+        }
+
+        $data = $request->validated();
+        $data['status'] = WorkShift::CLOSE;
+        $data['end'] = now()->format('Y-m-d H:i:s');
+
+        $workShift->update($data);
+
+        $zakladyStat = $this->workShiftRepository->getStatByZaklady($workShift);
+
+        foreach ($zakladyStat as $item) {
+            ZakladReport::create([
+                'category_id' => $item->zaklad_id,
+                'work_shift_id' => $workShift->id,
+                'total' => $item->total,
+            ]);
+        }
     }
 
     public function openDriverWorkShift(
@@ -46,7 +115,7 @@ class WorkShiftService extends Service
     ): DriverWorkShift
     {
         $driverWorkShift = $workShift->drivers()->create([
-            'status' => 'open',
+            'status' => DriverWorkShift::OPEN,
             'start' => $request->start,
             'courier_id' => $request->courier_id,
             'car_id' => $request->car_id,
@@ -68,62 +137,7 @@ class WorkShiftService extends Service
         DriverWorkShift $driverWorkShift
     ): array
     {
-        $start = $driverWorkShift->start;
-        $end = $driverWorkShift->end ?? now();
-
-        $stat = [];
-        $stat['food_shipping_count'] = 0;
-        $stat['food_shipping_total'] = 0;
-        $stat['shipping_count'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['taxi_count'] = 0;
-        $stat['taxi_total'] = 0;
-
-        $data = DB::table('orders')
-            ->select(DB::raw('type, count(*) count, sum(total) total'))
-            ->where('courier_id', $driverWorkShift->courier_id)
-            ->whereBetween('created_at', [
-                $start->format('Y-m-d H:i:s'), 
-                $end->format('Y-m-d H:i:s'),
-            ])
-            ->whereNot('status', Order::CANCELED)
-            ->groupBy('type')
-            ->get();
-            
-        foreach ($data as $item) {
-            $type = $item->type == Order::FOOD_SHIPPING
-                ? 'food_shipping'
-                : ($item->type == Order::SHIPPING 
-                ? 'shipping' 
-                : 'taxi');
-            $stat["{$type}_count"] = (int) $item->count;
-            $stat["{$type}_total"] = (float) $item->total;
-        }
-        
-        $stat['additional_costs'] = (float) DB::table('orders')
-            ->select(DB::raw('coalesce(sum(additional_costs), 0) additional_costs'))
-            ->where('courier_id', $driverWorkShift->courier_id)
-            ->whereBetween('created_at', [
-                $start->format('Y-m-d H:i:s'), 
-                $end->format('Y-m-d H:i:s'),
-            ])
-            ->whereNot('status', Order::CANCELED)
-            ->first()
-            ->additional_costs;
-
-        $stat['to_returned'] = (float) DB::table('orders')
-            ->select(DB::raw("coalesce(sum(total), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
-            ->where('courier_id', $driverWorkShift->courier_id)
-            ->whereBetween('created_at', [
-                $start->format('Y-m-d H:i:s'), 
-                $end->format('Y-m-d H:i:s'),
-            ])
-            ->where('payment_method', Order::CASH)
-            ->whereNot('status', Order::CANCELED)
-            ->first()
-            ->to_returned;
-        
-        return $stat;
+        return $this->workShiftRepository->getDriverWorkShiftStat($driverWorkShift);
     }
 
     public function closeDriverWorkShift(
@@ -132,103 +146,43 @@ class WorkShiftService extends Service
     ): void
     {
         $data = $request->validated();
-        $data['status'] = 'close';
+        $data['status'] = DriverWorkShift::CLOSE;
 
         $driverWorkShift->update($data);
+
+        DriverWorkShiftClosed::dispatch($driverWorkShift);
     }
 
-    public function workShiftStat(
-        WorkShift $workShift
+    public function openDispatcherWorkShift(
+        WorkShift $workShift,
+        DispatchersOpenRequest $request
+    ): DispatcherWorkShift
+    {
+        $dispatcherWorkShift = $workShift->dispatchers()->create([
+            'status' => DispatcherWorkShift::OPEN,
+            'dispatcher_id' => $request->dispatcher_id,
+            'start' => $request->start,
+        ]);
+
+        return $dispatcherWorkShift;
+    }
+
+    public function dispatcherWorkShiftStat(
+        DispatcherWorkShift $dispatcherWorkShift
     ): array
     {
-        $start = $workShift->start;
-        $end = $driverWorkShift->end ?? now();
-
-        $stat = [];
-        $stat['food_shipping_count'] = 0;
-        $stat['food_shipping_total'] = 0;
-        $stat['shipping_count'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['taxi_count'] = 0;
-        $stat['taxi_total'] = 0;
-
-        $data = DB::table('orders')
-            ->select(DB::raw('type, count(*) count, sum(total) total'))
-            ->whereBetween('created_at', [
-                $start->format('Y-m-d H:i:s'), 
-                $end->format('Y-m-d H:i:s'),
-            ])
-            ->whereNot('status', Order::CANCELED)
-            ->groupBy('type')
-            ->get();
-        foreach ($data as $item) {
-            $type = $item->type == Order::FOOD_SHIPPING
-                ? 'food_shipping'
-                : ($item->type == Order::SHIPPING 
-                ? 'shipping' 
-                : 'taxi');
-            $stat["{$type}_count"] = (int) $item->count;
-            $stat["{$type}_total"] = (float) $item->total;
-        }
-        
-        return $stat;
+        return $this->workShiftRepository->getDispatcherWorkShiftStat($dispatcherWorkShift);
     }
 
-    public function close(
-        WorkShift $workShift,
-        WorkShiftsCloseRequest $request
+    public function closeDispatcherWorkShift(
+        DispatcherWorkShift $dispatcherWorkShift,
+        DispatchersCloseRequest $request
     ): void
     {
-        if (! $workShift->allDriversWorkShiftsClosed()) {
-            throw new Exception('Закрийте зміни водіїв.');
-        }
-
         $data = $request->validated();
-        $data['status'] = 'close';
-        $data['end'] = now()->format('Y-m-d H:i:s');
+        $data['status'] = DispatcherWorkShift::CLOSE;
 
-        $workShift->update($data);
-
-        $zaklady = Category::establishment()->get();
-
-        $data = DB::table('orders')
-            ->select(DB::raw('category_product.category_id id, sum(order_items.quantity * order_items.amount) total'))
-            ->join('order_items', 'order_items.order_id', '=', 'orders.id')
-            ->join('products', 'products.id', '=', 'order_items.product_id')
-            ->join('category_product', 'category_product.product_id', '=', 'products.id')
-            ->whereBetween('orders.created_at', [
-                $workShift->start->format('Y-m-d H:i:s'), 
-                $workShift->end->format('Y-m-d H:i:s'),
-            ])
-            ->whereIn('category_product.category_id', $zaklady->pluck('id'))
-            ->groupBy('category_product.category_id')
-            ->get();
-
-        foreach ($data as $item) {
-            ZakladReport::create([
-                'category_id' => $item->id,
-                'work_shift_id' => $workShift->id,
-                'total' => $item->total,
-            ]);
-        }
-    }
-
-    public function index(Request $request): LengthAwarePaginator
-    {
-        $page = $request->query('page', 1);
-        $perpage = $request->query('perpage', 15);
-        $orderby = $request->query('orderby', 'created_at');
-        $order = $request->query('order', 'DESC');
-        $s = $request->query('s', '');
-
-        $models = WorkShift::with('zakladyReports')
-            ->with('zakladyReports.zaklad')
-            ->orderBy($orderby, $order)
-            ->close()
-            ->search($s)
-            ->paginate($perpage, ['*'], 'page', $page);
-
-        return $models;
+        $dispatcherWorkShift->update($data);
     }
 
     public function updateZakladReport(

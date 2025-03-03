@@ -26,6 +26,7 @@ class WorkShiftResource extends JsonResource
             'shipping_total' => $this->shipping_total,
             'taxi_total' => $this->taxi_total,
             'drivers' => $this->drivers,
+            'dispatchers' => $this->dispatchers,
             'zaklady_reports' => $this->zakladyReports,
         ];
 

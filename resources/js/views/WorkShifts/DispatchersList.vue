@@ -2,13 +2,13 @@
     <a-list
         item-layout="horizontal"
         bordered
-        :data-source="drivers"
-        :locale="{emptyText: 'Немає водіїв'}">
+        :data-source="dispatchers"
+        :locale="{emptyText: 'Немає диспетчерів'}">
         <template #renderItem="{ item }">
             <a-list-item>
                 <a-list-item-meta>
                     <template #title>
-                        {{ `${item.courier.first_name} ${item.courier.last_name}` }}
+                        {{ `${item.dispatcher.first_name} ${item.dispatcher.last_name}` }}
                         <a-typography-text type="secondary">
                             {{ formatDate(item.start) }} - {{ item.end ? formatDate(item.end) : 'працює' }}
                         </a-typography-text>
@@ -18,9 +18,6 @@
                 <template 
                     v-if="item.status == 'open'"
                     #actions>
-                    <a-typography-link  @click="$emit('edit', item)">
-                        редагувати
-                    </a-typography-link>
                     <a-typography-link 
                         type="danger"
                         @click="$emit('close', item)">
@@ -39,7 +36,7 @@ import {
 
 export default {
     props: [
-        'drivers',
+        'dispatchers',
     ],
     methods: {
         formatDate,

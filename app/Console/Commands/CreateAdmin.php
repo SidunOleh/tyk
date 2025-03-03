@@ -30,7 +30,7 @@ class CreateAdmin extends Command
         $email = $this->ask('E-mail', 'test@gmail.com');
         $firstName = $this->ask('Ім\'я', 'Test');
         $lastName = $this->ask('Прізвище', 'Test');
-        $phone = $this->ask('Телефон', '111111111');
+        $phone = $this->ask('Телефон', '(111) 111-11-11');
 
         $user = User::create([
             'first_name' => $firstName,

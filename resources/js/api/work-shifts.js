@@ -101,6 +101,33 @@ export default {
 
         return res.data
     },
+    async openDispatcherWorkShift(workShiftId, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/work-shifts/${workShiftId}/dispatchers/open`, data)
+
+        return res.data
+    },
+    async dispatcherWorkShiftStat(id) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get(`/api/work-shifts/dispatchers/${id}/stat`)
+
+        return res.data
+    },
+    async closeDispatcherWorkShift(id, data) {
+        if (!hasRole(['адмін', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/work-shifts/dispatchers/${id}/close`, data)
+
+        return res.data
+    },
     async editZakladReport(id, data) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')

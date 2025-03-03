@@ -157,9 +157,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const data = JSON.parse(JSON.stringify(this.data))
-                data.phone = `+38${data.phone}`
-                const res = await api.create(data)
+                const res = await api.create(this.data)
                 message.success(`Успішно створено. E-mail з доступами надіслано ${this.data.email}.`)
                 this.$emit('create')
                 this.$emit('update:open', false)

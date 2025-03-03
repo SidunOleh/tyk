@@ -235,5 +235,6 @@ return [
         'end' => 'кінець',
         'exchange_office' => 'розмінна каса',
         'comment' => 'комент',
+        'dispatcher_id' => 'диспетчер',
     ],
 ];

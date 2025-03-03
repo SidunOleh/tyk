@@ -40,6 +40,12 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->nullOnDelete();
 
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained()
+                ->onUpdate('cascade')
+                ->nullOnDelete();
+
             $table->json('history')->nullable();
             
             $table->timestamps();

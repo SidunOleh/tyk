@@ -17,19 +17,37 @@
                 </a-typography-link>
             </a-flex>
 
-            <div style="margin-top: 20px;">
-                <a-button 
-                    style="margin-bottom: 20px;"
-                    type="primary"
-                    @click="addDriver.open = true">
-                    Додати водія 
-                </a-button>
+            <a-flex
+                style="margin-top: 20px;"
+                :align="'flex-start'"
+                :gap="20">
+                <div style="margin-bottom: 20px; width: 50%;">
+                    <a-button 
+                        style="margin-bottom: 20px;"
+                        type="primary"
+                        @click="addDispatcher.open = true">
+                        Додати диспетчера 
+                    </a-button>
 
-                <DriversList 
-                    :drivers="current.drivers"
-                    @edit="driver => {editDriver.open = true; editDriver.record = driver;}"
-                    @close="driver => {closeDriver.open = true; closeDriver.record = driver;}"/>
-            </div>
+                    <DispatchersList 
+                        :dispatchers="current.dispatchers"
+                        @close="dispatcher => {closeDispatcher.open = true; closeDispatcher.record = dispatcher;}"/>
+                </div>
+
+                <div style="width: 50%;">
+                    <a-button 
+                        style="margin-bottom: 20px;"
+                        type="primary"
+                        @click="addDriver.open = true">
+                        Додати водія 
+                    </a-button>
+
+                    <DriversList 
+                        :drivers="current.drivers"
+                        @edit="driver => {editDriver.open = true; editDriver.record = driver;}"
+                        @close="driver => {closeDriver.open = true; closeDriver.record = driver;}"/>
+                </div>
+            </a-flex>
         </template>
 
         <template v-else>
@@ -49,6 +67,21 @@
         </template>
     </a-spin>
 
+    <DispatcherModal
+        v-if="addDispatcher.open"
+        title="Відкриття зміни для диспетчера"
+        v-model:open="addDispatcher.open"
+        action="open"
+        :dispatchers="freeDispatchers"
+        :workShift="current"
+        @open="fetchCurrent"/>
+    <CloseDispatcherModal
+        v-if="closeDispatcher.open"
+        :title="`Закриття зміни диспетчера ${closeDispatcher.record.dispatcher.first_name} ${closeDispatcher.record.dispatcher.last_name}`"
+        v-model:open="closeDispatcher.open"
+        :item="closeDispatcher.record"
+        @close="fetchCurrent"/>
+
     <DriverModal
         v-if="addDriver.open"
         title="Відкриття зміни для водія"
@@ -58,7 +91,6 @@
         :cars="freeCars"
         :workShift="current"
         @open="fetchCurrent"/>
-
     <DriverModal
         v-if="editDriver.open"
         :title="`Редагування зміни водія ${editDriver.record.courier.first_name} ${editDriver.record.courier.last_name}`"
@@ -69,7 +101,6 @@
         :workShift="current"
         :item="editDriver.record"
         @edit="fetchCurrent"/>
-
     <CloseDriverModal
         v-if="closeDriver.open"
         :title="`Закриття зміни водія ${closeDriver.record.courier.first_name} ${closeDriver.record.courier.last_name}`"
@@ -87,7 +118,9 @@
 
 <script>
 import DriverModal from './DriverModal.vue'
+import DispatcherModal from './DispatcherModal.vue'
 import CloseDriverModal from './CloseDriverModal.vue'
+import CloseDispatcherModal from './CloseDispatcherModal.vue'
 import CloseModal from './CloseModal.vue'
 import { message } from 'ant-design-vue'
 import api from '../../api/work-shifts'
@@ -97,7 +130,9 @@ import {
 } from '../../helpers/helpers'
 import couriersApi from '../../api/couriers'
 import carsApi from '../../api/cars'
+import usersApi from '../../api/users'
 import DriversList from './DriversList.vue'
+import DispatchersList from './DispatchersList.vue'
 
 export default {
     components: {
@@ -105,11 +140,21 @@ export default {
         DriversList,
         CloseDriverModal,
         CloseModal,
+        DispatcherModal,
+        DispatchersList,
+        CloseDispatcherModal,
     },
     data() {
         return {
             current: null,
             loading: false,
+            addDispatcher: {
+                open: false,
+            },
+            closeDispatcher: {
+                open: false,
+                record: null,
+            },
             addDriver: {
                 open: false,
             },
@@ -124,11 +169,25 @@ export default {
             close: {
                 open: false,
             },
+            dispatchers: [],
             couriers: [],
             cars: [],
         }
     },  
     computed: {
+        freeDispatchers() {
+           return this.dispatchers.filter(dispatcher => ! this
+                .current
+                .dispatchers
+                .find(currentDispatcher => {
+                    if (
+                        currentDispatcher.status == 'open' 
+                        && currentDispatcher.dispatcher_id == dispatcher.id
+                    ) {
+                        return true
+                    }
+                }))
+        },
         freeCouriers() {
            return this.couriers.filter(courier => ! this
                 .current
@@ -184,6 +243,13 @@ export default {
                 this.loading = false
             }
         },
+        async fetchDispatchers() {
+            try {
+                this.dispatchers = await usersApi.dispatchers()
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
         async fetchCouriers() {
             try {
                 this.couriers = await couriersApi.all()
@@ -212,6 +278,7 @@ export default {
     },
     mounted() {
         this.fetchCurrent()
+        this.fetchDispatchers()
         this.fetchCouriers()
         this.fetchCars()
     },

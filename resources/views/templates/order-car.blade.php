@@ -359,6 +359,28 @@
     .order-car__left.loading {
         border-radius: 5px;
     }
+
+    .add-address {
+        background-color: #ec1220;
+        border-radius: 5px;
+        padding: 2px;
+        text-align: center;
+        color: white;
+        cursor: pointer;
+        margin: -5px 0 10px 0;
+        font-size: 16px;
+    }
+
+    .remove-address img {
+        width: 20px;
+        cursor: pointer;
+    }
+
+    .order-car .form-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
 </style>
 
 <section 
@@ -374,12 +396,7 @@
                 <div 
                     class="arrow"
                     @click="openPanel = ! openPanel">
-                    <svg fill="#000000" height="15px" width="15px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                        viewBox="0 0 330 330" xml:space="preserve">
-                        <path id="XMLID_225_" d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393
-                            c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
-                            s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
-                    </svg>
+                    <img src="/assets/img/arrow.svg" alt="">
                 </div>
 
                 <div 
@@ -389,19 +406,13 @@
                         <div 
                             :class="{'order-car__type': true, 'chosen': data.service == 'Таксі'}"
                             @click="data.service = 'Таксі'">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="m20.9 9-1.5-4.6c-.3-.8-1-1.4-1.9-1.4H6.4c-.9 0-1.6.5-1.9 1.4L3 9H1v3h1v9h4v-2h12v2h4v-9h1V9h-2.1ZM5 14h4v2H5v-2Zm10 2v-2h4v2h-4ZM7.1 6h9.7l1.3 4H5.8l1.3-4Z" fill="currentColor"></path>
-                            </svg>
+                            <img src="/assets/img/car.svg" alt="">
                             <span>Таксі</span>
                         </div>
                         <div 
                             :class="{'order-car__type': true, 'chosen': data.service == 'Кур\'єр'}"
                             @click="data.service = 'Кур\'єр'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M17.5777 4.43152L15.5777 3.38197C13.8221 2.46066 12.9443 2 12 2C11.0557 2 10.1779 2.46066 8.42229 3.38197L6.42229 4.43152C4.64855 5.36234 3.6059 5.9095 2.95969 6.64132L12 11.1615L21.0403 6.64132C20.3941 5.9095 19.3515 5.36234 17.5777 4.43152Z" fill="currentColor"/>
-                                <path d="M21.7484 7.96435L12.75 12.4635V21.904C13.4679 21.7252 14.2848 21.2965 15.5777 20.618L17.5777 19.5685C19.7294 18.4393 20.8052 17.8748 21.4026 16.8603C22 15.8458 22 14.5833 22 12.0585V11.9415C22 10.0489 22 8.86558 21.7484 7.96435Z" fill="currentColor"/>
-                                <path d="M11.25 21.904V12.4635L2.25164 7.96434C2 8.86557 2 10.0489 2 11.9415V12.0585C2 14.5833 2 15.8458 2.5974 16.8603C3.19479 17.8748 4.27063 18.4393 6.42229 19.5685L8.42229 20.618C9.71524 21.2965 10.5321 21.7252 11.25 21.904Z" fill="currentColor"/>
-                            </svg>
+                            <img src="/assets/img/courier.svg" alt="">
                             <span>Кур'єр</span>
                         </div>
                     </div>
@@ -411,42 +422,88 @@
                         <div style="margin-bottom: 15px;">
                             <div class="form-group">
                                 <input 
+                                    v-if="data.from"
+                                    class="address-input"
                                     autocomplete="off"
                                     type="text" 
                                     name="from" 
-                                    placeholder="Звідки*" 
-                                    v-model="data.from.address"/>
+                                    :value="data.from.address"
+                                    v-model="data.from.value"
+                                    @input="data.from.showList = !Boolean(data.from.value)"
+                                    @focus="data.from.showList = !Boolean(data.from.value)"
+                                    @focusout="setTimeout(() => data.from.showList = false, 150)"
+                                    placeholder="Звідки*"/>
+                            </div>
+
+                            <div 
+                                v-if="data.from?.showList"
+                                class="address-list">
+                                <div 
+                                    class="address-item"
+                                    @click="openSetOnMap(data.from)">
+                                    Вказати на карті
+                                </div>
+                                <div 
+                                    v-for="item in addressHistory"
+                                    @click="setAddress(data.from, item)"
+                                    class="address-item">
+                                    {{ item.address }}
+                                </div>
                             </div>
                         </div>
 
                         <div
                             v-for="(address, i) in data.to" 
+                            :key="i"
                             style="margin-bottom: 15px;">
                             <div class="form-group">
                                 <input
+                                    class="address-input"
                                     autocomplete="off"
                                     type="text" 
                                     name="to[]"
+                                    :value="address.address"
                                     :to="`i${i}`" 
-                                    placeholder="Куди*" 
-                                    v-model="address.address"/>
+                                    placeholder="Куди*"/>
+                                <div 
+                                    v-if="data.to.length >= 2"
+                                    title="Видалити зупинку"
+                                    class="remove-address"
+                                    @click="deleteToAddress(i)">
+                                    <img src="/assets/img/bin.png" alt="">
+                                </div>
+                            </div>
+
+                            <div class="address-list">
+                                <div 
+                                    class="address-item"
+                                    @click="openSetOnMap(address)">
+                                    Вказати на карті
+                                </div>
+                                <div 
+                                    v-for="item in addressHistory"
+                                    @click="setAddress(address, item)"
+                                    class="address-item">
+                                    {{ item.address }}
+                                </div>
                             </div>
                         </div>
 
-                        <div @click="initToAddress(data.to.length)">+</div>
-
-
-
-
+                        <div 
+                            title="Додати зупинку"
+                            class="add-address"
+                            @click="addToAddress">+</div>
 
                         <div class="form-group">
                             <input  
-                                readonly
+                                type="date"
                                 autocomplete="off"
                                 type="text" 
                                 name="time" 
-                                id="time"
+                            
                                 placeholder="Час"/>
+
+                                <input type="time" step="1740" />
                         </div>
 
                         <div class="payment-methods">
@@ -480,9 +537,9 @@
 
                     <button 
                         class="btn"
-                        :disabled="! route.route"
+                    
                         @click="send">
-                        Замовити <span v-if="price !== null"> {{ price }}₴</span>
+                        Замовити <span v-if="route.price !== null"> {{ route.price }}₴</span>
                     </button>
                 </div>
 
@@ -542,7 +599,7 @@ const orderCar = {
     },
     openPanel: true,
 
-
+    addressHistory: [],
 
     map: null,
     data: {
@@ -567,127 +624,78 @@ const orderCar = {
         ),
         strictBounds: true,
     },
-    iniFromAddress() {
+    createAddress(inputSelector) {
         const address = {
             address: null,
             lat: null,
             lng: null,
+            value: '',
             autocomplete: null,
             marker: null,
         }
-
-        this.data.from = address
-
-        address.autocomplete = new google
-            .maps
-            .places
-            .Autocomplete(
-                document.querySelector('[name=from]'), 
-                this.autocompleteOptions
-            )
-
-        address.autocomplete.addListener('place_changed', () => {
-            const place = address.autocomplete.getPlace()
-
-            this.changeAddress(address, {
-                address: this.formatAddress(place.formatted_address, place.address_components),
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            })
-        })
-    },
-    initToAddress(index) {
-        const address = {
-            address: null,
-            lat: null,
-            lng: null,
-            autocomplete: null,
-            marker: null,
-        }
-
-        this.data.to[index] = address
 
         setTimeout(() => {
             address.autocomplete = new google
                 .maps
                 .places
                 .Autocomplete(
-                    document.querySelector(`[to=i${index}]`), 
+                    document.querySelector(inputSelector), 
                     this.autocompleteOptions
                 )
             address.autocomplete.addListener('place_changed', () => {
                 const place = address.autocomplete.getPlace()
 
-                this.changeAddress(address, {
-                    address: this.formatAddress(place.formatted_address, place.address_components),
-                    lat: place.geometry.location.lat(),
-                    lng: place.geometry.location.lng(),
-                })
+                document.querySelector(inputSelector).value = address.value = address.address = this.getAddress(place)
+                address.lat = place.geometry.location.lat()
+                address.lng = place.geometry.location.lng()
+
+                this.refreshMap()
             })
         })
-    },
-    formatAddress(address, components) {
-        const country = components.find(
-            component => component.types.includes('country')
-        )
-        const zip = components.find(
-            component => component.types.includes('postal_code')
-        )
-
-        if (country) {
-            address = address.replace(`, ${country.long_name}`, '').trim()
-        }
-
-        if (zip) {
-            address = address.replace(`, ${zip.long_name}`, '').trim()
-        }
 
         return address
     },
-    changeAddress(address, data) {
-        address.address = data.address
-        address.lat = data.lat
-        address.lng = data.lng
+    getAddress(place) {
+        let formatted = place.formatted_address
 
-        this.showOnMap(address)
+        const country = place.address_components.find(
+            component => component.types.includes('country')
+        )
+        if (country) {
+            formatted = formatted.replace(`, ${country.long_name}`, '').trim()
+        }
+
+        const zip = place.address_components.find(
+            component => component.types.includes('postal_code')
+        )
+        if (zip) {
+            formatted = formatted.replace(`, ${zip.long_name}`, '').trim()
+        }
+
+        return formatted
     },
-    showOnMap(address) {
-        if (
-            this.data.from.address
-            && ! this.data.to.some(address => ! address.address)
-        ) {
+    addToAddress() {
+        this.data.to.push(this.createAddress(`[to=i${this.data.to.length}]`))
+    },
+    deleteToAddress(i) {
+        this.removeMarker(this.data.to[i].marker)
+        this.data.to.splice(i, 1)
+        this.refreshMap()
+    },
+    refreshMap() {
+        let showRoute = this.data.from.address && ! this.data.to.some(address => ! address.address)
+
+        if (showRoute) {
             this.clearMap()
             this.renderRoute()
         } else {
-            this.removeMarker(address.marker)
-            this.renderMarker(address)
+            this.refreshMarkers()
         }
     },
     clearMap() {
         this.removeMarker(this.data.from.marker)
         this.data.to.forEach(address => this.removeMarker(address.marker))
         this.route.route?.setMap(null)
-    },
-    removeMarker(marker) {
-        marker?.setVisible(false)
-        marker?.setMap(null)
-        marker?.setPosition(null)
-        marker = null
-    },
-    renderMarker(address) {
-        address.marker = new google.maps.Marker({
-            position: {
-                lat: address.lat,
-                lng: address.lng,
-            },
-            map: this.map,
-        })
-
-        this.map.setCenter({
-            lat: address.lat,
-            lng: address.lng,
-        })
-        this.map.setZoom(16)
     },
     renderRoute() { 
         const directions = new google.maps.DirectionsService()
@@ -727,6 +735,52 @@ const orderCar = {
             }
         })
     },
+    refreshMarkers() {
+        if (
+            this.data.from.lat != this.data.from.marker?.getPosition().lat() ||
+            this.data.from.lng != this.data.from.marker?.getPosition().lng()
+        ) {
+            this.removeMarker(this.data.from.marker)
+            this.renderMarker(this.data.from)
+        }
+
+        this.data.to.forEach(address => {
+            if (
+                address.lat != address.marker?.getPosition().lat() ||
+                address.lng != address.marker?.getPosition().lng()
+            ) {
+                this.removeMarker(address.marker)
+                this.renderMarker(address)
+            }
+        })
+    },
+    renderMarker(address) {
+        address.marker = new google.maps.Marker({
+            position: {
+                lat: address.lat,
+                lng: address.lng,
+            },
+            map: this.map,
+        })
+
+        this.map.setCenter({
+            lat: address.lat,
+            lng: address.lng,
+        })
+        this.map.setZoom(16)
+    },
+    removeMarker(marker) {
+        marker?.setVisible(false)
+        marker?.setMap(null)
+        marker?.setPosition(null)
+        marker = null
+    },
+    setAddress(address, newAddress) {
+        address.value = address.address = newAddress.address
+        address.lat = newAddress.lat
+        address.lng = newAddress.lng
+        this.refreshMap()
+    },
 
 
 
@@ -756,21 +810,17 @@ const orderCar = {
             })
 
             this.setOnMap.address = {
-                address: this.formatAddress(
-                    location.formatted_address, 
-                    location.address_components
-                ),
+                address: this.getAddress(location),
                 lat: location.geometry.location.lat(),
                 lng: location.geometry.location.lng(),
             }
         })
     },
     applySetOnMap() {
-        this.changeAddress(this.setOnMap.for, {
-            address: this.setOnMap.address.address,
-            lat: this.setOnMap.address.lat,
-            lng: this.setOnMap.address.lng,
-        })
+        this.setOnMap.for.value = this.setOnMap.for.address = this.setOnMap.address.address
+        this.setOnMap.for.lat = this.setOnMap.address.lat
+        this.setOnMap.for.lng = this.setOnMap.address.lng
+        this.refreshMap()
 
         this.closeSetOnMap()
     },
@@ -793,6 +843,9 @@ const orderCar = {
         return res.results[0]
     },
     async send() {
+        console.log(this.data.to)
+            return
+        
         try {
             document.querySelector('.order-car__left').classList.add('loading')
             const res = await fetch('/orders/order-car', {
@@ -854,11 +907,10 @@ const orderCar = {
             gestureHandling: 'greedy',
         })
 
-        this.iniFromAddress()
-        this.initToAddress(0)
+        this.data.from = this.createAddress('[name=from]')
+        this.data.to.push(this.createAddress('[to=i0]'))
 
         this.datePicker = new AirDatepicker('#time', {
-            timepicker: true,
             onSelect: e => this.data.time = e.formattedDate,
             dateFormat: 'yyyy-MM-dd',
             timeFormat: 'HH:mm',
@@ -866,7 +918,7 @@ const orderCar = {
                 daysMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
                 months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
                 monthsShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
-                lear: 'Очистити',
+                clear: 'Очистити',
             },
             buttons: ['clear'],
         })
@@ -882,6 +934,8 @@ const orderCar = {
         if (order) {
             this.setDataFromOrder(JSON.parse(order))
         }
+
+        this.addressHistory = {{ Js::from($address_history) }}
     },
 }
 

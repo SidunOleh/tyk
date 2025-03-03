@@ -87,26 +87,10 @@
                     v-model:value="data.end"/>
             </a-form-item>
 
-            <a-form-item 
-                :required="true"
-                has-feedback
-                :validate-status="errors['returned_amount'] ? 'error' : ''"
-                :help="errors.returned_amount">
-                <template #label>
-                    Повернута сума. Повинен повернути - <a-typography-text strong style="margin-left: 5px;"> {{ formatPrice(data.to_returned) }}</a-typography-text>
-                </template>
-
-                <a-input-number
-                    style="width: 100%"
-                    placeholder="Введіть повернуту суму"
-                    :min="0"
-                    v-model:value="data.returned_amount"/>
-            </a-form-item>
-
             <a-button
                 danger
                 :loading="loading"
-                @click="confirmPopup(close, 'Ви впевнені що хочете закрити зміну для водія?')">
+                @click="confirmPopup(close, 'Ви впевнені що хочете закрити зміну для диспетчера?')">
                 Закрити
             </a-button>
 
@@ -139,8 +123,6 @@ export default {
                 shipping_total: 0,
                 taxi_count: 0,
                 taxi_total: 0,
-                additional_costs: 0,
-                returned_amount: 0,
             },
             errors: {},
             loading: false,
@@ -164,7 +146,7 @@ export default {
         async fetchStat() {
             try {
                 this.loading = true
-                const res = await api.driverWorkShiftStat(this.item.id)
+                const res = await api.dispatcherWorkShiftStat(this.item.id)
                 this.data = {...this.data, ...res.stat}
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
@@ -176,7 +158,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                await api.closeDriverWorkShift(
+                await api.closeDispatcherWorkShift(
                     this.item.id, 
                     this.data
                 )

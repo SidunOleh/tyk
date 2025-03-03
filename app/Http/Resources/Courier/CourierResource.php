@@ -21,6 +21,7 @@ class CourierResource extends JsonResource
             'phone' => $this->phone,
             'tg' => $this->tg,
             'vehicles' => $this->vehicles,
+            'tg_link' => $this->tgLink(),
             'history' => $this->history,
         ];
     }

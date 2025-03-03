@@ -32,6 +32,13 @@
                 <a-descriptions-item label="Телеграм">
                     {{ record.tg }}
                 </a-descriptions-item>
+                <a-descriptions-item label="Телеграм бот">
+                    <a-typography-paragraph 
+                        style="margin-bottom: 0;"
+                        :copyable="{ tooltip: false }">
+                        {{ record.tg_link }}
+                    </a-typography-paragraph>
+                </a-descriptions-item>
                 <a-descriptions-item label="Транспорт">
                     <a-tag 
                         v-for="vehicle in record.vehicles"

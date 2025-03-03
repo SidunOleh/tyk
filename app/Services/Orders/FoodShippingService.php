@@ -10,6 +10,7 @@ use App\Services\Cart\Cart;
 use App\Services\Cart\CartItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class FoodShippingService extends OrderService
 {
@@ -34,6 +35,7 @@ class FoodShippingService extends OrderService
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
+            'user_id' => Auth::guard('admin')->id(),
         ]);
         $order->orderItems()->createMany($request['order_items']);
         $order->updateAmount();

@@ -19,39 +19,73 @@
                 size="small"
                 bordered
                 :column="1">
-                <a-descriptions-item label="Початок">
-                    {{ formatDate(record.start) }}
-                </a-descriptions-item>  
-                <a-descriptions-item label="Кінець">
-                    {{ formatDate(record.end) }}
-                </a-descriptions-item> 
                 <a-descriptions-item label="Доставка їжі">
                     К-сть - {{ record.food_shipping_count }}, Сума - {{ formatPrice(record.food_shipping_total) }}
-                </a-descriptions-item> 
-                <a-descriptions-item label="Заклади">
-                    <a-descriptions 
-                        v-if="record.zaklady_reports.length"
-                        style="margin-top: 10px;"
-                        size="small"
-                        bordered
-                        :column="1">
-                        <a-descriptions-item 
-                            v-for="report in record.zaklady_reports"
-                            :label="report.zaklad.name">
-                            Загалом - {{ formatPrice(report.total) }}, Повернуто - {{ formatPrice(report.returned_amount) }} 
-                            <a-typography-link @click="$emit('zakladReport', report)">
-                                <EditOutlined/>
-                            </a-typography-link>
-                        </a-descriptions-item> 
-                    </a-descriptions>
                 </a-descriptions-item> 
                 <a-descriptions-item label="Кур'єр">
                     К-сть - {{ record.shipping_count }}, Сума - {{ formatPrice(record.shipping_total) }}
                 </a-descriptions-item> 
                 <a-descriptions-item label="Таксі">
                     К-сть - {{ record.taxi_count }}, Сума - {{ formatPrice(record.taxi_total) }}
-                </a-descriptions-item>          
+                </a-descriptions-item>  
+            </a-descriptions> 
+
+            <a-typography-title 
+                style="margin-top: 10px;"
+                :level="5">
+                Дані по закладам
+            </a-typography-title>
+            <a-descriptions 
+                v-if="record.zaklady_reports.length"
+                style="margin-top: 10px;"
+                size="small"
+                bordered
+                :column="1">
+                <a-descriptions-item 
+                    v-for="report in record.zaklady_reports"
+                    :label="report.zaklad.name">
+                    Загалом - {{ formatPrice(report.total) }}, Повернуто - {{ formatPrice(report.returned_amount) }} 
+                    <a-typography-link @click="$emit('zakladReport', report)">
+                        <EditOutlined/>
+                    </a-typography-link>
+                </a-descriptions-item> 
             </a-descriptions>
+
+            <a-typography-title 
+                style="margin-top: 10px;"
+                :level="5">
+                Зміни диспетчерів
+            </a-typography-title>
+            <a-descriptions 
+                v-if="record.dispatchers.length"
+                style="margin-top: 10px;"
+                size="small"
+                bordered
+                :column="1">
+                <a-descriptions-item 
+                    v-for="dispatcher in record.dispatchers"
+                    :label="`${dispatcher.dispatcher.first_name} ${dispatcher.dispatcher.last_name}`">
+                    {{ formatDate(dispatcher.start) }} - {{ formatDate(dispatcher.end) }}
+                </a-descriptions-item>  
+            </a-descriptions> 
+
+            <a-typography-title 
+                style="margin-top: 10px;"
+                :level="5">
+                Зміни водіїв
+            </a-typography-title>
+            <a-descriptions 
+                v-if="record.drivers.length"
+                style="margin-top: 10px;"
+                size="small"
+                bordered
+                :column="1">
+                <a-descriptions-item 
+                    v-for="driver in record.drivers"
+                    :label="`${driver.courier.first_name} ${driver.courier.last_name}`">
+                    {{ formatDate(driver.start) }} - {{ formatDate(driver.end) }}
+                </a-descriptions-item>  
+            </a-descriptions> 
         </template>
 
         <template #title>

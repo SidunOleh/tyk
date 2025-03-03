@@ -78,11 +78,15 @@ use App\Http\Controllers\Admin\Tariffs\StoreController as TariffsStoreController
 use App\Http\Controllers\Admin\Tariffs\UpdateController as TariffsUpdateController;
 use App\Http\Controllers\Admin\Users\BulkDeleteController;
 use App\Http\Controllers\Admin\Users\DeleteController;
+use App\Http\Controllers\Admin\Users\GetDispatchersController;
 use App\Http\Controllers\Admin\Users\IndexController;
 use App\Http\Controllers\Admin\Users\StoreController;
 use App\Http\Controllers\Admin\Users\UpdateController;
 use App\Http\Controllers\Admin\WorkShifts\Drivers\GetStatController;
 use App\Http\Controllers\Admin\WorkShifts\CloseController;
+use App\Http\Controllers\Admin\WorkShifts\Dispatchers\CloseController as DispatchersCloseController;
+use App\Http\Controllers\Admin\WorkShifts\Dispatchers\GetStatController as DispatchersGetStatController;
+use App\Http\Controllers\Admin\WorkShifts\Dispatchers\OpenController as DispatchersOpenController;
 use App\Http\Controllers\Admin\WorkShifts\Drivers\CloseController as DriversCloseController;
 use App\Http\Controllers\Admin\WorkShifts\Drivers\OpenController as DriversOpenController;
 use App\Http\Controllers\Admin\WorkShifts\Drivers\UpdateController as DriversUpdateController;
@@ -108,6 +112,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
         Route::prefix('/users')->name('users.')->group(function () {
             Route::get('/', IndexController::class)
                 ->name('index');
+            Route::get('/dispatchers', GetDispatchersController::class)
+                ->name('dispatchers');
             Route::post('/', StoreController::class)
                 ->name('store');
             Route::put('/{user}', UpdateController::class)
@@ -325,6 +331,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('stat');
             Route::post('/{workShift}/close', CloseController::class)
                 ->name('close');
+
             Route::post('/{workShift}/drivers/open', DriversOpenController::class)
                 ->name('drivers.open');
             Route::get('/drivers/{driverWorkShift}/stat', GetStatController::class)
@@ -333,6 +340,14 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('drivers.close');
             Route::post('/drivers/{driverWorkShift}', DriversUpdateController::class)
                 ->name('drivers.update');
+
+            Route::post('/{workShift}/dispatchers/open', DispatchersOpenController::class)
+                ->name('dispatchers.open');
+            Route::get('/dispatchers/{dispatcherWorkShift}/stat', DispatchersGetStatController::class)
+                ->name('dipatchers.stat');
+            Route::post('/dispatchers/{dispatcherWorkShift}/close', DispatchersCloseController::class)
+                ->name('dispatchers.close');
+                
             Route::post('/zaklad-reports/{zakladReport}', ZakladReportsUpdateController::class)
                 ->name('zaklad-reports.update');
         });
