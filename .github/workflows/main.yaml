@@ -34,7 +34,7 @@ jobs:
           sed -i 's/PHONET_API_KEY=/PHONET_API_KEY="${{ secrets.PHONET_API_KEY }}"/g' .env
           sed -i 's/TG_BOT_USERNAME=/TG_BOT_WEBHOOK="${{ secrets.TG_BOT_USERNAME }}"/g' .env
           sed -i 's/TG_BOT_TOKEN=/TG_BOT_TOKEN="${{ secrets.TG_BOT_TOKEN }}"/g' .env
-          sed -i 's/TG_BOT_WEBHOOK=/TG_BOT_WEBHOOK="${{ secrets.TG_BOT_WEBHOOK }}"/g' .env
+          sed -i 's|TG_BOT_WEBHOOK=|TG_BOT_WEBHOOK="${{ secrets.TG_BOT_WEBHOOK }}"|g' .env
           
       - run: php artisan key:generate
 
