@@ -52,18 +52,18 @@ class WorkShift extends Model
 
     public function scopeOpen(Builder $query): void
     {
-        $query->where('status', 'open');
+        $query->where('status', self::OPEN);
     }
 
     public function scopeClose(Builder $query): void
     {
-        $query->where('status', 'close');
+        $query->where('status', self::CLOSE);
     }
 
     public function allDriversWorkShiftsClosed(): bool
     {
         foreach ($this->drivers as $driver) {
-            if ($driver->status == 'open') {
+            if ($driver->status == DriverWorkShift::OPEN) {
                 return false;
             }
         }
@@ -74,7 +74,7 @@ class WorkShift extends Model
     public function allDispatchersWorkShiftsClosed(): bool
     {
         foreach ($this->dispatchers as $dispatcher) {
-            if ($dispatcher->status == 'open') {
+            if ($dispatcher->status == DispatcherWorkShift::OPEN) {
                 return false;
             }
         }
