@@ -56,7 +56,6 @@
 
     .order-car__types {
         display: flex;
-        gap: 20px;
     }
 
     .order-car__type {
@@ -64,17 +63,24 @@
         align-items: center;
         gap: 5px;
         cursor: pointer;
-        position: relative;
+        padding: 5px;
+        border-radius: 4px;
     }
 
-    .order-car__type.chosen::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 4px;
-        background: black;
-        bottom: -10px;
-        left: 0;
+    .order-car__type.chosen {
+        background: #ec1220;
+    }
+
+    .order-car__type.chosen span {
+        color: white;
+    }
+    
+    .order-car__type.chosen img {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(99%) saturate(0%) hue-rotate(319deg) brightness(104%) contrast(100%);
+    }
+
+    .order-car__type span {
+        color: #323232;
     }
 
     .order-car__form {
@@ -282,7 +288,7 @@
     .order-car[v-cloak]::before {
         content: 'завантаження...';
         position: absolute;
-        z-index: 1;
+        z-index: 1000;
         top: 0;
         left: 0;
         width: 100%;
@@ -381,18 +387,87 @@
         align-items: center;
         gap: 5px;
     }
+
+    .address-list {
+        position: absolute;
+        top: 45px;
+        left: 0;
+        z-index: 100;
+        width: 100%;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
+        max-height: 155px;
+        overflow: auto;
+    }
+
+    .address-list::-webkit-scrollbar {
+        height: 10px;
+        width: 10px;
+    }
+
+    .address-list::-webkit-scrollbar-track {
+        background: white;
+    }
+
+    .address-list:hover::-webkit-scrollbar-thumb {
+        background-color: hsl(0deg 0% 78.43%);
+    }
+
+    .address-list::-webkit-scrollbar-thumb {
+        background-color: hsl(0deg 0% 83.53%);
+        border-radius: 20px;
+        border: 3px solid white;
+    }
+
+    .address-list .address-item {
+        cursor: pointer;
+        padding: 0 4px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 30px;
+        text-align: left;
+        border-top: 1px solid #e6e6e6;
+        font-size: 11px;
+        color: #515151;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .address-list .address:first-child {
+        border-top: none;
+    }
+
+    .address-list .address-item:hover {
+        background-color: #f9f8fa;
+    }
+
+    .address-list .address-item svg {
+        flex-shrink: 0;
+    }
+
+    .address-list .address-item span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .input-wrapper {
+        margin-bottom: 15px;
+        position: relative;
+    }
 </style>
 
+@verbatim
 <section 
     class="order-car" 
-    data-order="{{ $order ? json_encode($order) : '' }}"
     v-cloak 
     @vue:mounted="mounted">
-    @verbatim
     <div class="container">
         <div :class="{'order-car__body': true, 'close': ! openPanel,}">
 
             <div class="order-car__left">
+
                 <div 
                     class="arrow"
                     @click="openPanel = ! openPanel">
@@ -400,39 +475,41 @@
                 </div>
 
                 <div 
-                    v-show="! setOnMap.open"
+                    v-show="leftSide == 'form'"
                     class="order-car__order">
                     <div class="order-car__types">
                         <div 
                             :class="{'order-car__type': true, 'chosen': data.service == 'Таксі'}"
                             @click="data.service = 'Таксі'">
-                            <img src="/assets/img/car.svg" alt="">
-                            <span>Таксі</span>
+                            <img src="/assets/img/car.png" alt="">
+                            <span>
+                                Таксі
+                            </span>
                         </div>
                         <div 
                             :class="{'order-car__type': true, 'chosen': data.service == 'Кур\'єр'}"
                             @click="data.service = 'Кур\'єр'">
                             <img src="/assets/img/courier.svg" alt="">
-                            <span>Кур'єр</span>
+                            <span>
+                                Кур'єр
+                            </span>
                         </div>
                     </div>
 
                     <div class="order-car__form">
-                        
-                        <div style="margin-bottom: 15px;">
+                        <div class="input-wrapper">
                             <div class="form-group">
                                 <input 
                                     v-if="data.from"
                                     class="address-input"
+                                    placeholder="Звідки*"
                                     autocomplete="off"
                                     type="text" 
                                     name="from" 
-                                    :value="data.from.address"
                                     v-model="data.from.value"
                                     @input="data.from.showList = !Boolean(data.from.value)"
                                     @focus="data.from.showList = !Boolean(data.from.value)"
-                                    @focusout="setTimeout(() => data.from.showList = false, 150)"
-                                    placeholder="Звідки*"/>
+                                    @focusout="setTimeout(() => data.from.showList = false, 150)"/>
                             </div>
 
                             <div 
@@ -441,30 +518,38 @@
                                 <div 
                                     class="address-item"
                                     @click="openSetOnMap(data.from)">
-                                    Вказати на карті
+                                    <img src="/assets/img/location.png" alt="">
+                                    <span>
+                                        Вказати на карті
+                                    </span>
                                 </div>
                                 <div 
                                     v-for="item in addressHistory"
-                                    @click="setAddress(data.from, item)"
-                                    class="address-item">
-                                    {{ item.address }}
+                                    class="address-item"
+                                    @click="setAddress(data.from, item)">
+                                    <img src="/assets/img/addressHistory.svg" alt="">
+                                    <span>
+                                        {{ item.address }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div
                             v-for="(address, i) in data.to" 
-                            :key="i"
-                            style="margin-bottom: 15px;">
+                            class="input-wrapper"
+                            :key="i">
                             <div class="form-group">
                                 <input
                                     class="address-input"
+                                    placeholder="Куди*"
                                     autocomplete="off"
                                     type="text" 
-                                    name="to[]"
-                                    :value="address.address"
-                                    :to="`i${i}`" 
-                                    placeholder="Куди*"/>
+                                    :name="`to[${i}]`"
+                                    v-model="address.value"
+                                    @input="address.showList = !Boolean(address.value)"
+                                    @focus="address.showList = !Boolean(address.value)"
+                                    @focusout="setTimeout(() => address.showList = false, 150)"/>
                                 <div 
                                     v-if="data.to.length >= 2"
                                     title="Видалити зупинку"
@@ -474,36 +559,34 @@
                                 </div>
                             </div>
 
-                            <div class="address-list">
+                            <div 
+                                v-if="address.showList"
+                                class="address-list">
                                 <div 
                                     class="address-item"
                                     @click="openSetOnMap(address)">
-                                    Вказати на карті
+                                    <img src="/assets/img/location.png" alt="">
+                                    <span>
+                                        Вказати на карті
+                                    </span>
                                 </div>
                                 <div 
                                     v-for="item in addressHistory"
-                                    @click="setAddress(address, item)"
-                                    class="address-item">
-                                    {{ item.address }}
+                                    class="address-item"
+                                    @click="setAddress(address, item)">
+                                    <img src="/assets/img/addressHistory.svg" alt="">
+                                    <span>
+                                        {{ item.address }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div 
-                            title="Додати зупинку"
                             class="add-address"
-                            @click="addToAddress">+</div>
-
-                        <div class="form-group">
-                            <input  
-                                type="date"
-                                autocomplete="off"
-                                type="text" 
-                                name="time" 
-                            
-                                placeholder="Час"/>
-
-                                <input type="time" step="1740" />
+                            title="Додати зупинку"
+                            @click="addToAddress">
+                            +
                         </div>
 
                         <div class="payment-methods">
@@ -520,6 +603,7 @@
                                     Готівка
                                 </label>
                             </div>
+
                             <div class="form-group">
                                 <input 
                                     name="payment_method"
@@ -537,26 +621,25 @@
 
                     <button 
                         class="btn"
-                    
+                        :disabled="!Boolean(route.route)"
                         @click="send">
                         Замовити <span v-if="route.price !== null"> {{ route.price }}₴</span>
                     </button>
                 </div>
 
                 <div
-                    v-show="setOnMap.open" 
+                    v-show="leftSide == 'setOnMap'"
                     class="order-car__set-on-map">
                     <div class="form-group">
                         <input 
                             readonly
                             type="text" 
-                            name="set_address" 
                             placeholder="Вкажіть адресу на карті"
                             v-model="setOnMap.address.address"/>
                     </div>
                     <button 
                         class="btn"
-                        :disabled="setOnMap.address.address ? false : true"
+                        :disabled="!Boolean(setOnMap.address.address)"
                         @click="applySetOnMap">
                         Підтвердити
                     </button>
@@ -566,6 +649,7 @@
                         Скасувати
                     </button>
                 </div>
+
             </div>
 
             <div class="order-car__right">
@@ -579,36 +663,18 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places&language=uk&region=ua"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/air-datepicker@3.5.3/air-datepicker.min.css" rel="stylesheet">
-
 <script type="module">
 import { createApp } from 'https://unpkg.com/petite-vue?module'
 
 const orderCar = {
-    datePicker: null,
-    setOnMap: {
-        open: false,
-        for: null,
-        marker: null,
-        address: {
-            address: null,
-            lat: null,
-            lng: null,
-        }
-    },
-    openPanel: true,
-
-    addressHistory: [],
-
     map: null,
     data: {
         service: 'Таксі',
         from: null,
         to: [],
-        time: null,
         payment_method: 'Готівка',
     },
+    leftSide: 'form',
     route: {
         route: null,
         price: null,
@@ -624,6 +690,17 @@ const orderCar = {
         ),
         strictBounds: true,
     },
+    openPanel: true,
+    setOnMap: {
+        for: null,
+        marker: null,
+        address: {
+            address: null,
+            lat: null,
+            lng: null,
+        },
+    },
+    addressHistory: [],
     createAddress(inputSelector) {
         const address = {
             address: null,
@@ -675,7 +752,8 @@ const orderCar = {
         return formatted
     },
     addToAddress() {
-        this.data.to.push(this.createAddress(`[to=i${this.data.to.length}]`))
+        this.data.to.push(this.createAddress(`[name=to\\[${this.data.to.length}\\]]`))
+        this.refreshMap()
     },
     deleteToAddress(i) {
         this.removeMarker(this.data.to[i].marker)
@@ -686,16 +764,14 @@ const orderCar = {
         let showRoute = this.data.from.address && ! this.data.to.some(address => ! address.address)
 
         if (showRoute) {
-            this.clearMap()
+            this.removeMarker(this.data.from.marker)
+            this.data.to.forEach(address => this.removeMarker(address.marker))
+            this.route.route?.setMap(null)
             this.renderRoute()
         } else {
+            this.route.route?.setMap(null)
             this.refreshMarkers()
         }
-    },
-    clearMap() {
-        this.removeMarker(this.data.from.marker)
-        this.data.to.forEach(address => this.removeMarker(address.marker))
-        this.route.route?.setMap(null)
     },
     renderRoute() { 
         const directions = new google.maps.DirectionsService()
@@ -737,8 +813,8 @@ const orderCar = {
     },
     refreshMarkers() {
         if (
-            this.data.from.lat != this.data.from.marker?.getPosition().lat() ||
-            this.data.from.lng != this.data.from.marker?.getPosition().lng()
+            this.data.from.lat != this.data.from.marker?.getPosition()?.lat() ||
+            this.data.from.lng != this.data.from.marker?.getPosition()?.lng()
         ) {
             this.removeMarker(this.data.from.marker)
             this.renderMarker(this.data.from)
@@ -746,8 +822,8 @@ const orderCar = {
 
         this.data.to.forEach(address => {
             if (
-                address.lat != address.marker?.getPosition().lat() ||
-                address.lng != address.marker?.getPosition().lng()
+                address.lat != address.marker?.getPosition()?.lat() ||
+                address.lng != address.marker?.getPosition()?.lng()
             ) {
                 this.removeMarker(address.marker)
                 this.renderMarker(address)
@@ -781,11 +857,8 @@ const orderCar = {
         address.lng = newAddress.lng
         this.refreshMap()
     },
-
-
-
     openSetOnMap(address) {
-        this.setOnMap.open = true  
+        this.leftSide = 'setOnMap'
         this.setOnMap.for = address  
         this.setOnMap.marker = new google.maps.Marker({
             position: {
@@ -831,7 +904,7 @@ const orderCar = {
             lat: null,
             lng: null,
         }
-        this.setOnMap.open = false
+        this.leftSide = 'form'
     },
     async geocode(latLng) {
         const geocoder = new google.maps.Geocoder()
@@ -842,12 +915,10 @@ const orderCar = {
 
         return res.results[0]
     },
-    async send() {
-        console.log(this.data.to)
-            return
-        
+    async send() {        
+        const container = document.querySelector('.order-car__left')
         try {
-            document.querySelector('.order-car__left').classList.add('loading')
+            container.classList.add('loading')
             const res = await fetch('/orders/order-car', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -858,26 +929,25 @@ const orderCar = {
         } catch (err) {
             console.error(err)
         } finally {
-            document.querySelector('.order-car__left').classList.remove('loading')
+            container.classList.remove('loading')
         }
     },
     getData() {
-        const data = JSON.parse(JSON.stringify(this.data))
+        const data = {}
         
         data.from = {
-            address: this.addresses[0].address,
-            lat: this.addresses[0].lat,
-            lng: this.addresses[0].lng,
+            address: this.data.from.address,
+            lat: this.data.from.lat,
+            lng: this.data.from.lng,
         }
-        data.to = {
-            address: this.addresses[1].address,
-            lat: this.addresses[1].lat,
-            lng: this.addresses[1].lng,
-        }
-        
-        if (data.time) {
-            data.time = `${data.time}:00`
-        }
+
+        data.to = this.data.to.map(address => {
+            return {
+                address: address.address,
+                lat: address.lat,
+                lng: address.lng,
+            }
+        })
 
         return data
     },
@@ -908,34 +978,19 @@ const orderCar = {
         })
 
         this.data.from = this.createAddress('[name=from]')
-        this.data.to.push(this.createAddress('[to=i0]'))
-
-        this.datePicker = new AirDatepicker('#time', {
-            onSelect: e => this.data.time = e.formattedDate,
-            dateFormat: 'yyyy-MM-dd',
-            timeFormat: 'HH:mm',
-            locale: {
-                daysMin: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-                months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-                monthsShort: ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'],
-                clear: 'Очистити',
-            },
-            buttons: ['clear'],
-        })
+        this.data.to.push(this.createAddress('[name=to\\[0\\]]'))
 
         const urlParams = new URLSearchParams(window.location.search)
         if (urlParams.get('service')) {
             this.data.service = urlParams.get('service')
         }
 
-        const order = document
-            .querySelector('.order-car')
-            .getAttribute('data-order')
-        if (order) {
-            this.setDataFromOrder(JSON.parse(order))
-        }
-
         this.addressHistory = {{ Js::from($address_history) }}
+
+        const order = {{ Js::from($order ?? null) }}
+        if (order) {
+            this.setDataFromOrder(order)
+        }
     },
 }
 

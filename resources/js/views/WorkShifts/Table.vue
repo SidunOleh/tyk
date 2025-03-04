@@ -50,6 +50,7 @@
                     </a-typography-link>
                 </a-descriptions-item> 
             </a-descriptions>
+            <a-empty v-else/>
 
             <a-typography-title 
                 style="margin-top: 10px;"
@@ -68,6 +69,7 @@
                     {{ formatDate(dispatcher.start) }} - {{ formatDate(dispatcher.end) }}
                 </a-descriptions-item>  
             </a-descriptions> 
+            <a-empty v-else/>
 
             <a-typography-title 
                 style="margin-top: 10px;"
@@ -86,6 +88,7 @@
                     {{ formatDate(driver.start) }} - {{ formatDate(driver.end) }}
                 </a-descriptions-item>  
             </a-descriptions> 
+            <a-empty v-else/>
         </template>
 
         <template #title>
