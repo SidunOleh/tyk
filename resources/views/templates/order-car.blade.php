@@ -483,15 +483,45 @@
         z-index: 100 !important;
     }
 
-    .ui-state-active {
-        background-color: #ec1220 !important;
-        color: white !important;
-        border: none !important;
-    }
-
     .datetime .form-group img {
         position: absolute;
         right: 10px;
+    }
+
+    .ui-state-highlight {
+        background-color: white !important;
+        color: #454545 !important;
+        border: 1px solid #c5c5c5 !important;
+    }
+
+    .ui-state-active {
+        background-color: #ec1220 !important;
+        color: white !important;
+        border: 1px solid #c5c5c5 !important;
+    }
+
+    .choices {
+        width: 100%;
+        z-index: 100;
+    }
+
+    .choices__inner {
+        border: none !important;
+        background: white !important;
+        box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11) !important;
+        border-radius: 8px !important;
+    }
+
+    .choices.is-open .choices__inner {
+        outline: 2px solid black;
+    }
+
+    .ui-timepicker-container {
+        z-index: 100 !important;
+    }
+
+    .choices__list--dropdown .choices__list, .choices__list[aria-expanded] .choices__list {
+        max-height: 200px !important;
     }
 </style>
 
@@ -660,7 +690,7 @@
                         </div>
 
                         <div 
-                            v-if="data.service == 'Кур\'єр'"
+                            v-show="data.service == 'Кур\'єр'"
                             style="margin-top: 15px;"
                             class="form-group">
                             <select v-model="data.shipping_type">
@@ -780,6 +810,8 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js'></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script type="module">
 import { createApp, reactive } from 'https://unpkg.com/petite-vue?module'
 
@@ -969,7 +1001,7 @@ function Route(map) {
     this.refreshMap = () => {
         let showRoute = this.from.address && this.to.some(address => address.address)
 
-        document.dispatchEvent(new CustomEvent('show-route', {
+        document.dispatchEvent(new CustomEvent('refresh-map', {
             detail: {showRoute}
         }))
 
@@ -1020,6 +1052,7 @@ const app = {
         },
     },
     addressHistory: [],
+    shippingTypesSelect: null,
     openSetOnMap(address) {
         this.leftSide = 'setOnMap'
         this.setOnMap.for = address  
@@ -1162,6 +1195,8 @@ const app = {
             })
 
             this.data.shipping_type = order.details.shipping_type
+
+            this.shippingTypesSelect.setChoiceByValue(order.details.shipping_type)
         }
 
         setTimeout(() => this.data.route.refreshMap())
@@ -1259,6 +1294,50 @@ const app = {
             }, err => console.error(err))
         }
     },
+    async updatePrice() {
+        try {
+            const data = {}
+            data.service = this.data.service
+            data.courier_service = this.data.shipping_type
+            
+            data.route = []
+
+            if (! this.data.route.from.address) {
+                this.price = null
+                return
+            }
+
+            data.route.push({
+                lat: this.data.route.from.lat,
+                lng: this.data.route.from.lng,
+            })
+
+            this.data.route.to.forEach(address => {
+                if (address.address) {
+                    data.route.push({
+                        lat: address.lat,
+                        lng: address.lng,
+                    })
+                }
+            })
+
+            if (data.route.length < 2) {
+                this.price = null
+                return
+            }
+
+            const res = await fetch('/orders/order-car/price', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            const json = await res.json()
+
+            this.price = json.price
+        } catch (err) {
+            console.log(err)
+        }
+    },
     mounted() {
         this.map = new google.maps.Map(
             document.getElementById('map'), {
@@ -1286,18 +1365,29 @@ const app = {
             timeFormat: 'HH:mm',
             interval: 15,
             startTime: this.startTime(),
-            scrollbar: false
+            scrollbar: false,
+        })
+
+        const shippingTypesSelectEl = document.querySelector('select')
+        this.shippingTypesSelect = new Choices(shippingTypesSelectEl, {
+            noResultsText: 'Немає результатів',
+            itemSelectText: 'Натисни',
+        })
+        shippingTypesSelectEl.addEventListener('change', () => {
+            this.updatePrice()
         })
 
         this.data.route = new Route(this.map)
 
-        document.addEventListener('show-route', e => {
+        document.addEventListener('refresh-map', e => {
             const el = document.querySelector('.order-btn')
             if (e.detail.showRoute) {
                 el.disabled = false
             } else {
                 el.disabled = true
             }
+
+            this.updatePrice()
         })
 
         const urlParams = new URLSearchParams(window.location.search)

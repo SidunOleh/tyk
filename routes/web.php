@@ -28,6 +28,7 @@ use App\Http\Controllers\Pages\HomeController;
 use App\Http\Controllers\Pages\OrderCarController;
 use App\Http\Controllers\Pages\ProductsController;
 use App\Http\Controllers\Pages\PromotionController;
+use App\Http\Controllers\Price\CalcForRouteController;
 use App\Http\Controllers\Tg\HandlerController;
 use Illuminate\Support\Facades\Route;
 use Rap2hpoutre\LaravelLogViewer\LogViewerController;
@@ -140,6 +141,8 @@ Route::post('/orders/{order}/repeat', RepeatController::class)
 Route::post('/orders/order-car', OrdersOrderCarController::class)
     ->middleware(['auth:web',])
     ->name('orders.order-car'); 
+Route::post('/orders/order-car/price', CalcForRouteController::class)
+    ->name('orders.order-car.price');
 
 /**
  * Checkout

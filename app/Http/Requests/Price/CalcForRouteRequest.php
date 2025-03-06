@@ -24,7 +24,7 @@ class CalcForRouteRequest extends FormRequest
     {
         return [
             'service' => 'required|in:' . Order::TAXI . ',' . Order::SHIPPING . ',' . Order::FOOD_SHIPPING,
-            'courier_service' => 'required_if:service,' . Order::SHIPPING . '|string',
+            'courier_service' => 'string',
             'route' => 'required|array|min:2',
             'route.*' => 'array',
             'route.*.lat' => 'numeric|between:-90,90', 

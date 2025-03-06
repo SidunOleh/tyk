@@ -97,7 +97,7 @@ class PriceService
 
         if ($data['service'] == Order::SHIPPING) {
             foreach ($settings['courier_services'] as $item) {
-                if ($item['service'] == $data['courier_service']) {
+                if ($item['service'] == $data['courier_service'] ?? '') {
                     $price += $item['price'];
                     break;
                 }
