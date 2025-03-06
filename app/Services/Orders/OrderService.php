@@ -3,6 +3,9 @@
 namespace App\Services\Orders;
 
 use App\Models\Order;
+use App\Services\Google\MapsService;
+use App\Services\Options\OptionService;
+use App\Services\Price\PriceService;
 use App\Services\Service;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -66,9 +69,9 @@ abstract class OrderService extends Service
             case Order::FOOD_SHIPPING:
                 return new FoodShippingService;
             case Order::SHIPPING:
-                return new ShippingService;
+                return new ShippingService(new PriceService(new MapsService, new OptionService));
             case Order::TAXI:
-                return new TaxiService;
+                return new TaxiService(new PriceService(new MapsService, new OptionService));
             default:
                 throw new Exception('Unexpected type: ' . $type);
         }

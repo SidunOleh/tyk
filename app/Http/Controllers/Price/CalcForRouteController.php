@@ -17,7 +17,7 @@ class CalcForRouteController extends Controller
 
     public function __invoke(CalcForRouteRequest $request)
     {
-        $price = $this->priceService->calcForRoute($request);
+        $price = $this->priceService->calcForRoute($request->validated());
 
         return response(['price' => $price]);
     }

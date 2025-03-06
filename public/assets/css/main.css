@@ -7060,3 +7060,7 @@ form.error .error-txt {
 .pac-logo::after {
     display: none !important;
 }
+
+textarea {
+    resize: none;
+}

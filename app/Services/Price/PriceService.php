@@ -20,10 +20,8 @@ class PriceService
         
     }
 
-    public function calcForRoute(CalcForRouteRequest $request): int
+    public function calcForRoute(array $data): int
     {
-        $data = $request->validated();
-
         $tariffPrice = $this->calcTariffPrice($data);
         $additionalPrice = $this->calcAdditionalPrice($data);
 

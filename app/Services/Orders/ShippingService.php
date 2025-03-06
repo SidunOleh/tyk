@@ -5,12 +5,20 @@ namespace App\Services\Orders;
 use App\Http\Requests\Orders\OrderCarRequest;
 use App\Models\Client;
 use App\Models\Order;
+use App\Services\Price\PriceService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ShippingService extends OrderService
 {
+    public function __construct(
+        private PriceService $priceService
+    )
+    {
+        
+    }    
+
     public function create(FormRequest $request): Model
     {
         $data = $request->validated();
@@ -78,11 +86,18 @@ class ShippingService extends OrderService
     {
         $data = $request->validated();
 
-        $time = $data['time'] ?? now()->format('Y-m-d H:m:i');
+        $time = "{$data['date']} {$data['time']}:00";
         $duration = 30;
 
         $details['shipping_from'] = $data['from'];
-        $details['shipping_to'] = [$data['to']];
+        $details['shipping_to'] = $data['to'];
+        $details['shipping_type'] = $data['shipping_type'] ?? '';
+
+        $shippingPrice = $this->priceService->calcForRoute([
+            'service' => $data['service'],
+            'route' => [$data['from'], ...$data['to'],],
+            'courier_service' => $data['shipping_type'] ?? '',
+        ]);
 
         $client = auth('web')->user();
 
@@ -93,6 +108,8 @@ class ShippingService extends OrderService
             'status' => Order::CREATED,
             'client_id' => $client->id,
             'payment_method' => $data['payment_method'],
+            'notes' => $data['comment'],
+            'shipping_price' => $shippingPrice,
             'details' => $details,
         ]);
 
