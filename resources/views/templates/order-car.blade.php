@@ -518,6 +518,7 @@
 
     .ui-timepicker-container {
         z-index: 100 !important;
+        max-height: 160px;
     }
 
     .choices__list--dropdown .choices__list, .choices__list[aria-expanded] .choices__list {
@@ -872,7 +873,6 @@ function Address(route, data = {}) {
             })
         })
     })
-
     this.setData = data => {
         this.address = data.address
         this.lat = data.lat
@@ -938,7 +938,6 @@ function Route(map) {
     this.from = new Address(this)
     this.to = reactive([])
     this.to.push(new Address(this))
-
     this.addAddress = (address = {}) => {
         this.to.push(new Address(this, address))
 
