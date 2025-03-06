@@ -947,6 +947,12 @@ function Route(map) {
 
         this.refreshMap()
     }
+    this.setRoute = (from, to) => {
+        this.from = new Address(this, from)
+        this.to = to.map(address => new Address(this, address))
+
+        this.refreshMap()
+    },
     this.showRoute = () => { 
         this.from.removeMarker()
         this.to.forEach(address => address.removeMarker())
@@ -1172,34 +1178,16 @@ const app = {
         this.data.service = order.type
 
         if (order.type == 'Таксі') {
-            this.data.route.from.setData(order.details.taxi_from)
-
-            order.details.taxi_to.forEach((address, i) => {
-                if (! this.data.route.to[i]) {
-                    this.data.route.addAddress(address)
-                } else {
-                    this.data.route.to[i].setData(address)
-                }
-            })
+            this.data.route.setRoute(order.details.taxi_from, order.details.taxi_to)
         }
 
         if (order.type == 'Кур\'єр') {
-            this.data.route.from.setData(order.details.shipping_from)
-
-            order.details.shipping_to.forEach((address, i) => {
-                if (! this.data.route.to[i]) {
-                    this.data.route.addAddress(address)
-                } else {
-                    this.data.route.to[i].setData(address)
-                }
-            })
+            this.data.route.setRoute(order.details.shipping_from, order.details.shipping_to)
 
             this.data.shipping_type = order.details.shipping_type
 
             this.shippingTypesSelect.setChoiceByValue(order.details.shipping_type)
         }
-
-        setTimeout(() => this.data.route.refreshMap())
     },
     animateMarkerTo(marker, newPosition) {
         var options = {
