@@ -804,6 +804,7 @@
     </div>
 </section>
 @endverbatim
+
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places&language=uk&region=ua"></script>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
@@ -940,6 +941,8 @@ function Route(map) {
 
     this.addAddress = (address = {}) => {
         this.to.push(new Address(this, address))
+
+        this.refreshMap()
     }
     this.removeAddress = i => {
         this.to[i].removeMarker()
@@ -949,7 +952,7 @@ function Route(map) {
     }
     this.setRoute = (from, to) => {
         this.from = new Address(this, from)
-        this.to = to.map(address => new Address(this, address))
+        this.to = reactive(to.map(address => new Address(this, address)))
 
         this.refreshMap()
     },
@@ -1129,7 +1132,10 @@ const app = {
             container.classList.add('loading')
             const res = await fetch('/orders/order-car', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
                 body: JSON.stringify(this.getData())
             })
             const data = await res.json()
@@ -1183,11 +1189,12 @@ const app = {
 
         if (order.type == 'Кур\'єр') {
             this.data.route.setRoute(order.details.shipping_from, order.details.shipping_to)
-
             this.data.shipping_type = order.details.shipping_type
 
             this.shippingTypesSelect.setChoiceByValue(order.details.shipping_type)
         }
+
+        this.updatePrice()
     },
     animateMarkerTo(marker, newPosition) {
         var options = {
@@ -1289,17 +1296,14 @@ const app = {
             data.courier_service = this.data.shipping_type
             
             data.route = []
-
             if (! this.data.route.from.address) {
                 this.price = null
                 return
             }
-
             data.route.push({
                 lat: this.data.route.from.lat,
                 lng: this.data.route.from.lng,
             })
-
             this.data.route.to.forEach(address => {
                 if (address.address) {
                     data.route.push({
@@ -1308,7 +1312,6 @@ const app = {
                     })
                 }
             })
-
             if (data.route.length < 2) {
                 this.price = null
                 return
@@ -1316,7 +1319,10 @@ const app = {
 
             const res = await fetch('/orders/order-car/price', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Accept': 'application/json',
+                },
                 body: JSON.stringify(data)
             })
             const json = await res.json()
