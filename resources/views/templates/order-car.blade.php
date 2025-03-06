@@ -1245,7 +1245,7 @@ const app = {
     },
     setAddressAsCurrent(address) {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async () => {
+            navigator.geolocation.getCurrentPosition(async geo => {
                 const lat = geo.coords.latitude
                 const lng = geo.coords.longitude
 
