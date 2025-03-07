@@ -98,6 +98,7 @@ class ShippingService extends OrderService
             'route' => [$data['from'], ...$data['to'],],
             'courier_service' => $data['shipping_type'] ?? '',
         ]);
+        $total = $shippingPrice;
 
         $client = auth('web')->user();
 
@@ -110,6 +111,7 @@ class ShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'notes' => $data['comment'],
             'shipping_price' => $shippingPrice,
+            'total' => $total,
             'details' => $details,
         ]);
 

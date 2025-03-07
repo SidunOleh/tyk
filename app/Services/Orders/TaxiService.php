@@ -94,6 +94,7 @@ class TaxiService extends OrderService
             'service' => $data['service'],
             'route' => [$data['from'], ...$data['to'],],
         ]);
+        $total = $shippingPrice;
 
         $client = auth('web')->user();
 
@@ -106,6 +107,7 @@ class TaxiService extends OrderService
             'payment_method' => $data['payment_method'],
             'notes' => $data['comment'],
             'shipping_price' => $shippingPrice,
+            'total' => $total,
             'details' => $details,
         ]);
 

@@ -2,7 +2,6 @@
 
 namespace App\Services\Price;
 
-use App\Http\Requests\Price\CalcForRouteRequest;
 use App\Http\Requests\Price\SaveSettingsRequest;
 use App\Models\Order;
 use App\Models\Region;

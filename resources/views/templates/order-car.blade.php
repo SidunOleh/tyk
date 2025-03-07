@@ -396,7 +396,7 @@
         position: absolute;
         top: 45px;
         left: 0;
-        z-index: 100;
+        z-index: 101;
         width: 100%;
         background: white;
         box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
@@ -518,7 +518,7 @@
 
     .ui-timepicker-container {
         z-index: 100 !important;
-        max-height: 160px;
+        max-height: 150px;
     }
 
     .choices__list--dropdown .choices__list, .choices__list[aria-expanded] .choices__list {
@@ -577,8 +577,7 @@
                                     :id="data.route.from.id"
                                     v-model="data.route.from.value"
                                     @input="data.route.from.showList = !data.route.from.value"
-                                    @focus="data.route.from.showList = !data.route.from.value"
-                                    @focusout="setTimeout(() => data.route.from.showList = false, 150)"/>
+                                    @focus="data.route.from.showList = !data.route.from.value"/>
                             </div>
 
                             <div 
@@ -626,8 +625,7 @@
                                         :id="address.id"
                                         v-model="address.value"
                                         @input="address.showList = !address.value"
-                                        @focus="address.showList = !address.value"
-                                        @focusout="setTimeout(() => address.showList = false, 200)"/>
+                                        @focus="address.showList = !address.value"/>
                                     <div 
                                         v-if="address.showList"
                                         class="address-list">
@@ -1382,6 +1380,22 @@ const app = {
 
             this.updatePrice()
         })
+
+        document.addEventListener('click', e => {
+            const inputs = document.querySelectorAll('input')
+            inputs.forEach(input => {
+                const id = input.getAttribute('id')
+                const addresses = [this.data.route.from, ...this.data.route.to]
+                addresses.forEach(address => {
+                    if (
+                        address.id == id && 
+                        input != document.activeElement
+                    ) {
+                        address.showList = false
+                    } 
+                })
+            })
+        })  
 
         const urlParams = new URLSearchParams(window.location.search)
         if (urlParams.get('service')) {
