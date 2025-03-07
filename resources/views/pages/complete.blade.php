@@ -29,6 +29,14 @@
                 <div class="subtotal-list">
                     <div class="subtotal-item">
                         <p class="position">
+                            Послуга
+                        </p>
+                        <p class="sum">
+                            Доставка їжі
+                        </p>
+                    </div>
+                    <div class="subtotal-item">
+                        <p class="position">
                             Проміжний підсумок
                         </p>
                         <p class="sum">
@@ -63,6 +71,14 @@
                 <div class="subtotal-list">
                     <div class="subtotal-item">
                         <p class="position">
+                            Послуга
+                        </p>
+                        <p class="sum">
+                            Кур'єр
+                        </p>
+                    </div>
+                    <div class="subtotal-item">
+                        <p class="position">
                             Звідки
                         </p>
                         <p class="sum">
@@ -77,6 +93,14 @@
                             {{ implode(', ', array_map(fn ($address) => $address['address'], $order->details['shipping_to'])) }}
                         </p>
                     </div>
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Загалом
+                        </p>
+                        <p class="sum">
+                            {{ $order->totalFormatted() }}
+                        </p>
+                    </div>
                 </div>
             </div>
             @endif
@@ -84,6 +108,14 @@
             @if ($order->type == App\Models\Order::TAXI)
             <div class="cartSubtotal">
                 <div class="subtotal-list">
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Послуга
+                        </p>
+                        <p class="sum">
+                            Таксі
+                        </p>
+                    </div>
                     <div class="subtotal-item">
                         <p class="position">
                             Звідки
@@ -98,6 +130,14 @@
                         </p>
                         <p class="sum">
                             {{ implode(', ', array_map(fn ($address) => $address['address'], $order->details['taxi_to'])) }}
+                        </p>
+                    </div>
+                    <div class="subtotal-item">
+                        <p class="position">
+                            Загалом
+                        </p>
+                        <p class="sum">
+                            {{ $order->totalFormatted() }}
                         </p>
                     </div>
                 </div>
