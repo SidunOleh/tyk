@@ -361,10 +361,10 @@ function Address(route, data = {}) {
             el.value = this.value
         }
 
-        this.route.refreshMap()
+        this.route.map.refresh()
     }
     this.addMarker = () => {
-        if (! this.lat || ! this.lng) {
+        if (this.isEmpty()) {
             return
         }
 
@@ -373,14 +373,14 @@ function Address(route, data = {}) {
                 lat: this.lat,
                 lng: this.lng,
             },
-            map: this.route.map,
+            map: this.route.getMap(),
         })
 
-        this.route.map.setCenter({
+        this.route.getMap().setCenter({
             lat: this.lat,
             lng: this.lng,
         })
-        this.route.map.setZoom(16)
+        this.route.getMap().setZoom(16)
     }
     this.updateMarker = () => {
         if (! this.marker) {
@@ -392,11 +392,11 @@ function Address(route, data = {}) {
                 lat: this.lat,
                 lng: this.lng,
             })
-            this.route.map.setCenter({
+            this.route.getMap().setCenter({
                 lat: this.lat,
                 lng: this.lng,
             })
-            this.route.map.setZoom(16)
+            this.route.getMap().setZoom(16)
         }
     }
     this.removeMarker = () => {
@@ -405,6 +405,9 @@ function Address(route, data = {}) {
         this.marker?.setPosition(null)
         this.marker = null
     }
+    this.isEmpty = () => {
+        return  ! this.lat || ! this.lng
+    } 
     this.isChanged = () => {
         return  this.lat != this.marker?.getPosition()?.lat() || this.lng != this.marker?.getPosition()?.lng()
     } 
@@ -415,24 +418,25 @@ function Route(map) {
     this.from = new Address(this)
     this.to = reactive([])
     this.to.push(new Address(this))
+    this.getMap = () => this.map.map
     this.addAddress = (address = {}) => {
         this.to.push(new Address(this, address))
 
-        this.refreshMap()
+        this.map.refresh()
     }
     this.removeAddress = i => {
         this.to[i].removeMarker()
         this.to.splice(i, 1)
 
-        this.refreshMap()
+        this.map.refresh()
     }
     this.setRoute = (from, to) => {
         this.from = new Address(this, from)
         this.to = reactive(to.map(address => new Address(this, address)))
 
-        this.refreshMap()
+        this.map.refresh()
     },
-    this.showRoute = () => { 
+    this.show = () => { 
         this.from.removeMarker()
         this.to.forEach(address => address.removeMarker())
         this.route?.setMap(null)
@@ -442,7 +446,7 @@ function Route(map) {
         this.route = new google.maps.DirectionsRenderer({
             preserveViewport: true,
         })
-        this.route.setMap(this.map)
+        this.route.setMap(this.getMap())
 
         const origin = {
             lat: this.from.lat,
@@ -475,10 +479,10 @@ function Route(map) {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.setDirections(result)
                 const bounds = this.getBounds()
-                this.map.setZoom(
-                    this.calcMapZoomByBounds(this.map, bounds)
+                this.getMap().setZoom(
+                    this.calcMapZoomByBounds(this.getMap(), bounds)
                 )
-                this.map.setCenter(
+                this.getMap().setCenter(
                     bounds.getCenter()
                 )
             } else {
@@ -486,12 +490,18 @@ function Route(map) {
             }
         })
     }
+    this.remove = () => {
+        this.route?.setMap(null)
+        this.route = null
+        this.from.updateMarker()
+        this.to.forEach(address => address.updateMarker())
+    }
     this.getBounds = () => {
         let bounds = new google.maps.LatLngBounds()
 
         const addresses = [this.from, ...this.to]
         addresses.forEach(address => {
-            if (address.lat && address.lng) {
+            if (! address.isEmpty()) {
                 bounds.extend({
                     lat: address.lat,
                     lng: address.lng,
@@ -501,7 +511,7 @@ function Route(map) {
 
         return bounds
     }
-    this.calcMapZoomByBoundary = (map, bounds) => {
+    this.calcMapZoomByBounds = (map, bounds) => {
         let MAX_ZOOM = map.mapTypes.get(map.getMapTypeId()).maxZoom || 21
         let MIN_ZOOM = map.mapTypes.get(map.getMapTypeId()).minZoom || 0
 
@@ -524,19 +534,18 @@ function Route(map) {
 
         return 0
     }
-    this.removeRoute = () => {
-        this.route?.setMap(null)
-        this.route = null
-        this.from.updateMarker()
-        this.to.forEach(address => address.updateMarker())
-    }
-    this.refreshMap = () => {
-        let showRoute = this.from.address && this.to.some(address => address.address)
+}
+
+function Map(map) {
+    this.map = map
+    this.route = new Route(this)
+    this.refresh = () => {
+        let showRoute = ! this.route.from.isEmpty() && this.route.to.some(address => ! address.isEmpty())
 
         if (showRoute) {
-            this.showRoute()
+            this.route.show()
         } else {
-            this.removeRoute()
+            this.route.remove()
         }
 
         document.dispatchEvent(new CustomEvent('refresh-map', {
@@ -599,27 +608,37 @@ const app = {
             animation: google.maps.Animation.DROP,
         })
 
-        this.map.addListener('center_changed', () => {
-            this.animateMarkerTo(this.setOnMap.marker, {
-                lat: this.map.getCenter().lat(),
-                lng: this.map.getCenter().lng(),
-            })
+        this.map.addListener('center_changed', this.centerChangedHandler)
+
+        this.map.addListener('dragend', this.dragendHandler)
+    },
+    centerChangedHandler() {
+        if (this.leftSide != 'setOnMap') {
+            return
+        }
+
+        this.animateMarkerTo(this.setOnMap.marker, {
+            lat: this.map.getCenter().lat(),
+            lng: this.map.getCenter().lng(),
+        })
+    },
+    async dragendHandler() {        
+        if (this.leftSide != 'setOnMap') {
+            return
+        }
+
+        const position = this.setOnMap.marker.getPosition()
+
+        const place = await this.geocode({
+            lat: position.lat(),
+            lng: position.lng(),
         })
 
-        this.map.addListener('dragend', async () => {
-            const position = this.setOnMap.marker.getPosition()
-
-            const place = await this.geocode({
-                lat: position.lat(),
-                lng: position.lng(),
-            })
-
-            this.setOnMap.address = {
-                address: getAddressFromPlace(place),
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng(),
-            }
-        })
+        this.setOnMap.address = {
+            address: getAddressFromPlace(place),
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+        }
     },
     applySetOnMap() {
         this.setOnMap.for.setData(this.setOnMap.address)
@@ -899,7 +918,7 @@ const app = {
             this.updatePrice()
         })
 
-        this.data.route = new Route(this.map)
+        this.data.route = new Map(this.map).route
 
         document.addEventListener('refresh-map', e => {
             this.updatePrice()
