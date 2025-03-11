@@ -7,271 +7,271 @@
         <div :class="{'order-car__body': true, 'close': ! openPanel,}">
 
             <div class="order-car__left">
-
-                <div 
-                    class="arrow"
-                    @click="openPanel = ! openPanel">
-                    <img src="/assets/img/arrow.svg" alt="">
-                </div>
-
-                <div 
-                    v-show="leftSide == 'form'"
-                    class="order-car__order">
-                    <div class="order-car__types">
-                        <div 
-                            :class="{'order-car__type': true, 'chosen': data.service == 'Таксі'}"
-                            @click="data.service = 'Таксі'">
-                            <img src="/assets/img/car.png" alt="">
-                            <span>
-                                Таксі
-                            </span>
-                        </div>
-                        <div 
-                            :class="{'order-car__type': true, 'chosen': data.service == 'Кур\'єр'}"
-                            @click="data.service = 'Кур\'єр'">
-                            <img src="/assets/img/courier.svg" alt="">
-                            <span>
-                                Кур'єр
-                            </span>
-                        </div>
+                <div style="padding: 15px; max-height: 500px; overflow: auto;">
+                    <div 
+                        class="arrow"
+                        @click="openPanel = ! openPanel">
+                        <img src="/assets/img/arrow.svg" alt="">
                     </div>
 
-                    <div class="order-car__form">
-                        <div 
-                            v-if="data.route?.from"
-                            class="input-wrapper">
-                            <div class="form-group">
-                                <input
-                                    class="address-input"
-                                    placeholder="Звідки*"
-                                    autocomplete="off"
-                                    type="text" 
-                                    :id="data.route.from.id"
-                                    v-model="data.route.from.value"
-                                    @input="data.route.from.showList = !data.route.from.value"
-                                    @focus="data.route.from.showList = !data.route.from.value"/>
+                    <div 
+                        v-show="leftSide == 'form'"
+                        class="order-car__order">
+                        <div class="order-car__types">
+                            <div 
+                                :class="{'order-car__type': true, 'chosen': data.service == 'Таксі'}"
+                                @click="data.service = 'Таксі'">
+                                <img src="/assets/img/car.png" alt="">
+                                <span>
+                                    Таксі
+                                </span>
+                            </div>
+                            <div 
+                                :class="{'order-car__type': true, 'chosen': data.service == 'Кур\'єр'}"
+                                @click="data.service = 'Кур\'єр'">
+                                <img src="/assets/img/courier.svg" alt="">
+                                <span>
+                                    Кур'єр
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="order-car__form">
+                            <div 
+                                v-if="data.route?.from"
+                                class="input-wrapper">
+                                <div class="form-group">
+                                    <input
+                                        class="address-input"
+                                        placeholder="Звідки*"
+                                        autocomplete="off"
+                                        type="text" 
+                                        :id="data.route.from.id"
+                                        v-model="data.route.from.value"
+                                        @input="data.route.from.showList = !data.route.from.value"
+                                        @focus="data.route.from.showList = !data.route.from.value"/>
+                                </div>
+
+                                <div 
+                                    v-if="data.route.from.showList"
+                                    class="address-list">
+                                    <div 
+                                        class="address-item"
+                                        @click="setCurrentAddress(data.route.from)">
+                                        <img src="/assets/img/location.png" alt="">
+                                        <span>
+                                            Ваше місцерозташування
+                                        </span>
+                                    </div>
+                                    <div 
+                                        class="address-item"
+                                        @click="openSetOnMap(data.route.from)">
+                                        <img src="/assets/img/location.png" alt="">
+                                        <span>
+                                            Вказати на карті
+                                        </span>
+                                    </div>
+                                    <div 
+                                        v-for="item in addressHistory"
+                                        class="address-item"
+                                        @click="data.route.from.setData(item)">
+                                        <img src="/assets/img/addressHistory.svg" alt="">
+                                        <span>
+                                            {{ item.address }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                v-for="(address, i) in data.route?.to ?? []" 
+                                class="input-wrapper"
+                                :key="i">
+                                <div class="form-group">
+                                    <div style="flex-grow: 1; position: relative;">
+                                        <input
+                                            class="address-input"
+                                            :placeholder="data.route.to.length == 1 ? 'Куди*' : 'Зупинка'"
+                                            autocomplete="off"
+                                            type="text" 
+                                            :id="address.id"
+                                            v-model="address.value"
+                                            @input="address.showList = !address.value"
+                                            @focus="address.showList = !address.value"/>
+                                        <div 
+                                            v-if="address.showList"
+                                            class="address-list">
+                                            <div 
+                                                class="address-item"
+                                                @click="openSetOnMap(address)">
+                                                <img src="/assets/img/location.png" alt="">
+                                                <span>
+                                                    Вказати на карті
+                                                </span>
+                                            </div>
+                                            <div 
+                                                v-for="item in addressHistory"
+                                                class="address-item"
+                                                @click="address.setData(item)">
+                                                <img src="/assets/img/addressHistory.svg" alt="">
+                                                <span>
+                                                    {{ item.address }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div 
+                                        v-if="data.route.to.length >= 2"
+                                        title="Видалити зупинку"
+                                        class="remove-address"
+                                        @click="data.route.removeAddress(i)">
+                                        <img src="/assets/img/bin.png" alt="">
+                                    </div>
+                                </div>
                             </div>
 
                             <div 
-                                v-if="data.route.from.showList"
-                                class="address-list">
-                                <div 
-                                    class="address-item"
-                                    @click="setCurrentAddress(data.route.from)">
-                                    <img src="/assets/img/location.png" alt="">
-                                    <span>
-                                        Ваше місцерозташування
-                                    </span>
-                                </div>
-                                <div 
-                                    class="address-item"
-                                    @click="openSetOnMap(data.route.from)">
-                                    <img src="/assets/img/location.png" alt="">
-                                    <span>
-                                        Вказати на карті
-                                    </span>
-                                </div>
-                                <div 
-                                    v-for="item in addressHistory"
-                                    class="address-item"
-                                    @click="data.route.from.setData(item)">
-                                    <img src="/assets/img/addressHistory.svg" alt="">
-                                    <span>
-                                        {{ item.address }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            v-for="(address, i) in data.route?.to ?? []" 
-                            class="input-wrapper"
-                            :key="i">
-                            <div class="form-group">
-                                <div style="flex-grow: 1; position: relative;">
-                                    <input
-                                        class="address-input"
-                                        :placeholder="data.route.to.length == 1 ? 'Куди*' : 'Зупинка'"
-                                        autocomplete="off"
-                                        type="text" 
-                                        :id="address.id"
-                                        v-model="address.value"
-                                        @input="address.showList = !address.value"
-                                        @focus="address.showList = !address.value"/>
-                                    <div 
-                                        v-if="address.showList"
-                                        class="address-list">
-                                        <div 
-                                            class="address-item"
-                                            @click="openSetOnMap(address)">
-                                            <img src="/assets/img/location.png" alt="">
-                                            <span>
-                                                Вказати на карті
-                                            </span>
-                                        </div>
-                                        <div 
-                                            v-for="item in addressHistory"
-                                            class="address-item"
-                                            @click="address.setData(item)">
-                                            <img src="/assets/img/addressHistory.svg" alt="">
-                                            <span>
-                                                {{ item.address }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div 
-                                    v-if="data.route.to.length >= 2"
-                                    title="Видалити зупинку"
-                                    class="remove-address"
-                                    @click="data.route.removeAddress(i)">
-                                    <img src="/assets/img/bin.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div 
-                            v-if="data.route.to.length < 3"
-                            class="btn add-address"
-                            title="Додати зупинку"
-                            @click="data.route.addAddress()">
-                            +
-                        </div>
-
-                        <div class="datetime">
-                            <div class="form-group">
-                                <input 
-                                    type="text"
-                                    readonly
-                                    autocomplete="off"
-                                    id="date"
-                                    v-model="data.date">
-                                <img src="/assets/img/calendar.png" alt="">
+                                v-if="data.route.to.length < 3"
+                                class="btn add-address"
+                                title="Додати зупинку"
+                                @click="data.route.addAddress()">
+                                +
                             </div>
 
-                            <div class="form-group">
-                                <input 
-                                    type="text"
-                                    readonly
-                                    autocomplete="off"
-                                    id="time"
-                                    v-model="data.time">
-                                <img src="/assets/img/time.png" alt="">
-                            </div>
-                        </div>
-
-                        <div 
-                            v-show="data.service == 'Кур\'єр'"
-                            style="margin-top: 15px;"
-                            class="form-group">
-                            <select v-model="data.shipping_type">
-                                <option value="" disabled selected>
-                                    Тип доставки
-                                </option>
-                                <option 
-                                    v-for="type in shippingTypes"
-                                    :value="type">
-                                        {{ type }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div 
-                            v-if="data.service == 'Кур\'єр'"
-                            class="btn comment-btn"
-                            @click="leftSide = 'comment'">
-                            Додати коментарій
-                        </div>
-
-                        <div class="payments">
-                            <div class="radio-group">
-                                <label class="radio-option">
+                            <div class="datetime">
+                                <div class="form-group">
                                     <input 
-                                        form="checkout-form" 
-                                        type="radio" 
-                                        value="Готівка"
-                                        v-model="data.payment_method"/>
-                                    <span class="custom-radio"></span>
-                                    Готівка
-                                </label>
-                                <label class="radio-option">
-                                    <input
-                                        form="checkout-form" 
-                                        type="radio" 
-                                        value="Карта" 
-                                        v-model="data.payment_method"/>
-                                    <span class="custom-radio"></span>
-                                    Карта
-                                </label>
+                                        type="text"
+                                        readonly
+                                        autocomplete="off"
+                                        id="date"
+                                        v-model="data.date">
+                                    <img src="/assets/img/calendar.png" alt="">
+                                </div>
+
+                                <div class="form-group">
+                                    <input 
+                                        type="text"
+                                        readonly
+                                        autocomplete="off"
+                                        id="time"
+                                        v-model="data.time">
+                                    <img src="/assets/img/time.png" alt="">
+                                </div>
                             </div>
 
-                            <div  
-                                v-if="bonuses >= 50"
+                            <div 
+                                v-show="data.service == 'Кур\'єр'"
+                                style="margin-top: 15px;"
                                 class="form-group">
-                                <input 
-                                    id="bonuses"
-                                    type="checkbox" 
-                                    class="custom-checkbox"
-                                    v-model="data.use_bonuses"/>
-                                <label for="bonuses">
-                                    Використати бонуси
-                                </label>
+                                <select v-model="data.shipping_type">
+                                    <option value="" disabled selected>
+                                        Тип доставки
+                                    </option>
+                                    <option 
+                                        v-for="type in shippingTypes"
+                                        :value="type">
+                                            {{ type }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div 
+                                v-if="data.service == 'Кур\'єр'"
+                                class="btn comment-btn"
+                                @click="leftSide = 'comment'">
+                                Додати коментарій
+                            </div>
+
+                            <div class="payments">
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input 
+                                            form="checkout-form" 
+                                            type="radio" 
+                                            value="Готівка"
+                                            v-model="data.payment_method"/>
+                                        <span class="custom-radio"></span>
+                                        Готівка
+                                    </label>
+                                    <label class="radio-option">
+                                        <input
+                                            form="checkout-form" 
+                                            type="radio" 
+                                            value="Карта" 
+                                            v-model="data.payment_method"/>
+                                        <span class="custom-radio"></span>
+                                        Карта
+                                    </label>
+                                </div>
+
+                                <div  
+                                    v-if="bonuses >= 50"
+                                    class="form-group">
+                                    <input 
+                                        id="bonuses"
+                                        type="checkbox" 
+                                        class="custom-checkbox"
+                                        v-model="data.use_bonuses"/>
+                                    <label for="bonuses">
+                                        Використати бонуси
+                                    </label>
+                                </div>
                             </div>
                         </div>
+
+                        <button 
+                            class="btn order-btn"
+                            :disabled="price === null"
+                            @click="send">
+                            Замовити <span v-if="price !== null"> {{ price }}₴</span>
+                        </button>
                     </div>
 
-                    <button 
-                        class="btn order-btn"
-                        :disabled="price === null"
-                        @click="send">
-                        Замовити <span v-if="price !== null"> {{ price }}₴</span>
-                    </button>
-                </div>
-
-                <div
-                    v-show="leftSide == 'setOnMap'"
-                    class="order-car__set-on-map">
-                    <div class="form-group">
-                        <input 
-                            readonly
-                            type="text" 
-                            placeholder="Вкажіть адресу на карті"
-                            v-model="setOnMap.address.address"/>
+                    <div
+                        v-show="leftSide == 'setOnMap'"
+                        class="order-car__set-on-map">
+                        <div class="form-group">
+                            <input 
+                                readonly
+                                type="text" 
+                                placeholder="Вкажіть адресу на карті"
+                                v-model="setOnMap.address.address"/>
+                        </div>
+                        <button 
+                            class="btn"
+                            :disabled="!Boolean(setOnMap.address.address)"
+                            @click="applySetOnMap">
+                            Підтвердити
+                        </button>
+                        <button 
+                            class="btn cancel"
+                            @click="closeSetOnMap">
+                            Скасувати
+                        </button>
                     </div>
-                    <button 
-                        class="btn"
-                        :disabled="!Boolean(setOnMap.address.address)"
-                        @click="applySetOnMap">
-                        Підтвердити
-                    </button>
-                    <button 
-                        class="btn cancel"
-                        @click="closeSetOnMap">
-                        Скасувати
-                    </button>
-                </div>
 
-                <div
-                    v-show="leftSide == 'comment'"
-                    class="order-car__comment">
-                    <div class="form-group">
-                        <textarea 
-                            rows="5"
-                            v-model="data.comment"
-                            placeholder="Коментарій"></textarea>
+                    <div
+                        v-show="leftSide == 'comment'"
+                        class="order-car__comment">
+                        <div class="form-group">
+                            <textarea 
+                                rows="5"
+                                v-model="data.comment"
+                                placeholder="Коментарій"></textarea>
+                        </div>
+                        <button 
+                            class="btn"
+                            @click="addComment">
+                            Додати
+                        </button>
+                        <button 
+                            class="btn cancel"
+                            @click="deleteComment">
+                            Видалити
+                        </button>
                     </div>
-                    <button 
-                        class="btn"
-                        @click="addComment">
-                        Додати
-                    </button>
-                    <button 
-                        class="btn cancel"
-                        @click="deleteComment">
-                        Видалити
-                    </button>
                 </div>
-
             </div>
 
             <div class="order-car__right">
