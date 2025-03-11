@@ -57,7 +57,7 @@
                                 class="address-list">
                                 <div 
                                     class="address-item"
-                                    @click="setAddressAsCurrent(data.route.from)">
+                                    @click="setCurrentAddress(data.route.from)">
                                     <img src="/assets/img/location.png" alt="">
                                     <span>
                                         Ваше місцерозташування
@@ -609,8 +609,8 @@ const app = {
         })
 
         this.map.addListener('center_changed', this.centerChangedHandler)
-
-        this.map.addListener('dragend', this.dragendHandler)
+        this.map.addListener('zoom_changed', this.fidnSetOnMapAddress)
+        this.map.addListener('dragend', this.fidnSetOnMapAddress)
     },
     centerChangedHandler() {
         if (this.leftSide != 'setOnMap') {
@@ -622,12 +622,15 @@ const app = {
             lng: this.map.getCenter().lng(),
         })
     },
-    async dragendHandler() {        
+    async fidnSetOnMapAddress() {        
         if (this.leftSide != 'setOnMap') {
             return
         }
+        
+        const position = this.map.getCenter()
 
-        const position = this.setOnMap.marker.getPosition()
+        this.setOnMap.marker.setPosition(position)
+        this.map.setCenter(position)
 
         const place = await this.geocode({
             lat: position.lat(),
@@ -672,61 +675,6 @@ const app = {
         this.data.comment = ''
         this.leftSide = 'form'
     },
-    async send() {        
-        const container = document.querySelector('.order-car__left')
-        try {
-            container.classList.add('loading')
-            const res = await fetch('/orders/order-car', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-                body: JSON.stringify(this.getData())
-            })
-            const data = await res.json()
-            location.href = `/zaversheno?order=${data.id}`
-        } catch (err) {
-            console.error(err)
-        } finally {
-            container.classList.remove('loading')
-        }
-    },
-    getData() {
-        const data = {}
-
-        data.service = this.data.service
-        
-        data.from = {
-            address: this.data.route.from.address,
-            lat: this.data.route.from.lat,
-            lng: this.data.route.from.lng,
-        }
-        data.to = this.data.route.to.map(address => {
-            return {
-                address: address.address,
-                lat: address.lat,
-                lng: address.lng,
-            }
-        })
-
-        data.date = this.data.formattedDate
-        if (data.date == 'Сьогодні') {
-            data.date = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`
-        }
-
-        data.time = this.data.time
-        if (data.time == 'Зараз') {
-            data.time = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`
-        }
-
-        data.shipping_type = this.data.shipping_type
-        data.comment = this.data.comment
-        data.payment_method = this.data.payment_method
-        data.use_bonuses = this.data.use_bonuses
-
-        return data
-    },
     setDataFromOrder(order) {
         this.data.service = order.type
 
@@ -747,30 +695,30 @@ const app = {
         let options = {
         duration: 100,
             easing: function (x, t, b, c, d) {
-                return -c *(t/=d)*(t-2) + b;
+                return -c *(t/=d)*(t-2) + b
             }
         };
 
-        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame
+        window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame
 
-        marker.AT_startPosition_lat = marker.getPosition().lat();
-        marker.AT_startPosition_lng = marker.getPosition().lng();
-        let newPosition_lat = newPosition.lat;
-        let newPosition_lng = newPosition.lng;
+        marker.AT_startPosition_lat = marker.getPosition().lat()
+        marker.AT_startPosition_lng = marker.getPosition().lng()
+        let newPosition_lat = newPosition.lat
+        let newPosition_lng = newPosition.lng
 
         if (Math.abs(newPosition_lng - marker.AT_startPosition_lng) > 180) {
             if (newPosition_lng > marker.AT_startPosition_lng) {
-                newPosition_lng -= 360;
+                newPosition_lng -= 360
             } else {
-                newPosition_lng += 360;
+                newPosition_lng += 360
             }
         }
 
         let animateStep = function(marker, startTime) {
-            let ellapsedTime = (new Date()).getTime() - startTime;
-            let durationRatio = ellapsedTime / options.duration; // 0 - 1
-            let easingDurationRatio = options.easing(durationRatio, ellapsedTime, 0, 1, options.duration);
+            let ellapsedTime = (new Date()).getTime() - startTime
+            let durationRatio = ellapsedTime / options.duration
+            let easingDurationRatio = options.easing(durationRatio, ellapsedTime, 0, 1, options.duration)
 
             if (durationRatio < 1) {
                 marker.setPosition({
@@ -785,23 +733,23 @@ const app = {
                 });
 
                 if (window.requestAnimationFrame) {
-                    marker.AT_animationHandler = window.requestAnimationFrame(function() {animateStep(marker, startTime)});
+                    marker.AT_animationHandler = window.requestAnimationFrame(function() {animateStep(marker, startTime)})
                 } else {
-                    marker.AT_animationHandler = setTimeout(function() {animateStep(marker, startTime)}, 17);
+                    marker.AT_animationHandler = setTimeout(function() {animateStep(marker, startTime)}, 17)
                 }
 
             } else {
-                marker.setPosition(newPosition);
+                marker.setPosition(newPosition)
             }
         }
 
         if (window.cancelAnimationFrame) {
-            window.cancelAnimationFrame(marker.AT_animationHandler);
+            window.cancelAnimationFrame(marker.AT_animationHandler)
         } else {
-            clearTimeout(marker.AT_animationHandler);
+            clearTimeout(marker.AT_animationHandler)
         }
 
-        animateStep(marker, (new Date()).getTime());
+        animateStep(marker, (new Date()).getTime())
     },
     startTime() {
         let hour = String(new Date().getHours()).padStart(2, '0')
@@ -820,7 +768,7 @@ const app = {
 
         return `${hour}:${minute}`
     },
-    setAddressAsCurrent(address) {
+    setCurrentAddress(address) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async geo => {
                 const lat = geo.coords.latitude
@@ -877,6 +825,61 @@ const app = {
             this.price = json.price
         } catch (err) {
             console.error(err)
+        }
+    },
+    getData() {
+        const data = {}
+
+        data.service = this.data.service
+        
+        data.from = {
+            address: this.data.route.from.address,
+            lat: this.data.route.from.lat,
+            lng: this.data.route.from.lng,
+        }
+        data.to = this.data.route.to.map(address => {
+            return {
+                address: address.address,
+                lat: address.lat,
+                lng: address.lng,
+            }
+        })
+
+        data.date = this.data.formattedDate
+        if (data.date == 'Сьогодні') {
+            data.date = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`
+        }
+
+        data.time = this.data.time
+        if (data.time == 'Зараз') {
+            data.time = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`
+        }
+
+        data.shipping_type = this.data.shipping_type
+        data.comment = this.data.comment
+        data.payment_method = this.data.payment_method
+        data.use_bonuses = this.data.use_bonuses
+
+        return data
+    },
+    async send() {        
+        const container = document.querySelector('.order-car__left')
+        try {
+            container.classList.add('loading')
+            const res = await fetch('/orders/order-car', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(this.getData())
+            })
+            const data = await res.json()
+            location.href = `/zaversheno?order=${data.id}`
+        } catch (err) {
+            console.error(err)
+        } finally {
+            container.classList.remove('loading')
         }
     },
     mounted() {
