@@ -8,7 +8,9 @@
             <a-menu 
                 v-model:selectedKeys="selectedKeys" 
                 mode="inline">
-                <a-menu-item key="dashboard">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="dashboard">
                     <template #icon>
                         <DashboardOutlined/>
                     </template>
@@ -17,7 +19,7 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-sub-menu>
+                <a-sub-menu v-if="hasRole(['адмін', 'диспетчер'])">
                     <template #icon>
                         <ClockCircleOutlined/>
                     </template>
@@ -38,7 +40,9 @@
                     </a-menu-item>
                 </a-sub-menu>
 
-                <a-menu-item key="orders">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="orders">
                     <template #icon>
                         <ShoppingCartOutlined/>
                     </template>
@@ -47,7 +51,9 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="clients">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="clients">
                     <template #icon>
                         <TeamOutlined/>
                     </template>
@@ -56,7 +62,9 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="couriers">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="couriers">
                     <template #icon>
                         <DragOutlined/>
                     </template>
@@ -65,7 +73,9 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="cars">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="cars">
                     <template #icon>
                         <CarOutlined/>
                     </template>
@@ -74,7 +84,7 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-sub-menu>
+                <a-sub-menu v-if="hasRole(['адмін',])">
                     <template #icon>
                         <CreditCardOutlined/>
                     </template>
@@ -101,7 +111,7 @@
                     </a-menu-item>
                 </a-sub-menu>
 
-                <a-sub-menu>
+                <a-sub-menu v-if="hasRole(['адмін', 'диспетчер'])">
                     <template #icon>
                         <ShopOutlined/>
                     </template>
@@ -128,7 +138,9 @@
                     </a-menu-item>
                 </a-sub-menu>
 
-                <a-menu-item key="promotions">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="promotions">
                     <template #icon>
                         <SoundOutlined />
                     </template>
@@ -137,7 +149,9 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="analytics">
+                <a-menu-item 
+                    v-if="hasRole(['адмін',])"
+                    key="analytics">
                     <template #icon>
                         <LineChartOutlined />
                     </template>
@@ -146,7 +160,9 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="content">
+                <a-menu-item 
+                    v-if="hasRole(['адмін', 'диспетчер'])"
+                    key="content">
                     <template #icon>
                         <EditOutlined/>
                     </template>
@@ -155,12 +171,25 @@
                     </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="users">
+                <a-menu-item 
+                    v-if="hasRole(['адмін',])"
+                    key="users">
                     <template #icon>
                         <UserOutlined/>
                     </template>
                     <router-link :to="{name: 'users.index'}">
                         Користувачі
+                    </router-link>
+                </a-menu-item>
+
+                <a-menu-item 
+                    v-if="hasRole(['адмін',])"
+                    key="settings">
+                    <template #icon>
+                        <SettingOutlined/>
+                    </template>
+                    <router-link :to="{name: 'settings.index'}">
+                        Налаштування
                     </router-link>
                 </a-menu-item>
 
@@ -218,7 +247,10 @@ import {
 } from '@ant-design/icons-vue'
 import Logout from './Logout.vue'
 import OrderModal from '../Orders/Modal/Modal.vue'
-import { auth } from '../../helpers/helpers'
+import { 
+    auth,
+    hasRole,
+} from '../../helpers/helpers'
 import Phonet from '../../helpers/phonet'
 import clientsApi from '../../api/clients'
 import { 
@@ -264,6 +296,7 @@ export default {
     },
     methods: {
         auth,
+        hasRole,
         async handleCall(call) {
             if (this.caller === call.otherLegs[0].num) {
                 return
@@ -366,7 +399,10 @@ export default {
             phonet.listen('call.hangup', this.handleHangup)
         }
 
-        if (! hasOpenWorkShift && auth.isLogged()) {
+        if (
+            ! hasOpenWorkShift
+            && hasRole(['адмін', 'диспетчер',])
+        ) {
             this.showWorkShiftNotification()
         }
     },

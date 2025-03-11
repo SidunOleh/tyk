@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Orders\OrderService;
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ class Order extends Model
         'subtotal',
         'shipping_price',
         'additional_costs',
+        'add_bonuses',
         'bonuses',
         'total',
         'time',
@@ -40,6 +42,7 @@ class Order extends Model
         'additional_costs' => 'float',
         'shipping_price' => 'float',
         'bonuses' => 'float',
+        'add_bonuses' => 'float',
         'total' => 'float',
         'time' => 'datetime',
         'duration' => 'integer',
@@ -102,12 +105,18 @@ class Order extends Model
         });
 
         static::created(function (self $order) {
-            $order->client->addBonus(10);
-
             $order->log('створено', Auth::user());
         });
 
         static::updated(function (self $order) {
+            if ($order->status == Order::DONE and $order->getOriginal('status') != Order::DONE) {
+                OrderService::make($order->type)->addBonusToClient($order);
+            }
+    
+            if ($order->status != Order::DONE and $order->getOriginal('status') == Order::DONE) {
+                OrderService::make($order->type)->removeBonusFromClient($order);
+            }
+
             $order->log('змінено', Auth::user(), $order->getUpdates());
         });
 
@@ -221,7 +230,7 @@ class Order extends Model
             return $carry + $orderItem->amount * $orderItem->quantity;
         }, 0);
 
-        $total = $subtotal + $this->shipping_price + $this->additional_costs - $this->bonuses;
+        $total = $subtotal + $this->shipping_price + $this->additional_costs;
 
         return $this->updateQuietly([
             'subtotal' => $subtotal,
@@ -237,5 +246,10 @@ class Order extends Model
     public function totalFormatted(string $symb = '₴'): string
     {
         return number_format($this->total, 2) . $symb;
+    }
+    
+    public function bonusesFormatted(string $symb = '₴'): string
+    {
+        return number_format($this->bonuses, 2) . $symb;
     } 
 }

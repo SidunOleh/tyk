@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('shipping_price')->default(0);
             $table->decimal('additional_costs')->default(0);
             $table->decimal('bonuses')->default(0);
+            $table->decimal('add_bonuses')->default(0);
             $table->decimal('total')->default(0);
             $table->dateTime('time');
             $table->unsignedInteger('duration');

@@ -9,7 +9,7 @@ export default {
         s = '',
         filters = {}
     }) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -30,7 +30,7 @@ export default {
         return res.data
     },
     async fetchBetween(start, end) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -41,7 +41,7 @@ export default {
         return res.data
     },
     async create(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -50,7 +50,7 @@ export default {
         return res.data
     },
     async edit(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -59,7 +59,7 @@ export default {
         return res.data
     },
     async changeStatus(id, status) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -68,7 +68,7 @@ export default {
         return res.data
     },
     async changeCourier(id, courierId) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -77,7 +77,7 @@ export default {
         return res.data
     },
     async delete(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -86,7 +86,7 @@ export default {
         return res.data
     },
     async bulkDelete(ids) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 

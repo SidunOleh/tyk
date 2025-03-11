@@ -164,6 +164,37 @@
                     v-model:value="data.notes"/>
             </a-form-item>
 
+            <a-form-item 
+                has-feedback
+                :validate-status="errors['bonuses'] ? 'error' : ''"
+                :help="errors.bonuses">
+                <template #label>
+                    К-сть бонусів - <b style="margin-left: 5px;">{{ formatPrice(selectedClient?.bonuses ?? 0) }}</b>
+                </template>
+
+                <template v-if="action == 'create'">
+                    <template v-if="selectedClient?.bonuses >= 50">
+                        <a-checkbox     
+                            style="margin-bottom: 10px;"
+                            v-model:checked="useBonuses"
+                            @change="data.bonuses = useBonuses ? 50 : null">
+                            Використати бонуси
+                        </a-checkbox>
+                        <a-input-number
+                            v-if="useBonuses"
+                            style="width: 100%;"
+                            placeholder="Введіть бонуси"
+                            :min="50"
+                            :max="selectedClient.bonuses"
+                            v-model:value="data.bonuses"/>
+                    </template>
+
+                    <b v-else>Недостатньо для нарахування</b>
+                </template>
+
+                <div v-else>Використано бонусів - <b>{{ formatPrice(data.bonuses) }}</b></div>
+            </a-form-item>
+
             <div style="margin-bottom: 15px;">
                 Повна сума:
                 <a-typography-text strong>
@@ -243,6 +274,7 @@ export default {
                 paid: false,
                 payment_method: null,
                 notes: '',
+                bonuses: null,
             },
             clients: {
                 data: [],
@@ -264,6 +296,7 @@ export default {
             loading: false,
             calcingPrice: false,
             fetchingClientOrders: false,
+            useBonuses: false,
         }
     },    
     computed: {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HasRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
             '/tg',
         ]);
         $middleware->redirectGuestsTo(fn () => route('pages.home'));
+        $middleware->alias([
+            'has_role' => HasRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

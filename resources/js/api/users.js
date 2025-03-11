@@ -30,7 +30,7 @@ export default {
         return res.data
     },
     async dispatchers() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 

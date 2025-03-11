@@ -11,6 +11,7 @@
                 </a-typography-title>
 
                 <a-typography-link 
+                    v-if="hasRole(['адмін',])"
                     type="danger"
                     @click="close.open = true">
                     Закрити
@@ -133,6 +134,7 @@ import carsApi from '../../api/cars'
 import usersApi from '../../api/users'
 import DriversList from './DriversList.vue'
 import DispatchersList from './DispatchersList.vue'
+import { hasRole, } from '../../helpers/helpers'
 
 export default {
     components: {
@@ -232,6 +234,7 @@ export default {
     methods: {
         confirmPopup,
         formatDate,
+        hasRole,
         async fetchCurrent() {
             try {
                 this.loading = true

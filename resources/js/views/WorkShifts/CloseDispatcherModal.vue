@@ -13,6 +13,21 @@
                 <a-card-grid 
                     style="width: 33.33%; text-align: center"
                     :hoverable="false">
+                    Послуга
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
+                    К-сть
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
+                    Тотал
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
                     Доставка їжі
                 </a-card-grid>
                 <a-card-grid 
@@ -118,10 +133,13 @@ export default {
             data: {
                 end: null,
                 food_shipping_count: 0,
+                food_shipping_bonuses: 0,
                 food_shipping_total: 0,
                 shipping_count: 0,
+                shipping_bonuses: 0,
                 shipping_total: 0,
                 taxi_count: 0,
+                taxi_bonuses: 0,
                 taxi_total: 0,
             },
             errors: {},

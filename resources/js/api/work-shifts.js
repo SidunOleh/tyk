@@ -9,7 +9,7 @@ export default {
         s = '',
         filters = {}
     }) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -30,7 +30,7 @@ export default {
         return res.data
     },
     async current() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -39,7 +39,7 @@ export default {
         return res.data
     },
     async open() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -48,7 +48,7 @@ export default {
         return res.data
     },
     async workShiftStat(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -66,7 +66,7 @@ export default {
         return res.data
     },
     async openDriverWorkShift(workShiftId, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -75,7 +75,7 @@ export default {
         return res.data
     },
     async editDriverWorkShift(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -84,7 +84,7 @@ export default {
         return res.data
     },
     async driverWorkShiftStat(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -93,7 +93,7 @@ export default {
         return res.data
     },
     async closeDriverWorkShift(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -102,7 +102,7 @@ export default {
         return res.data
     },
     async openDispatcherWorkShift(workShiftId, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -111,7 +111,7 @@ export default {
         return res.data
     },
     async dispatcherWorkShiftStat(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -120,7 +120,7 @@ export default {
         return res.data
     },
     async closeDispatcherWorkShift(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -129,7 +129,7 @@ export default {
         return res.data
     },
     async editZakladReport(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 

@@ -115,8 +115,8 @@ class PriceService
             'stop' => $settings['stop'] ?? 0,
             'courier_services' => $settings['courier_services'] ?? array_map(
                 fn ($service) => [
-                    'service' => 
-                    $service, 'price' => 0,
+                    'service' => $service, 
+                    'price' => 0,
                 ],
                 config('app.courier_services') ?? []
             ),

@@ -1,531 +1,3 @@
-<style>
-    .order-car {
-        margin-top: 80px;
-        height: calc(100vh - 132px);
-    }
-
-    @media (max-width: 1024px) {
-        .order-car {
-            margin-top: 70px;
-            height: calc(100vh - 122px);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .order-car {
-            height: calc(100vh - 118px);
-        }
-    }
-
-    .order-car .container {
-        height: 100%;
-    }
-
-    .order-car__body {
-        gap: 20px;
-        display: flex;
-        height: 100%;
-        overflow: auto;
-    }
-
-    @media (max-width: 1250px) {
-        .order-car__body {
-            flex-direction: column;
-        }
-    }
-
-    .order-car__left {
-        align-self: flex-start;
-        flex: 30%;
-        border: 2px solid rgb(243 243 243);
-        padding: 15px;
-        border-radius: 5px;
-    }
-
-    @media (max-width: 1250px) {
-        .order-car__left {
-            order: 2;
-        }
-    }
-
-    @media (max-width: 1250px) {
-        .order-car__left {
-            width: 100%;
-        }
-    }
-
-    .order-car__types {
-        display: flex;
-    }
-
-    .order-car__type {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    .order-car__type.chosen {
-        background: #ec1220;
-    }
-
-    .order-car__type.chosen span {
-        color: white;
-    }
-    
-    .order-car__type.chosen img {
-        filter: brightness(0) saturate(100%) invert(100%) sepia(99%) saturate(0%) hue-rotate(319deg) brightness(104%) contrast(100%);
-    }
-
-    .order-car__type span {
-        color: #323232;
-    }
-
-    .order-car__type img {
-        width: 17px;
-    }
-
-    .order-car__form {
-        margin-top: 30px;
-    }
-
-    .order-car__left .btn {
-        margin-top: 15px;
-        width: 100%;
-        font-size: 16px;
-        padding: 12px 24px;
-        display: flex;
-        gap: 5px;
-    }
-
-    .order-car__left .btn:disabled {
-        opacity: 0.6;
-        pointer-events: none;
-    }
-
-    .order-car__right {
-        flex: 70%;
-    }
-
-    @media (max-width: 768px) {
-        .order-car__right {
-            width: 100%;
-            order: 1;
-        }
-    }
-
-    #map {
-        width: 100%;
-        height: 100%;
-        border-radius: 5px;
-    }
-
-    #map img[alt=Google] {
-        display: none;
-    }
-
-    #map .gm-style-cc {
-        display: none;
-    }
-
-    .form-group {
-        position: relative
-    }
-
-    .form-group label {
-        color: var(--Grey-100, #323232);
-        font-family: Montserrat;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        display: block;
-    }
-
-    .form-group .error {
-        display: none;
-        color: red;
-        position: absolute;
-        left: 3px;
-        top: 102%;
-        font-size: 14px
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        background: var(--White, #fff);
-        -webkit-box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11);
-        box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11);
-        border: none;
-        font-size: 16px
-    }
-
-    .form-group input::-webkit-input-placeholder,
-    .form-group select::-webkit-input-placeholder,
-    .form-group textarea::-webkit-input-placeholder {
-        color: #868686;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: normal;
-        font-family: Montserrat
-    }
-
-    .form-group input::-moz-placeholder,
-    .form-group select::-moz-placeholder,
-    .form-group textarea::-moz-placeholder {
-        color: #868686;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: normal;
-        font-family: Montserrat
-    }
-
-    .form-group input:-ms-input-placeholder,
-    .form-group select:-ms-input-placeholder,
-    .form-group textarea:-ms-input-placeholder {
-        color: #868686;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: normal;
-        font-family: Montserrat
-    }
-
-    .form-group input::-ms-input-placeholder,
-    .form-group select::-ms-input-placeholder,
-    .form-group textarea::-ms-input-placeholder {
-        color: #868686;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: normal;
-        font-family: Montserrat
-    }
-
-    .form-group input::placeholder,
-    .form-group select::placeholder,
-    .form-group textarea::placeholder {
-        color: #868686;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: normal;
-        font-family: Montserrat
-    }
-
-    .custom-checkbox {
-        position: absolute;
-        z-index: -1;
-        opacity: 0;
-        display: none;
-    }
-
-    .custom-checkbox+label {
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    .custom-checkbox+label::before {
-        content: '';
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        flex-grow: 0;
-        border: 1px solid #ec1220;
-        border-radius: 0.25em;
-        margin-right: 0.5em;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 50% 50%;
-    }
-
-    .custom-checkbox:checked+label::before {
-        border-color: #ec1220;
-        background-color: #ec1220;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
-    }
-
-    .payment-methods {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .btn.cancel {
-        background-color: black;
-    }
-
-    .btn.cancel:hover {
-        background-color: white;
-        color: black;
-    }
-
-    .address-select .icon {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translate(0, -50%);
-        cursor: pointer;
-    }
-
-    .address-select input {
-        padding-right: 35px;
-    }
-
-    .order-car__left.loading {
-        border-radius: 5px;
-    }
-
-    .order-car {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .order-car[v-cloak]::before {
-        content: 'завантаження...';
-        position: absolute;
-        z-index: 1000;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: #f8f8f8;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .order-car__left .arrow {
-        display: none;
-        cursor: pointer;
-    }
-
-    .order-car__body.close .arrow img {
-       rotate: 180deg;
-    }
-
-    @media (max-width: 1250px) {
-        .order-car {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .order-car .container {
-            padding: 0 !important;
-        }
-
-        .order-car__body {
-            height: 100vh;
-            gap: 0;
-        }
-
-        .footer {
-            display: none;
-        }
-
-        .order-car__left {
-            position: relative;
-        }
-
-        .order-car__left .arrow {
-            width: 100px;
-            height: 20px;
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            z-index: 2;
-            transform: translate(-50%, 0);
-            background-color: #f8f8f8;
-            border-radius: 10px 10px 0 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .order-car__body.close .order-car__left {
-           flex: 0;
-           padding: 0;
-           border: 0;
-        }
-
-        .order-car__body.close .arrow svg {
-            transform: rotate(180deg);
-        }
-
-        .order-car__body.close .order-car__order {
-            display: none;
-        }
-
-        .order-car__body.close .order-car__set-on-map {
-            display: none;
-        }
-    }
-
-    .order-car__left.loading {
-        border-radius: 5px;
-    }
-
-    .add-address {
-        border-radius: 6px ;
-        font-size: 14px !important;
-    }
-
-    .remove-address img {
-        width: 18px;
-        cursor: pointer;
-    }
-
-    .order-car .form-group {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .address-list {
-        position: absolute;
-        top: 45px;
-        left: 0;
-        z-index: 101;
-        width: 100%;
-        background: white;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, .3);
-        max-height: 155px;
-        overflow: auto;
-    }
-
-    .address-list::-webkit-scrollbar {
-        height: 10px;
-        width: 10px;
-    }
-
-    .address-list::-webkit-scrollbar-track {
-        background: white;
-    }
-
-    .address-list:hover::-webkit-scrollbar-thumb {
-        background-color: hsl(0deg 0% 78.43%);
-    }
-
-    .address-list::-webkit-scrollbar-thumb {
-        background-color: hsl(0deg 0% 83.53%);
-        border-radius: 20px;
-        border: 3px solid white;
-    }
-
-    .address-list .address-item {
-        cursor: pointer;
-        padding: 0 4px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        line-height: 30px;
-        text-align: left;
-        border-top: 1px solid #e6e6e6;
-        font-size: 11px;
-        color: #515151;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .address-list .address:first-child {
-        border-top: none;
-    }
-
-    .address-list .address-item:hover {
-        background-color: #f9f8fa;
-    }
-
-    .address-list .address-item svg {
-        flex-shrink: 0;
-    }
-
-    .address-list .address-item span {
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-
-    .input-wrapper {
-        margin-bottom: 15px;
-        position: relative;
-    }
-
-    .comment-btn {
-        font-size: 14px !important;
-    } 
-
-    .datetime {
-        display: flex;
-        gap: 15px;
-        margin-top: 15px;
-    }
-    
-    .datetime .form-group {
-        width: 50%;
-    }
-
-    .ui-widget.ui-widget-content {
-        border: none !important;
-    }
-
-    #ui-datepicker-div {
-        z-index: 100 !important;
-    }
-
-    .datetime .form-group img {
-        position: absolute;
-        right: 10px;
-    }
-
-    .ui-state-highlight {
-        background-color: white !important;
-        color: #454545 !important;
-        border: 1px solid #c5c5c5 !important;
-    }
-
-    .ui-state-active {
-        background-color: #ec1220 !important;
-        color: white !important;
-        border: 1px solid #c5c5c5 !important;
-    }
-
-    .choices {
-        width: 100%;
-        z-index: 100;
-    }
-
-    .choices__inner {
-        border: none !important;
-        background: white !important;
-        box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11) !important;
-        border-radius: 8px !important;
-    }
-
-    .choices.is-open .choices__inner {
-        outline: 2px solid black;
-    }
-
-    .ui-timepicker-container {
-        z-index: 100 !important;
-        max-height: 150px;
-    }
-
-    .choices__list--dropdown .choices__list, .choices__list[aria-expanded] .choices__list {
-        max-height: 200px !important;
-    }
-</style>
-
 @verbatim
 <section 
     class="order-car" 
@@ -711,31 +183,38 @@
                             Додати коментарій
                         </div>
 
-                        <div class="payment-methods">
-                            <div class="form-group">
-                                <input 
-                                    checked
-                                    name="payment_method"
-                                    value="Готівка"
-                                    type="radio" 
-                                    class="custom-checkbox"
-                                    id="cash"
-                                    v-model="data.payment_method"/>
-                                <label for="cash">
+                        <div class="payments">
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input 
+                                        form="checkout-form" 
+                                        type="radio" 
+                                        value="Готівка"
+                                        v-model="data.payment_method"/>
+                                    <span class="custom-radio"></span>
                                     Готівка
+                                </label>
+                                <label class="radio-option">
+                                    <input
+                                        form="checkout-form" 
+                                        type="radio" 
+                                        value="Карта" 
+                                        v-model="data.payment_method"/>
+                                    <span class="custom-radio"></span>
+                                    Карта
                                 </label>
                             </div>
 
-                            <div class="form-group">
+                            <div  
+                                v-if="bonuses >= 50"
+                                class="form-group">
                                 <input 
-                                    name="payment_method"
-                                    value="Карта"
-                                    type="radio" 
+                                    id="bonuses"
+                                    type="checkbox" 
                                     class="custom-checkbox"
-                                    id="card"
-                                    v-model="data.payment_method"/>
-                                <label for="card">
-                                    Карта
+                                    v-model="data.use_bonuses"/>
+                                <label for="bonuses">
+                                    Використати бонуси
                                 </label>
                             </div>
                         </div>
@@ -743,7 +222,7 @@
 
                     <button 
                         class="btn order-btn"
-                        disabled
+                        :disabled="price === null"
                         @click="send">
                         Замовити <span v-if="price !== null"> {{ price }}₴</span>
                     </button>
@@ -808,7 +287,7 @@
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js'></script>
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<link rel="stylesheet" href="'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -960,7 +439,9 @@ function Route(map) {
 
         const directions = new google.maps.DirectionsService()
 
-        this.route = new google.maps.DirectionsRenderer()
+        this.route = new google.maps.DirectionsRenderer({
+            preserveViewport: true,
+        })
         this.route.setMap(this.map)
 
         const origin = {
@@ -993,10 +474,55 @@ function Route(map) {
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.setDirections(result)
+                const boundary = this.getBoundary()
+                this.map.setZoom(
+                    this.getZoomByBounds(this.map, boundary)
+                )
+                this.map.setCenter(
+                    boundary.getCenter()
+                )
             } else {
                 console.error(result)
             }
         })
+    }
+    this.getBoundary = () => {
+        let boundary = new google.maps.LatLngBounds()
+
+        const addresses = [this.from, ...this.to]
+        addresses.forEach(address => {
+            if (address.address) {
+                boundary.extend({
+                    lat: address.lat,
+                    lng: address.lng,
+                })
+            }
+        })
+
+        return boundary
+    }
+    this.getZoomByBounds = (map, bounds) => {
+        let MAX_ZOOM = map.mapTypes.get(map.getMapTypeId()).maxZoom || 21
+        let MIN_ZOOM = map.mapTypes.get(map.getMapTypeId()).minZoom || 0
+
+        let ne = map.getProjection().fromLatLngToPoint(bounds.getNorthEast())
+        let sw = map.getProjection().fromLatLngToPoint(bounds.getSouthWest()) 
+
+        let worldCoordWidth = Math.abs(ne.x-sw.x)
+        let worldCoordHeight = Math.abs(ne.y-sw.y)
+
+        let FIT_PAD = 40
+
+        for(let zoom = MAX_ZOOM; zoom >= MIN_ZOOM; --zoom){ 
+            if(
+                worldCoordWidth*(1<<zoom)+2*FIT_PAD < $(map.getDiv()).width() && 
+                worldCoordHeight*(1<<zoom)+2*FIT_PAD < $(map.getDiv()).height()
+            ) {
+                return zoom
+            }
+        }
+
+        return 0
     }
     this.removeRoute = () => {
         this.route?.setMap(null)
@@ -1007,15 +533,15 @@ function Route(map) {
     this.refreshMap = () => {
         let showRoute = this.from.address && this.to.some(address => address.address)
 
-        document.dispatchEvent(new CustomEvent('refresh-map', {
-            detail: {showRoute}
-        }))
-
         if (showRoute) {
             this.showRoute()
         } else {
             this.removeRoute()
         }
+
+        document.dispatchEvent(new CustomEvent('refresh-map', {
+            detail: {showRoute}
+        }))
     }
 }
 
@@ -1030,6 +556,7 @@ const app = {
         shipping_type: '',
         comment: '',
         payment_method: 'Готівка',
+        use_bonuses: false,
     },
     shippingTypes: [
         'Посилка з пошти',
@@ -1059,6 +586,7 @@ const app = {
     },
     addressHistory: [],
     shippingTypesSelect: null,
+    bonuses: 0,
     openSetOnMap(address) {
         this.leftSide = 'setOnMap'
         this.setOnMap.for = address  
@@ -1174,6 +702,7 @@ const app = {
         data.shipping_type = this.data.shipping_type
         data.comment = this.data.comment
         data.payment_method = this.data.payment_method
+        data.use_bonuses = this.data.use_bonuses
 
         return data
     },
@@ -1194,7 +723,7 @@ const app = {
         this.updatePrice()
     },
     animateMarkerTo(marker, newPosition) {
-        var options = {
+        let options = {
         duration: 100,
             easing: function (x, t, b, c, d) {
                 return -c *(t/=d)*(t-2) + b;
@@ -1206,8 +735,8 @@ const app = {
 
         marker.AT_startPosition_lat = marker.getPosition().lat();
         marker.AT_startPosition_lng = marker.getPosition().lng();
-        var newPosition_lat = newPosition.lat;
-        var newPosition_lng = newPosition.lng;
+        let newPosition_lat = newPosition.lat;
+        let newPosition_lng = newPosition.lng;
 
         if (Math.abs(newPosition_lng - marker.AT_startPosition_lng) > 180) {
             if (newPosition_lng > marker.AT_startPosition_lng) {
@@ -1217,10 +746,10 @@ const app = {
             }
         }
 
-        var animateStep = function(marker, startTime) {
-            var ellapsedTime = (new Date()).getTime() - startTime;
-            var durationRatio = ellapsedTime / options.duration; // 0 - 1
-            var easingDurationRatio = options.easing(durationRatio, ellapsedTime, 0, 1, options.duration);
+        let animateStep = function(marker, startTime) {
+            let ellapsedTime = (new Date()).getTime() - startTime;
+            let durationRatio = ellapsedTime / options.duration; // 0 - 1
+            let easingDurationRatio = options.easing(durationRatio, ellapsedTime, 0, 1, options.duration);
 
             if (durationRatio < 1) {
                 marker.setPosition({
@@ -1288,13 +817,14 @@ const app = {
     },
     async updatePrice() {
         try {
+            this.price = null
+
             const data = {}
             data.service = this.data.service
             data.courier_service = this.data.shipping_type
             
             data.route = []
             if (! this.data.route.from.address) {
-                this.price = null
                 return
             }
             data.route.push({
@@ -1310,7 +840,6 @@ const app = {
                 }
             })
             if (data.route.length < 2) {
-                this.price = null
                 return
             }
 
@@ -1326,7 +855,7 @@ const app = {
 
             this.price = json.price
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     },
     mounted() {
@@ -1371,13 +900,6 @@ const app = {
         this.data.route = new Route(this.map)
 
         document.addEventListener('refresh-map', e => {
-            const el = document.querySelector('.order-btn')
-            if (e.detail.showRoute) {
-                el.disabled = false
-            } else {
-                el.disabled = true
-            }
-
             this.updatePrice()
         })
 
@@ -1401,8 +923,14 @@ const app = {
         if (urlParams.get('service')) {
             this.data.service = urlParams.get('service')
         }
+        if (urlParams.get('courier_service')) {
+            this.data.shipping_type = urlParams.get('courier_service')
+            this.shippingTypesSelect.setChoiceByValue(urlParams.get('courier_service'))
+        }
 
         this.addressHistory = {{ Js::from($address_history) }}
+
+        this.bonuses = {{ Js::from($bonuses) }}
 
         const order = {{ Js::from($order) }}
         if (order) {

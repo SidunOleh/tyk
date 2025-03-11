@@ -18,6 +18,9 @@ class WorkShift extends Model
         'food_shipping_total',
         'shipping_total',
         'taxi_total',
+        'food_shipping_bonuses',
+        'shipping_bonuses',
+        'taxi_bonuses',
     ];
 
     protected $casts = [
@@ -29,6 +32,9 @@ class WorkShift extends Model
         'food_shipping_total' => 'float',
         'shipping_total' => 'float',
         'taxi_total' => 'float',
+        'food_shipping_bonuses' => 'float',
+        'shipping_bonuses' => 'float',
+        'taxi_bonuses' => 'float',
     ];
 
     public const OPEN = 'open';

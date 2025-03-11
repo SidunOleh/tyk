@@ -69,6 +69,8 @@ use App\Http\Controllers\Admin\Regions\DeleteController as RegionsDeleteControll
 use App\Http\Controllers\Admin\Regions\GetAllController as RegionsGetAllController;
 use App\Http\Controllers\Admin\Regions\StoreController as RegionsStoreController;
 use App\Http\Controllers\Admin\Regions\UpdateController as RegionsUpdateController;
+use App\Http\Controllers\Admin\Settings\GetController as SettingsGetController;
+use App\Http\Controllers\Admin\Settings\SaveController as SettingsSaveController;
 use App\Http\Controllers\Admin\Tariffs\BulkDeleteController as TariffsBulkDeleteController;
 use App\Http\Controllers\Admin\Tariffs\DeleteController as TariffsDeleteController;
 use App\Http\Controllers\Admin\Tariffs\GetAllController as TariffsGetAllController;
@@ -111,20 +113,26 @@ Route::domain(config('app.admin_domain'))->group(function () {
     Route::middleware(['auth:sanctum',])->group(function () {
         Route::prefix('/users')->name('users.')->group(function () {
             Route::get('/', IndexController::class)
-                ->name('index');
+                ->name('index')
+                ->middleware('has_role:адмін');
             Route::get('/dispatchers', GetDispatchersController::class)
-                ->name('dispatchers');
+                ->name('dispatchers')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/', StoreController::class)
-                ->name('store');
+                ->name('store')
+                ->middleware('has_role:адмін');
             Route::put('/{user}', UpdateController::class)
-                ->name('update');
+                ->name('update')
+                ->middleware('has_role:адмін');
             Route::delete('/bulk', BulkDeleteController::class)
-                ->name('bulk-delete');
+                ->name('bulk-delete')
+                ->middleware('has_role:адмін');
             Route::delete('/{user}', DeleteController::class)
-                ->name('delete');
+                ->name('delete')
+                ->middleware('has_role:адмін');
         });
 
-        Route::prefix('/couriers')->name('couriers.')->group(function () {
+        Route::prefix('/couriers')->name('couriers.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', CouriersIndexController::class)
                 ->name('index');
             Route::get('/all', CouriersGetAllController::class)
@@ -143,7 +151,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/products')->name('products.')->group(function () {
+        Route::prefix('/products')->name('products.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', ProductsIndexController::class)
                 ->name('index');
             Route::get('/search', ProductsSearchController::class)
@@ -158,7 +166,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/categories')->name('categories.')->group(function () {
+        Route::prefix('/categories')->name('categories.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', CategoriesIndexController::class)
                 ->name('index');
             Route::get('/all', GetAllController::class)
@@ -182,7 +190,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
             Route::post('/{category}/reorder-products', ReorderProductsController::class)
                 ->name('reorder-products');
 
-            Route::prefix('/tags')->name('tags.')->group(function () {
+            Route::prefix('/tags')->name('tags.')->middleware('has_role:адмін,диспетчер')->group(function () {
                 Route::get('/', GetController::class)
                     ->name('get');
                 Route::post('/', TagsStoreController::class)
@@ -196,12 +204,12 @@ Route::domain(config('app.admin_domain'))->group(function () {
             });
         });
 
-        Route::prefix('/images')->name('images.')->group(function () {
+        Route::prefix('/images')->name('images.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::post('/upload', UploadController::class)
                 ->name('upload');
         });
 
-        Route::prefix('/clients')->name('clients.')->group(function () {
+        Route::prefix('/clients')->name('clients.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', ClientsIndexController::class)
                 ->name('index');
             Route::get('/search', SearchController::class)
@@ -220,7 +228,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/orders')->name('orders.')->group(function () {
+        Route::prefix('/orders')->name('orders.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', OrdersIndexController::class)
                 ->name('index');
             Route::get('/between', GetBetweenController::class)
@@ -239,7 +247,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/promotions')->name('promotions.')->group(function () {
+        Route::prefix('/promotions')->name('promotions.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', PromotionsIndexController::class)
                 ->name('index');
             Route::post('/', PromotionsStoreController::class)
@@ -252,7 +260,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/cars')->name('cars.')->group(function () {
+        Route::prefix('/cars')->name('cars.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', CarsIndexController::class)
                 ->name('index');
             Route::get('/all', CarsGetAllController::class)
@@ -267,7 +275,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/analytics')->name('analytics.')->group(function () {
+        Route::prefix('/analytics')->name('analytics.')->middleware('has_role:адмін')->group(function () {
             Route::get('/income', IncomeController::class)
                 ->name('income');
             Route::get('/orders', OrdersController::class)
@@ -276,14 +284,14 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('products');
         });
 
-        Route::prefix('/content')->name('content.')->group(function () {
+        Route::prefix('/content')->name('content.')->middleware('has_role:адмін,диспетчер')->group(function () {
             Route::get('/', ContentGetController::class)
                 ->name('get');
             Route::post('/', SaveController::class)
                 ->name('save');
         });
 
-        Route::prefix('/tariffs')->name('tariffs.')->group(function () {
+        Route::prefix('/tariffs')->name('tariffs.')->middleware('has_role:адмін')->group(function () {
             Route::get('/', TariffsIndexController::class)
                 ->name('index');
             Route::get('/all', TariffsGetAllController::class)
@@ -300,7 +308,7 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('delete');
         });
 
-        Route::prefix('/regions')->name('regions.')->group(function () {
+        Route::prefix('/regions')->name('regions.')->middleware('has_role:адмін')->group(function () {
             Route::get('/all', RegionsGetAllController::class)
                 ->name('all');
             Route::post('/', RegionsStoreController::class)
@@ -313,43 +321,66 @@ Route::domain(config('app.admin_domain'))->group(function () {
 
         Route::prefix('/price')->name('price.')->group(function () {
             Route::post('/calc-for-route', CalcForRouteController::class)
-                ->name('price-for-route');
+                ->name('price-for-route')
+                ->middleware('has_role:адмін,диспетчер');
             Route::get('/settings', GetSettingsController::class)
-                ->name('settings.get');
+                ->name('settings.get')
+                ->middleware('has_role:адмін');
             Route::post('/settings', SaveSettingsController::class)
-                ->name('settings.save');
+                ->name('settings.save')
+                ->middleware('has_role:адмін');
         });
 
         Route::prefix('/work-shifts')->name('work-shifts.')->group(function () {
             Route::get('/', WorkShiftsIndexController::class)
-                ->name('index');
+                ->name('index')
+                ->middleware('has_role:адмін,диспетчер');
             Route::get('/current', GetCurrentController::class)
-                ->name('current');
+                ->name('current')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/open', OpenController::class)
-                ->name('open');
+                ->name('open')
+                ->middleware('has_role:адмін,диспетчер');
             Route::get('/{workShift}/stat', WorkShiftsGetStatController::class)
-                ->name('stat');
+                ->name('stat')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/{workShift}/close', CloseController::class)
-                ->name('close');
+                ->name('close')
+                ->middleware('has_role:адмін');
 
             Route::post('/{workShift}/drivers/open', DriversOpenController::class)
-                ->name('drivers.open');
+                ->name('drivers.open')
+                ->middleware('has_role:адмін,диспетчер');
             Route::get('/drivers/{driverWorkShift}/stat', GetStatController::class)
-                ->name('drivers.stat');
+                ->name('drivers.stat')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/drivers/{driverWorkShift}/close', DriversCloseController::class)
-                ->name('drivers.close');
+                ->name('drivers.close')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/drivers/{driverWorkShift}', DriversUpdateController::class)
-                ->name('drivers.update');
+                ->name('drivers.update')
+                ->middleware('has_role:адмін,диспетчер');
 
             Route::post('/{workShift}/dispatchers/open', DispatchersOpenController::class)
-                ->name('dispatchers.open');
+                ->name('dispatchers.open')
+                ->middleware('has_role:адмін,диспетчер');
             Route::get('/dispatchers/{dispatcherWorkShift}/stat', DispatchersGetStatController::class)
-                ->name('dipatchers.stat');
+                ->name('dipatchers.stat')
+                ->middleware('has_role:адмін,диспетчер');
             Route::post('/dispatchers/{dispatcherWorkShift}/close', DispatchersCloseController::class)
-                ->name('dispatchers.close');
+                ->name('dispatchers.close')
+                ->middleware('has_role:адмін,диспетчер');
                 
             Route::post('/zaklad-reports/{zakladReport}', ZakladReportsUpdateController::class)
-                ->name('zaklad-reports.update');
+                ->name('zaklad-reports.update')
+                ->middleware('has_role:адмін,диспетчер');
+        });
+
+        Route::prefix('/settings')->name('settings.')->middleware('has_role:адмін')->group(function () {
+            Route::get('/', SettingsGetController::class)
+                ->name('get');
+            Route::post('/', SettingsSaveController::class)
+                ->name('save');
         });
     });
 });

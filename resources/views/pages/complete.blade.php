@@ -41,6 +41,9 @@
                         </p>
                         <p class="sum">
                             {{ $order->totalFormatted() }}
+                            @if ($order->bonuses) 
+                            ({{ $order->bonusesFormatted() }} бонусами)
+                            @endif
                         </p>
                     </div>
                     <div class="subtotal-item">
@@ -57,6 +60,9 @@
                         </p>
                         <p class="sum">
                             {{ $order->totalFormatted() }}
+                            @if ($order->bonuses) 
+                            ({{ $order->bonusesFormatted() }} бонусами)
+                            @endif
                         </p>
                     </div>
                     <p class="remark">
@@ -99,6 +105,9 @@
                         </p>
                         <p class="sum">
                             {{ $order->totalFormatted() }}
+                            @if ($order->bonuses) 
+                            ({{ $order->bonusesFormatted() }} бонусами)
+                            @endif
                         </p>
                     </div>
                 </div>
@@ -138,6 +147,9 @@
                         </p>
                         <p class="sum">
                             {{ $order->totalFormatted() }}
+                            @if ($order->bonuses) 
+                            ({{ $order->bonusesFormatted() }} бонусами)
+                            @endif
                         </p>
                     </div>
                 </div>

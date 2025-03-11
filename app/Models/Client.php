@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Contracts\ILogUser;
+use App\Exceptions\NotEnoughBonusesException;
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -106,5 +107,14 @@ class Client extends Authenticatable implements ILogUser
     public function addBonus(float $amount): bool
     {
         return $this->update(['bonuses' => $this->bonuses + $amount]);
+    }
+
+    public function removeBonus(float $amount, bool $canBeMinus = false): bool
+    {
+        if ($amount > $this->bonuses and ! $canBeMinus) {
+            throw new NotEnoughBonusesException('client ' . $this->id);
+        }
+
+        return $this->update(['bonuses' => $this->bonuses - $amount]);
     }
 }

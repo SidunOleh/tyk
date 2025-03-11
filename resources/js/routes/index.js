@@ -49,6 +49,7 @@ const routes = [{
     }),
     name: 'dashboard',
     meta: {
+        roles: ['адмін', 'диспетчер', ],
         key: 'dashboard',
         title: 'Дашборд',
     }
@@ -61,7 +62,7 @@ const routes = [{
     }),
     name: 'clients.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'clients',
         title: 'Клієнти',
     },
@@ -74,7 +75,7 @@ const routes = [{
     }),
     name: 'orders.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'orders',
         title: 'Замовлення',
     },
@@ -87,7 +88,7 @@ const routes = [{
     }),
     name: 'products.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'products',
         title: 'Товари',
     },
@@ -100,7 +101,7 @@ const routes = [{
     }),
     name: 'categories.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'categories',
         title: 'Категорії',
     },
@@ -113,7 +114,7 @@ const routes = [{
     }),
     name: 'couriers.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'couriers',
         title: 'Кур\'єри',
     },
@@ -139,7 +140,7 @@ const routes = [{
     }),
     name: 'sort.categories',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'sort',
         title: 'Сортування категорій',
     },
@@ -152,7 +153,7 @@ const routes = [{
     }),
     name: 'sort.products',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'sort',
         title: 'Сортування товарів',
     },
@@ -165,7 +166,7 @@ const routes = [{
     }),
     name: 'promotions.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'promotions',
         title: 'Акції',
     },
@@ -178,7 +179,7 @@ const routes = [{
     }),
     name: 'cars.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'cars',
         title: 'Автомобілі',
     },
@@ -204,7 +205,7 @@ const routes = [{
     }),
     name: 'content.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'content',
         title: 'Контент',
     },
@@ -256,7 +257,7 @@ const routes = [{
     }),
     name: 'work-shifts.current',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'work-shifts.current',
         title: 'Зміна',
     },
@@ -269,9 +270,22 @@ const routes = [{
     }),
     name: 'work-shifts.index',
     meta: {
-        roles: ['адмін', ],
+        roles: ['адмін', 'диспетчер', ],
         key: 'work-shifts.index',
         title: 'Зміни',
+    },
+}, {
+    path: '/settings',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Settings/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'settings.index',
+    meta: {
+        roles: ['адмін', ],
+        key: 'settings.index',
+        title: 'Налаштування',
     },
 }, {
     path: '/:pathMatch(.*)*',

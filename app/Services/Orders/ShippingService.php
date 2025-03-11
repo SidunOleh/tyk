@@ -5,22 +5,17 @@ namespace App\Services\Orders;
 use App\Http\Requests\Orders\OrderCarRequest;
 use App\Models\Client;
 use App\Models\Order;
-use App\Services\Price\PriceService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ShippingService extends OrderService
 {
-    public function __construct(
-        private PriceService $priceService
-    )
-    {
-        
-    }    
-
     public function create(FormRequest $request): Model
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
 
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
@@ -28,6 +23,13 @@ class ShippingService extends OrderService
         $details['shipping_type'] = $data['details']['shipping_type']; 
         $details['shipping_from'] = $data['details']['shipping_from'];
         $details['shipping_to'] = $data['details']['shipping_to'];
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+
+        if ($data['bonuses']) {
+            $client->removeBonus($data['bonuses']);
+        }
 
         $order = Order::create([
             'type' => $data['service'],
@@ -42,22 +44,27 @@ class ShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
+            'bonuses' => $data['bonuses'] ?? 0,
         ]);
         $order->updateAmount();
 
-        $client = Client::find($data['client_id']);
-        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+        DB::commit();
 
         return $order;
     }
 
     public function update(Model $order, FormRequest $request): void
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
         
         $details['shipping_type'] = $data['details']['shipping_type']; 
         $details['shipping_from'] = $data['details']['shipping_from'];
         $details['shipping_to'] = $data['details']['shipping_to'];
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
 
         $order->update([
             'type' => $data['service'],
@@ -72,9 +79,8 @@ class ShippingService extends OrderService
             'details' => $details,
         ]);
         $order->updateAmount();
-
-        $client = Client::find($data['client_id']);
-        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+        
+        DB::commit();
     }
 
     public function repeat(Order $order): void
@@ -84,6 +90,8 @@ class ShippingService extends OrderService
 
     public function orderCar(OrderCarRequest $request): Order
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
 
         $time = "{$data['date']} {$data['time']}:00";
@@ -101,6 +109,13 @@ class ShippingService extends OrderService
         $total = $shippingPrice;
 
         $client = auth('web')->user();
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+
+        $bonuses = 0;
+        if ($data['use_bonuses'] and $client->bonuses >= 50) {
+            $bonuses = $total > $client->bonuses ? $client->bonuses : $total;
+            $client->removeBonus($bonuses);
+        }
 
         $order = Order::create([
             'type' => $data['service'],
@@ -112,10 +127,11 @@ class ShippingService extends OrderService
             'notes' => $data['comment'],
             'shipping_price' => $shippingPrice,
             'total' => $total,
+            'bonuses' => $bonuses,
             'details' => $details,
         ]);
 
-        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+        DB::commit();
 
         return $order;
     }

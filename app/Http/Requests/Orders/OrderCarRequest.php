@@ -36,6 +36,7 @@ class OrderCarRequest extends FormRequest
             'shipping_type' => 'string|nullable',
             'comment' => 'string|nullable',
             'payment_method' => 'required|in:Готівка,Карта',
+            'use_bonuses' => 'required|boolean',
         ];
     }
 }

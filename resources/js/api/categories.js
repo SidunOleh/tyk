@@ -9,7 +9,7 @@ export default {
         s = '',
         filters = {}
     }) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -30,7 +30,7 @@ export default {
         return res.data
     },
     async all() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -39,7 +39,7 @@ export default {
         return res.data
     },
     async tree() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -48,7 +48,7 @@ export default {
         return res.data
     },
     async getProducts(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -57,7 +57,7 @@ export default {
         return res.data
     },
     async searchZaklady(s) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -66,7 +66,7 @@ export default {
         return res.data
     },
     async create(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -75,7 +75,7 @@ export default {
         return res.data
     },
     async edit(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -84,7 +84,7 @@ export default {
         return res.data
     },
     async delete(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -93,7 +93,7 @@ export default {
         return res.data
     },
     async bulkDelete(ids) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -104,7 +104,7 @@ export default {
         return res.data
     },
     async reorder(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -113,7 +113,7 @@ export default {
         return res.data
     },
     async reorderProducts(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -122,7 +122,7 @@ export default {
         return res.data
     },
     async getTags() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -131,7 +131,7 @@ export default {
         return res.data
     },
     async createTag(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -140,7 +140,7 @@ export default {
         return res.data
     },
     async editTag(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -149,7 +149,7 @@ export default {
         return res.data
     },
     async deleteTag(id) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 
@@ -158,7 +158,7 @@ export default {
         return res.data
     },
     async reorderTags(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер',])) {
             throw new Error('Заборонено.')
         }
 

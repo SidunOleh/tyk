@@ -22,6 +22,9 @@ return new class extends Migration
             $table->decimal('food_shipping_total')->default(0);
             $table->decimal('shipping_total')->default(0);
             $table->decimal('taxi_total')->default(0);
+            $table->decimal('food_shipping_bonuses')->default(0);
+            $table->decimal('shipping_bonuses')->default(0);
+            $table->decimal('taxi_bonuses')->default(0);
             $table->timestamps();
         });
     }

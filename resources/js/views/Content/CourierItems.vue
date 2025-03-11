@@ -41,6 +41,14 @@
                     :vertical="true"
                     :gap="10">
 
+                    <a-form-item label="Сервіс">
+                        <a-select
+                            placeholder="Сервіс"
+                            :options="courierServiceOptions"
+                            v-model:value="item.service">
+                        </a-select>
+                    </a-form-item>
+
                     <a-form-item label="Іконка">
                         <Upload v-model:uploaded="item.icon"/>
                     </a-form-item>
@@ -83,7 +91,7 @@
 
         <a-button
             style="margin-left: 18px;"  
-            @click="items.push({icon: null, title: '', subtitle: '', img: null,})">
+            @click="items.push({service: null, icon: null, title: '', subtitle: '', img: null,})">
             Додати
         </a-button>
 
@@ -93,6 +101,7 @@
 
 <script>
 import Upload from '../components/Upload.vue'
+import courierServices from '../../data/courierServices'
 
 export default {
     components: {
@@ -101,6 +110,16 @@ export default {
     props: [
         'items', 
     ],
+    computed: {
+        courierServiceOptions() {
+            return courierServices.map(service => {
+                return {
+                    label: service,
+                    value: service,
+                }
+            })
+        },
+    },
     methods: {
         moveUp(items, i) {
             if (i == 0) {

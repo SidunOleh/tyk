@@ -11,17 +11,27 @@ use App\Services\Cart\CartItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FoodShippingService extends OrderService
 {
     public function create(FormRequest $request): Model
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
 
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
         $details['food_to'] = $data['details']['food_to'];
         $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses($details['food_to']);
+
+        if ($data['bonuses']) {
+            $client->removeBonus($data['bonuses']);
+        }
 
         $order = Order::create([
             'type' => $data['service'],
@@ -36,21 +46,27 @@ class FoodShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
+            'bonuses' => $data['bonuses'] ?? 0,
         ]);
         $order->orderItems()->createMany($request['order_items']);
         $order->updateAmount();
 
-        Client::find($data['client_id'])->addAddresses($details['food_to']);
+        DB::commit();
 
         return $order;
     }
 
     public function update(Model $order, FormRequest $request): void
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
 
         $details['food_to'] = $data['details']['food_to'];
         $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
+
+        $client = Client::find($data['client_id']);
+        $client->addAddresses($details['food_to']);
 
         $order->update([
             'type' => $data['service'],
@@ -85,7 +101,7 @@ class FoodShippingService extends OrderService
 
         $order->updateAmount();
 
-        Client::find($data['client_id'])->addAddresses($details['food_to']);
+        DB::commit();
     }
 
     public function repeat(Order $order): void
@@ -108,6 +124,8 @@ class FoodShippingService extends OrderService
     
     public function checkout(CheckoutRequest $request): Order
     {
+        DB::beginTransaction();
+
         $data = $request->validated();
 
         $client = Client::firstOrCreate(['phone' => $data['phone']]);
@@ -152,8 +170,16 @@ class FoodShippingService extends OrderService
         ], $cart->items));
         
         $order->updateAmount();
+
+        if ($data['use_bonuses'] ?? '' == 'on' and $client->bonuses >= 50) {
+            $bonuses = $order->total > $client->bonuses ? $client->bonuses : $order->total;
+            $client->removeBonus($bonuses);
+            $order->update(['bonuses' => $bonuses]);
+        }
         
         $cart->empty();
+
+        DB::commit();
 
         return $order;
     }

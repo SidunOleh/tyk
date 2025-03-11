@@ -20,13 +20,19 @@
                 bordered
                 :column="1">
                 <a-descriptions-item label="Доставка їжі">
-                    К-сть - {{ record.food_shipping_count }}, Сума - {{ formatPrice(record.food_shipping_total) }}
+                    К-сть - {{ record.food_shipping_count }} <br>
+                    Бонуси - {{ formatPrice(record.food_shipping_bonuses) }} <br>
+                    Сума - {{ formatPrice(record.food_shipping_total) }}
                 </a-descriptions-item> 
                 <a-descriptions-item label="Кур'єр">
-                    К-сть - {{ record.shipping_count }}, Сума - {{ formatPrice(record.shipping_total) }}
+                    К-сть - {{ record.shipping_count }} <br>
+                    Бонуси - {{ formatPrice(record.shipping_bonuses) }} <br>
+                    Сума - {{ formatPrice(record.shipping_total) }}
                 </a-descriptions-item> 
                 <a-descriptions-item label="Таксі">
-                    К-сть - {{ record.taxi_count }}, Сума - {{ formatPrice(record.taxi_total) }}
+                    К-сть - {{ record.taxi_count }} <br>
+                    Бонуси - {{ formatPrice(record.taxi_bonuses) }} <br>
+                    Сума - {{ formatPrice(record.taxi_total) }}
                 </a-descriptions-item>  
             </a-descriptions> 
 
@@ -44,9 +50,10 @@
                 <a-descriptions-item 
                     v-for="report in record.zaklady_reports"
                     :label="report.zaklad.name">
-                    Загалом - {{ formatPrice(report.total) }}, Повернуто - {{ formatPrice(report.returned_amount) }} 
+                    Загалом - {{ formatPrice(report.total) }} <br>
+                    Повернуто - {{ formatPrice(report.returned_amount) }} <br>
                     <a-typography-link @click="$emit('zakladReport', report)">
-                        <EditOutlined/>
+                       Редагувати <EditOutlined/>
                     </a-typography-link>
                 </a-descriptions-item> 
             </a-descriptions>

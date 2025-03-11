@@ -229,7 +229,7 @@
                             <p class="text_16">
                                 {!! $item['subtitle'] !!}
                             </p>
-                            <a href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" class="btn">
+                            <a href="{{ route('pages.order-car', ['service' => 'Кур\'єр', 'courier_service' => $item['service'],]) }}" class="btn">
                                 Замовити доставку
                             </a>
                         </div>

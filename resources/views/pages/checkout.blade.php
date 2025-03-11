@@ -121,26 +121,44 @@
                 </p>
             </div>
 
-            <div class="radio-group">
-                <label class="radio-option">
-                    <input
-                        form="checkout-form" 
-                        type="radio" 
-                        name="payment_method" 
-                        value="Карта" 
-                        checked />
-                    <span class="custom-radio"></span>
-                    Оплата карткою
-                </label>
-                <label class="radio-option">
-                    <input 
-                        form="checkout-form" 
-                        type="radio" 
-                        name="payment_method" 
-                        value="Готівкою" />
-                    <span class="custom-radio"></span>
-                    Готівкою при отриманні
-                </label>
+            <div class="payments-settings">
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input 
+                            form="checkout-form" 
+                            type="radio" 
+                            name="payment_method" 
+                            value="Готівка" />
+                        <span class="custom-radio"></span>
+                        Готівкою при отриманні
+                    </label>
+                    <label class="radio-option">
+                        <input
+                            form="checkout-form" 
+                            type="radio" 
+                            name="payment_method" 
+                            value="Карта" 
+                            checked />
+                        <span class="custom-radio"></span>
+                        Оплата карткою
+                    </label>
+                </div>
+
+                @if ($client?->bonuses >= 50)
+                <div class="bonuses">
+                    <div class="form-group">
+                        <input 
+                            form="checkout-form" 
+                            id="bonuses"
+                            type="checkbox" 
+                            class="custom-checkbox"
+                            name="use_bonuses"/>
+                        <label for="bonuses">
+                            Використати бонуси
+                        </label>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <button

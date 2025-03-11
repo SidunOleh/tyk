@@ -55,6 +55,9 @@
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
                             </p>
+                            <p class="sum-total">
+                                {{ $order->bonusesFormatted('₴') }} бонусами
+                            </p>
                             <button class="btn food">
                                 Повторити
                             </button>
@@ -78,6 +81,9 @@
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
                             </p>
+                            <p class="sum-total">
+                                {{ $order->bonusesFormatted('₴') }} бонусами
+                            </p>
                             <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити
                             </a>
@@ -100,6 +106,9 @@
                             </p>
                             <p class="sum-total">
                                 {{ $order->totalFormatted('₴') }}
+                            </p>
+                            <p class="sum-total">
+                                {{ $order->bonusesFormatted('₴') }} бонусами
                             </p>
                             <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити

@@ -41,6 +41,7 @@ class CheckoutRequest extends FormRequest
             'delivery_time' => 'date_format:H:i|nullable',
             'notes' => 'string|nullable',
             'payment_method' => 'required|in:Готівка,Карта',
+            'use_bonuses' => 'sometimes|accepted',
         ];
     }
 

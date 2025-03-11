@@ -3,10 +3,9 @@
 namespace App\Services\Orders;
 
 use App\Models\Order;
-use App\Services\Google\MapsService;
-use App\Services\Options\OptionService;
 use App\Services\Price\PriceService;
 use App\Services\Service;
+use App\Services\Settings\SettingsService;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,6 +14,14 @@ use Illuminate\Http\Request;
 abstract class OrderService extends Service
 {
     protected string $model = Order::class;
+
+    public function __construct(
+        protected PriceService $priceService,
+        protected SettingsService $settingsService,
+    )
+    {
+        
+    }  
 
     public function index(Request $request): LengthAwarePaginator
     {
@@ -61,17 +68,39 @@ abstract class OrderService extends Service
         $order->update(['courier_id' => $courierId]);
     }
 
+    public function addBonusToClient(Order $order): void
+    {
+        $bonuses = 0;
+        $settings = $this->settingsService->get();
+        if ($order->type == Order::FOOD_SHIPPING) {
+            $bonuses = $settings['bonuses_food_shipping'];
+        } elseif ($order->type == Order::SHIPPING) {
+            $bonuses = $settings['bonuses_shipping'];
+        } elseif ($order->type == Order::TAXI) {
+            $bonuses = $settings['bonuses_taxi'];
+        }
+
+        $order->client->addBonus($bonuses);
+        $order->add_bonuses = $bonuses;
+        $order->saveQuietly();
+    }
+
+    public function removeBonusFromClient(Order $order): void
+    {
+        $order->client->removeBonus($order->add_bonuses, true);
+    }
+
     abstract public function repeat(Order $order): void;
 
     public static function make(string $type): self
     {
         switch ($type) {
             case Order::FOOD_SHIPPING:
-                return new FoodShippingService;
+                return app()->make(FoodShippingService::class);
             case Order::SHIPPING:
-                return new ShippingService(new PriceService(new MapsService, new OptionService));
+                return app()->make(ShippingService::class);
             case Order::TAXI:
-                return new TaxiService(new PriceService(new MapsService, new OptionService));
+                return app()->make(TaxiService::class);
             default:
                 throw new Exception('Unexpected type: ' . $type);
         }

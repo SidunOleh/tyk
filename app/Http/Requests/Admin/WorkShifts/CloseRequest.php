@@ -23,10 +23,13 @@ class CloseRequest extends FormRequest
     {
         return [
             'food_shipping_count' => 'required|numeric|min:0',
-            'shipping_count' => 'required|numeric|min:0',
-            'taxi_count' => 'required|numeric|min:0',
+            'food_shipping_bonuses' => 'required|numeric|min:0',
             'food_shipping_total' => 'required|numeric|min:0',
+            'shipping_count' => 'required|numeric|min:0',
+            'shipping_bonuses' => 'required|numeric|min:0',
             'shipping_total' => 'required|numeric|min:0',
+            'taxi_count' => 'required|numeric|min:0',
+            'taxi_bonuses' => 'required|numeric|min:0',
             'taxi_total' => 'required|numeric|min:0',
         ];
     }

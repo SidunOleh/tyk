@@ -15,17 +15,20 @@ class WorkShiftRepository
     {
         $stat = [];
         $stat['food_shipping_count'] = 0;
+        $stat['food_shipping_bonuses'] = 0;
         $stat['food_shipping_total'] = 0;
-        $stat['shipping_count'] = 0;
+        $stat['shipping_total'] = 0;
+        $stat['shipping_bonuses'] = 0;
         $stat['shipping_total'] = 0;
         $stat['taxi_count'] = 0;
+        $stat['taxi_bonuses'] = 0;
         $stat['taxi_total'] = 0;
 
         $start = $workShift->start;
         $end = $driverWorkShift->end ?? now();
 
         $data = DB::table('orders')
-            ->select(DB::raw('type, count(*) count, sum(total) total'))
+            ->select(DB::raw('type, count(*) count, sum(bonuses) bonuses, sum(total) total'))
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
                 $end->format('Y-m-d H:i:s'),
@@ -41,6 +44,7 @@ class WorkShiftRepository
                 : 'taxi');
 
             $stat["{$type}_count"] = (int) $item->count;
+            $stat["{$type}_bonuses"] = (int) $item->bonuses;
             $stat["{$type}_total"] = (float) $item->total;
         }
         

@@ -9,7 +9,7 @@ export default {
         s = '',
         filters = {}
     }) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -30,7 +30,7 @@ export default {
         return res.data
     },
     async search(s, categoryId) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -45,7 +45,7 @@ export default {
         return res.data
     },
     async create(data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -54,7 +54,7 @@ export default {
         return res.data
     },
     async edit(id, data) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
@@ -72,7 +72,7 @@ export default {
         return res.data
     },
     async bulkDelete(ids) {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 

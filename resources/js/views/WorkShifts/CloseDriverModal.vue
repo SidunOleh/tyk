@@ -13,6 +13,21 @@
                 <a-card-grid 
                     style="width: 33.33%; text-align: center"
                     :hoverable="false">
+                    Послуга
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
+                    К-сть
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
+                    Тотал
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 33.33%; text-align: center"
+                    :hoverable="false">
                     Доставка їжі
                 </a-card-grid>
                 <a-card-grid 

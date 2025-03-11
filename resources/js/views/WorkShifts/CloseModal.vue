@@ -11,62 +11,102 @@
                 style="margin-bottom: 15px;"
                 title="Статистика за зміну">
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    Послуга
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    К-сть
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    Бонуси
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    Тотал
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     Доставка їжі
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ data.food_shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    {{ formatPrice(data.food_shipping_bonuses) }}
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ formatPrice(data.food_shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     Кур'єр
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ data.shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    {{ formatPrice(data.shipping_bonuses) }}
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ formatPrice(data.shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     Таксі
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ data.taxi_count }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    {{ formatPrice(data.taxi_bonuses) }}
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ formatPrice(data.taxi_total) }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     Загалом
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ totalCount }}
                 </a-card-grid>
                 <a-card-grid 
-                    style="width: 33.33%; text-align: center"
+                    style="width: 25%; text-align: center"
+                    :hoverable="false">
+                    {{ formatPrice(totalBonuses) }}
+                </a-card-grid>
+                <a-card-grid 
+                    style="width: 25%; text-align: center"
                     :hoverable="false">
                     {{ formatPrice(totalTotal) }}
                 </a-card-grid>
@@ -117,6 +157,11 @@ export default {
             return this.data.food_shipping_count 
                 + this.data.shipping_count 
                 + this.data.taxi_count
+        },  
+        totalBonuses() {
+            return this.data.food_shipping_bonuses 
+                + this.data.shipping_bonuses
+                + this.data.taxi_bonuses
         },  
         totalTotal() {
             return this.data.food_shipping_total 
