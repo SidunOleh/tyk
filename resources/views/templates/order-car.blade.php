@@ -4,13 +4,13 @@
     v-cloak 
     @vue:mounted="mounted">
     <div class="container">
-        <div :class="{'order-car__body': true, 'close': ! openPanel,}">
+        <div :class="{'order-car__body': true, 'close': !openPanel,}">
 
             <div class="order-car__left">
                 <div class="order-car__panel">
                     <div 
                         class="arrow"
-                        @click="openPanel = ! openPanel">
+                        @click="openPanel = !openPanel">
                         <img src="/assets/img/arrow.svg" alt="">
                     </div>
 
