@@ -7573,7 +7573,7 @@ textarea {
 
 @media (max-width: 768px) {
     .ui-timepicker-container {
-        max-height: 95px;
+        transform: translate(0px, calc(-100% - 45px));
     }
 }
 

@@ -287,7 +287,7 @@
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js'></script>
-<link rel="stylesheet" href="'https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -474,34 +474,34 @@ function Route(map) {
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.setDirections(result)
-                const boundary = this.getBoundary()
+                const bounds = this.getBounds()
                 this.map.setZoom(
-                    this.getZoomByBounds(this.map, boundary)
+                    this.calcMapZoomByBounds(this.map, bounds)
                 )
                 this.map.setCenter(
-                    boundary.getCenter()
+                    bounds.getCenter()
                 )
             } else {
                 console.error(result)
             }
         })
     }
-    this.getBoundary = () => {
-        let boundary = new google.maps.LatLngBounds()
+    this.getBounds = () => {
+        let bounds = new google.maps.LatLngBounds()
 
         const addresses = [this.from, ...this.to]
         addresses.forEach(address => {
-            if (address.address) {
-                boundary.extend({
+            if (address.lat && address.lng) {
+                bounds.extend({
                     lat: address.lat,
                     lng: address.lng,
                 })
             }
         })
 
-        return boundary
+        return bounds
     }
-    this.getZoomByBounds = (map, bounds) => {
+    this.calcMapZoomByBoundary = (map, bounds) => {
         let MAX_ZOOM = map.mapTypes.get(map.getMapTypeId()).maxZoom || 21
         let MIN_ZOOM = map.mapTypes.get(map.getMapTypeId()).minZoom || 0
 
@@ -607,9 +607,11 @@ const app = {
         })
 
         this.map.addListener('dragend', async () => {
+            const position = this.setOnMap.marker.getPosition()
+
             const place = await this.geocode({
-                lat: this.map.getCenter().lat(),
-                lng: this.map.getCenter().lng(),
+                lat: position.lat(),
+                lng: position.lng(),
             })
 
             this.setOnMap.address = {
