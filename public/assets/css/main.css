@@ -7634,10 +7634,12 @@ textarea {
     border-color: #ec1220;
 }
 
-.order-car__panel {
-    padding: 15px;
-    max-height: 400px;
-    overflow: auto;
+@media (max-width: 1250px) {
+    .order-car__panel {
+        padding: 15px;
+        max-height: 400px;
+        overflow: auto;
+    }
 }
 
 .order-car__body.close .order-car__panel {
