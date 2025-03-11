@@ -7,7 +7,7 @@
         <div :class="{'order-car__body': true, 'close': ! openPanel,}">
 
             <div class="order-car__left">
-                <div style="padding: 15px; max-height: 500px; overflow: auto;">
+                <div class="order-car__panel">
                     <div 
                         class="arrow"
                         @click="openPanel = ! openPanel">

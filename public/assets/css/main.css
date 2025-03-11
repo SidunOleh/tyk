@@ -7633,3 +7633,13 @@ textarea {
 .custom-checkbox:hover+label::before {
     border-color: #ec1220;
 }
+
+.order-car__panel {
+    padding: 15px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.order-car__body.close .order-car__panel {
+    padding: 0;
+}
