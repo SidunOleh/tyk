@@ -7583,10 +7583,10 @@ textarea {
 
 .payments {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    gap: 25px;
     margin-top: 15px;
 }
 
@@ -7634,14 +7634,21 @@ textarea {
     border-color: #ec1220;
 }
 
+.order-car__body .order-car__panel {
+    padding: 15px;
+}
+
 @media (max-width: 1250px) {
     .order-car__panel {
-        padding: 15px;
-        max-height: 400px;
+        max-height: 450px;
         overflow: auto;
     }
 }
 
 .order-car__body.close .order-car__panel {
     padding: 0;
+}
+
+.payments .radio-group {
+    flex-direction: row;
 }
