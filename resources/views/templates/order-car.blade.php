@@ -282,7 +282,7 @@
     </div>
 </section>
 @endverbatim
-
+ 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps_key') }}&libraries=places&language=uk&region=ua"></script>
 <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
