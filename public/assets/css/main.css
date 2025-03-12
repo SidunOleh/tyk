@@ -7391,6 +7391,9 @@ textarea {
         height: 100vh;
         gap: 0;
     }
+    .footer_order-car {
+        display: none;
+    }
     .order-car__left {
         position: relative;
     }

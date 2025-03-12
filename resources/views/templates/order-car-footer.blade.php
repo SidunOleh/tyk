@@ -1,4 +1,4 @@
-    <footer class="footer" style="padding-top: 0;">
+    <footer class="footer footer_order-car" style="padding-top: 0;">
         <div class="copyright">
             <div class="container">
                 Copyright tyk-tyk.biz {{ date('Y') }}, All right reserved
