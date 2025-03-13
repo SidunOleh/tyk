@@ -93,6 +93,10 @@ class Order extends Model
 
     public const CARD = 'Карта';
 
+    public const SPEND_BONUS_AMOUNT = 50;
+
+    public const DEFAULT_DURATION = 30;
+
     protected static function booted(): void
     {
         static::creating(function (self $order) {
@@ -252,4 +256,17 @@ class Order extends Model
     {
         return number_format($this->bonuses, 2) . $symb;
     } 
+
+    public function useBonuses(): bool
+    {
+        if (! $this->client->hasEnouphBonuses(self::SPEND_BONUS_AMOUNT)) {
+            return false;
+        }
+
+        $bonuses = $this->total < self::SPEND_BONUS_AMOUNT ? $this->total : self::SPEND_BONUS_AMOUNT;
+        $this->client->removeBonus($bonuses);
+        $this->update(['bonuses' => $bonuses]);
+
+        return true;
+    }
 }

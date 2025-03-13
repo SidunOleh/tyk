@@ -154,7 +154,7 @@
                             class="custom-checkbox"
                             name="use_bonuses"/>
                         <label for="bonuses">
-                            Використати бонуси
+                            Використати бонуси(50₴)
                         </label>
                     </div>
                 </div>

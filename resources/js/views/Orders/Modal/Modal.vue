@@ -166,8 +166,8 @@
 
             <a-form-item 
                 has-feedback
-                :validate-status="errors['bonuses'] ? 'error' : ''"
-                :help="errors.bonuses">
+                :validate-status="errors['use_bonuses'] ? 'error' : ''"
+                :help="errors.use_bonuses">
                 <template #label>
                     К-сть бонусів - <b style="margin-left: 5px;">{{ formatPrice(selectedClient?.bonuses ?? 0) }}</b>
                 </template>
@@ -176,17 +176,9 @@
                     <template v-if="selectedClient?.bonuses >= 50">
                         <a-checkbox     
                             style="margin-bottom: 10px;"
-                            v-model:checked="useBonuses"
-                            @change="data.bonuses = useBonuses ? 50 : null">
-                            Використати бонуси
+                            v-model:checked="data.use_bonuses">
+                            Використати бонуси - <b>{{ formatPrice(50) }}</b>
                         </a-checkbox>
-                        <a-input-number
-                            v-if="useBonuses"
-                            style="width: 100%;"
-                            placeholder="Введіть бонуси"
-                            :min="50"
-                            :max="selectedClient.bonuses"
-                            v-model:value="data.bonuses"/>
                     </template>
 
                     <b v-else>Недостатньо для нарахування</b>
@@ -274,7 +266,7 @@ export default {
                 paid: false,
                 payment_method: null,
                 notes: '',
-                bonuses: null,
+                use_bonuses: false,
             },
             clients: {
                 data: [],
@@ -296,7 +288,6 @@ export default {
             loading: false,
             calcingPrice: false,
             fetchingClientOrders: false,
-            useBonuses: false,
         }
     },    
     computed: {

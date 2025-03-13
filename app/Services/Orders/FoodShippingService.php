@@ -29,10 +29,6 @@ class FoodShippingService extends OrderService
         $client = Client::find($data['client_id']);
         $client->addAddresses($details['food_to']);
 
-        if ($data['bonuses']) {
-            $client->removeBonus($data['bonuses']);
-        }
-
         $order = Order::create([
             'type' => $data['service'],
             'shipping_price' => $data['shipping_price'] ?? 0,
@@ -46,10 +42,13 @@ class FoodShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
-            'bonuses' => $data['bonuses'] ?? 0,
         ]);
         $order->orderItems()->createMany($request['order_items']);
         $order->updateAmount();
+
+        if ($data['use_bonuses']) {
+            $order->useBonuses();
+        }
 
         DB::commit();
 
@@ -133,7 +132,6 @@ class FoodShippingService extends OrderService
 
         $address = $this->getLatLng($data['address']);
         $address['address'] = $data['address'];
-
         $client->addAddresses([$address]);
 
         if ($delivetyTime = $data['delivery_time'] ?? null) {
@@ -146,7 +144,7 @@ class FoodShippingService extends OrderService
         $order = Order::create([
             'type' => Order::FOOD_SHIPPING,
             'time' => now()->format('Y-m-d H:i:s'),
-            'duration' => 30,
+            'duration' => Order::DEFAULT_DURATION,
             'notes' => $validated['notes'] ?? '',
             'status' => Order::CREATED,
             'client_id' => $client->id,
@@ -171,10 +169,8 @@ class FoodShippingService extends OrderService
         
         $order->updateAmount();
 
-        if ($data['use_bonuses'] ?? '' == 'on' and $client->bonuses >= 50) {
-            $bonuses = $order->total > $client->bonuses ? $client->bonuses : $order->total;
-            $client->removeBonus($bonuses);
-            $order->update(['bonuses' => $bonuses]);
+        if ($data['use_bonuses'] ?? '' == 'on') {
+            $order->useBonuses();
         }
         
         $cart->empty();

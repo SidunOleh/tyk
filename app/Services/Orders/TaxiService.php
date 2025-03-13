@@ -26,10 +26,6 @@ class TaxiService extends OrderService
         $client = Client::find($data['client_id']);
         $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
 
-        if ($data['bonuses']) {
-            $client->removeBonus($data['bonuses']);
-        }
-
         $order = Order::create([
             'type' => $data['service'],
             'shipping_price' => $data['shipping_price'] ?? 0,
@@ -43,9 +39,12 @@ class TaxiService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
-            'bonuses' => $data['bonuses'] ?? 0,
         ]);
         $order->updateAmount();
+
+        if ($data['use_bonuses']) {
+            $order->useBonuses();
+        }
 
         DB::commit();
 
@@ -93,7 +92,6 @@ class TaxiService extends OrderService
         $data = $request->validated();
 
         $time = "{$data['date']} {$data['time']}:00";
-        $duration = 30;
 
         $details['taxi_from'] = $data['from'];
         $details['taxi_to'] = $data['to'];
@@ -107,25 +105,22 @@ class TaxiService extends OrderService
         $client = auth('web')->user();
         $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
 
-        $bonuses = 0;
-        if ($data['use_bonuses'] and $client->bonuses >= 50) {
-            $bonuses = $total > $client->bonuses ? $client->bonuses : $total;
-            $client->removeBonus($bonuses);
-        }
-
         $order = Order::create([
             'type' => $data['service'],
             'time' => $time,
-            'duration' => $duration,
+            'duration' => Order::DEFAULT_DURATION,
             'status' => Order::CREATED,
             'client_id' => $client->id,
             'payment_method' => $data['payment_method'],
             'notes' => $data['comment'],
             'shipping_price' => $shippingPrice,
             'total' => $total,
-            'bonuses' => $bonuses,
             'details' => $details,
         ]);
+
+        if ($data['use_bonuses']) {
+            $order->useBonuses();
+        }
 
         DB::commit();
 

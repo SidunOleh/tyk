@@ -31,7 +31,7 @@ class StoreRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'paid' => 'required|boolean',
             'payment_method' => 'required_if:paid,true|string|nullable',
-            'bonuses' => 'integer|min:50|nullable',
+            'use_bonuses' => 'required|boolean',
             
             'details' => 'required|array',
 

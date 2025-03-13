@@ -214,7 +214,9 @@
                                         class="custom-checkbox"
                                         v-model="data.use_bonuses"/>
                                     <label for="bonuses">
-                                        Використати бонуси
+                                        <span>
+                                            Використати бонуси <b>(50₴)</b>
+                                        </span>
                                     </label>
                                 </div>
                             </div>

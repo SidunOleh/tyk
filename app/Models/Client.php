@@ -104,6 +104,11 @@ class Client extends Authenticatable implements ILogUser
         return false;
     }
 
+    public function hasEnouphBonuses($amount): bool
+    {
+        return $this->bonuses >= $amount;
+    }
+
     public function addBonus(float $amount): bool
     {
         return $this->update(['bonuses' => $this->bonuses + $amount]);
