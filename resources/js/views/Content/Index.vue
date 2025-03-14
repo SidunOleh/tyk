@@ -92,13 +92,6 @@
                             <StepItems :items="data.home_step_items"/>
                         </a-form-item>
                     </a-tab-pane>
-                    <a-tab-pane key="7" tab="Відгуки">
-                        <a-form-item label="Заголовок">
-                            <a-input
-                                placeholder="Введіть заголовок"
-                                v-model:value="data.home_reviews_title"/>
-                        </a-form-item>
-                    </a-tab-pane>
                 </a-tabs>
             </a-collapse-panel>
             <a-collapse-panel key="2" header="Про нас">
@@ -192,8 +185,6 @@ export default {
                 home_app_img: null,
                 home_step_title: '',
                 home_step_items: [],
-                home_reviews_title: '',
-                home_reviews_items: [],
                 about_first_title: '',
                 about_first_img: null,
                 about_info_title: '',

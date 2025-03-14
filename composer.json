@@ -12,8 +12,9 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "mavinoo/laravel-batch": "^2.4",
-        "rap2hpoutre/laravel-log-viewer": "^2.4",
+        "rap2hpoutre/laravel-log-viewer": "^2.5",
         "staudenmeir/eloquent-json-relations": "^1.13",
+        "symfony/mailer": "~7.1.0",
         "telegram-bot/api": "^2.5"
     },
     "require-dev": {
