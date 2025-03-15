@@ -53,10 +53,10 @@ Route::domain(config('app.admin_domain'))->group(function () {
 Route::post('/send-code', SendCodeController::class)
     ->name('send-code');
 Route::post('/login', AuthLogInController::class)
-    ->name('login');
+    ->name('client.login');
 Route::post('/logout', AuthLogOutController::class)
     ->middleware(['auth:web',])
-    ->name('logout');
+    ->name('client.logout');
 
 /**
  * Pages

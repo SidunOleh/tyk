@@ -35,8 +35,6 @@ jobs:
           sed -i 's/TG_BOT_USERNAME=/TG_BOT_USERNAME="${{ secrets.TG_BOT_USERNAME }}"/g' .env
           sed -i 's/TG_BOT_TOKEN=/TG_BOT_TOKEN="${{ secrets.TG_BOT_TOKEN }}"/g' .env
           sed -i 's|TG_BOT_WEBHOOK=|TG_BOT_WEBHOOK="${{ secrets.TG_BOT_WEBHOOK }}"|g' .env
-          
-      - run: php artisan key:generate
 
       - uses: actions/setup-node@v2
         with:
