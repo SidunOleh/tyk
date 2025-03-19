@@ -64,7 +64,7 @@ class ImportProducts extends Command
         ];
 
         if ($product) {
-            $product->update($productData);
+            // $product->update($productData);
         } else {
             $product = Product::create($productData);
         }
