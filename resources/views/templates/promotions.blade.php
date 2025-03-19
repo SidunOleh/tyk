@@ -1,3 +1,4 @@
+@if(count($promotions))
 <section class="discounts">
     <div class="container">
         <h2 class="section_title">
@@ -45,3 +46,4 @@
         </div>
     </div>
 </section>
+@endif

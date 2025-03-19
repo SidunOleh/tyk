@@ -16,11 +16,19 @@
             </div>
         </div>
         @if ($cart->items)
-        <a 
-            href="{{ route('pages.checkout') }}" 
-            class="btn">
-            Перейти до оформлення
-        </a>
+            @auth('web')
+            <a 
+                href="{{ route('pages.checkout') }}" 
+                class="btn">
+                Перейти до оформлення
+            </a>
+            @endauth
+
+            @guest('web')
+            <div class="btn checkout_btn unlogged">
+                Перейти до оформлення
+            </div>
+            @endguest
         @endif
     </div>
 </section>

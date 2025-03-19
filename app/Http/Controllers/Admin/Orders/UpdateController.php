@@ -14,6 +14,14 @@ class UpdateController extends Controller
     {
         OrderService::make($request->service)->update($order, $request);
 
+        $order->load([
+            'orderItems',
+            'orderItems.product',
+            'orderItems.product.categories',
+            'client',
+            'courier',
+        ]);
+
         return response(['order' => new OrderResource($order),]);
     }
 }

@@ -22,7 +22,9 @@
                         <p class="text_18">
                             {!! get_content_value('home_food_subtitle') !!}
                         </p>
-                        <a href="{{ route('pages.zaklady') }}" class="btn">Замовити їжу</a>
+                        <a href="{{ route('pages.zaklady') }}" class="btn">
+                            Замовити їжу
+                        </a>
                     </div>
                 </div>
             </div>
@@ -37,19 +39,11 @@
                         <p class="text_18">
                             {!! get_content_value('home_taxi_subtitle') !!}
                         </p>
-                        @auth('web')
                         <a 
                             href="{{ route('pages.order-car', ['service' => 'Таксі']) }}" 
                             class="btn taxi_btn">
                             Замовити таксі
                         </a>
-                        @endauth
-
-                        @guest('web')
-                        <div class="btn taxi_btn unlogged">
-                            Замовити таксі
-                        </div>
-                        @endguest
                     </div>
                 </div>
                 <div class="hero__item">
@@ -63,19 +57,11 @@
                         <p class="text_18">
                             {!! get_content_value('home_courier_subtitle') !!}
                         </p>
-                        @auth('web')
                         <a 
                             href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" 
                             class="btn delivery_btn">
                             Викликати кур’єра
                         </a>
-                        @endauth
-
-                        @guest('web')
-                        <div class="btn delivery_btn unlogged">
-                            Викликати кур’єра
-                        </div>
-                        @endguest
                     </div>
                 </div>
             </div>
@@ -91,7 +77,9 @@
                     <p class="text_18">
                         {!! get_content_value('home_food_subtitle') !!}
                     </p>
-                    <a href="{{ route('pages.zaklady') }}" class="btn">Замовити їжу</a>
+                    <a href="{{ route('pages.zaklady') }}" class="btn">
+                        Замовити їжу
+                    </a>
                 </div>
             </div>
             <div class="hero__item">
@@ -104,19 +92,11 @@
                     <p class="text_18">
                         {!! get_content_value('home_taxi_subtitle') !!}
                     </p>
-                    @auth('web')
                     <a 
                         href="{{ route('pages.order-car', ['service' => 'Таксі']) }}" 
                         class="btn taxi_btn">
                         Замовити таксі
                     </a>
-                    @endauth
-
-                    @guest('web')
-                    <div class="btn taxi_btn unlogged">
-                        Замовити таксі
-                    </div>
-                    @endguest
                 </div>
             </div>
             <div class="hero__item">
@@ -129,19 +109,11 @@
                     <p class="text_18">
                         {!! get_content_value('home_courier_subtitle') !!}
                     </p>
-                    @auth('web')
                     <a 
                         href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" 
                         class="btn delivery_btn">
                         Викликати кур’єра
                     </a>
-                    @endauth
-
-                    @guest('web')
-                    <div class="btn delivery_btn unlogged">
-                        Викликати кур’єра
-                    </div>
-                    @endguest
                 </div>
             </div>
         </div>
@@ -221,7 +193,9 @@
                         {!! $item['title'] !!}
                     </div>
                     <div class="typeContent-item" data-typeContent="{{ $item['title'] }}">
+                        @if($item['img'])
                         <div class="img-card"><img src="{{ $item['img'] }}" alt="" /></div>
+                        @endif
                         <div class="info-card">
                             <p class="title_20">
                                 {!! $item['title'] !!}

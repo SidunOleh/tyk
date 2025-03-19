@@ -247,6 +247,8 @@ $('.dishes__menu .menu__item .head').on('click', function() {
     $('.dishes__menu .sub__item').removeClass('active')
     $(this).addClass('active')
     $('.selected span').text($(this).text())
+    $('.dishes .selected').toggleClass('open')
+    $('.dishes__menu').slideToggle(0)
     changeCatalog($(this).data('id'))
 })
 
@@ -350,17 +352,12 @@ $(document).on('click', '.additions-item .add', async function() {
  * Login
  */
 $('.account_btn.unlogged').on('click', () => {
-    $('#login').attr('data-redirect', '/cabinet')
+    $('#login').attr('data-event', 'cabinet')
     $('.popUp-Wrapper.signIn').addClass('open')
 })
 
-$('.delivery_btn.unlogged').on('click', () => {
-    $('#login').attr('data-redirect', '/zamoviti-avto?service=Кур\'єр')
-    $('.popUp-Wrapper.signIn').addClass('open')
-})
-
-$('.taxi_btn.unlogged').on('click', () => {
-    $('#login').attr('data-redirect', '/zamoviti-avto?service=Таксі')
+$('.checkout_btn.unlogged').on('click', () => {
+    $('#login').attr('data-event', 'checkout')
     $('.popUp-Wrapper.signIn').addClass('open')
 })
 
@@ -395,13 +392,26 @@ $('#login').on('submit', async function(e) {
         resetFormErrors($(this))
         loading($('.signIn-popUp'))
         await login($(this).find('input[name=code]').val())
-        location.href = $('#login').data('redirect')
+        $('.popUp-Wrapper.signIn').removeClass('open')
+        this.dispatchEvent(
+            new CustomEvent($('#login').data('event'), {
+                bubbles: true,
+            })
+        )
     } catch (err) {
         console.error(err)
         showFormErrors($(this), err)
     } finally {
         loading($('.signIn-popUp'), false)
     }
+})
+
+$('#login').on('cabinet', () => {
+    location.href = '/cabinet'
+})
+
+$('#login').on('checkout', () => {
+    location.href = '/oformlennya'
 })
 
 $('#login .resend').on('click', async() => {

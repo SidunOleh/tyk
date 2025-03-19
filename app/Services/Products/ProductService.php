@@ -47,8 +47,19 @@ class ProductService extends Service
         return $models;
     }
 
-    public function searchInCategory(string $s, int $categoryId): Collection
+    public function searchInCategories(string $s, array $categoriesIds): Collection
     {        
-        return Product::search($s)->categories([$categoryId])->get();
+        return Product::with('categories')->search($s)->categories($categoriesIds)->get();
+    }
+
+    public function search(string $s): Collection
+    {        
+        if ($s) {
+            $products = Product::with('categories')->search($s)->get();
+        } else {
+            $products = new Collection;
+        }
+
+        return $products;
     }
 }

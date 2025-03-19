@@ -6,26 +6,14 @@
         :validate-status="errors['order_items'] ? 'error' : ''"
         :help="errors['order_items']">
         <a-flex :gap="5">
+            <a-tree-select
+                style="width: 40%"
+                placeholder="Виберіть категорію"
+                multiple
+                :tree-data="categoryOptions"
+                v-model:value="categories.selected"/>
             <a-select
-                style="width: 30%;"
-                placeholder="Знайдіть заклад"
-                :allowClear="true"
-                :filter-option="false"
-                :options="zakladOptions"
-                :showSearch="true"
-                :showArrow="false"
-                v-model:value="zaklady.selected"
-                @search="fetchZaklady">
-                <template 
-                    v-if="zaklady.fetching" 
-                    #notFoundContent>
-                    <a-spin 
-                        style="width: 100%" 
-                        size="small"/>
-                </template>
-            </a-select>
-            <a-select
-                style="width: 70%"
+                style="width: 60%"
                 placeholder="Знайдіть товар"
                 :allowClear="true"
                 :filter-option="false"
@@ -62,7 +50,7 @@
             <a-list-item style="padding: 10px 0;">
                 <a-list-item-meta>
                     <template #title>
-                        {{ item.name }} x {{ item.quantity }}, {{ formatPrice(item.amount * item.quantity) }}
+                        {{ item.name }} - <b>{{ item.product?.categories?.find(category => category.parent_id === null)?.name }}</b> x {{ item.quantity }}, {{ formatPrice(item.amount * item.quantity) }}
                     </template>
                 </a-list-item-meta>
 
@@ -117,10 +105,9 @@ export default {
     ],
     data() {
         return {
-            zaklady: {
+            categories: {
                 data: [],
-                fetching: false,
-                selected: null,
+                selected: [],
             },
             products: {
                 data: [],
@@ -130,13 +117,8 @@ export default {
         }
     },
     computed: {
-        zakladOptions() {
-            return this.zaklady.data.map(zaklad => {
-                return {
-                    label: zaklad.name,
-                    value: zaklad.id, 
-                }
-            })
+        categoryOptions() {            
+            return this.makeCategoryOptions(this.categories.data, null)
         },
         productOptions() {
             return this.products.data.map(product => {
@@ -155,15 +137,34 @@ export default {
     },
     methods: {
         formatPrice,
-        async fetchZaklady(s) {
-            this.zaklady.fetching = true
-            const res = await categoriesApi.searchZaklady(s)
-            this.zaklady.data = res
-            this.zaklady.fetching = false
+        async fetchAllCategories() {
+            try {
+                const res = await categoriesApi.all() 
+                this.categories.data = res.categories
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
+        makeCategoryOptions(categories, parent) {
+            let options = []
+            categories.forEach(category => {
+                if (category.parent_id === parent) {
+                    options.push({
+                        label: category.name,
+                        value: category.id,
+                        children: this.makeCategoryOptions(
+                            categories, 
+                            category.id
+                        )
+                    })
+                }
+            })
+
+            return options
         },
         async fetchProducts(s) {
             this.products.fetching = true
-            const res = await productsApi.search(s, this.zaklady.selected)
+            const res = await productsApi.search(s, this.categories.selected)
             this.products.data = res
             this.products.fetching = false
         },
@@ -175,6 +176,7 @@ export default {
                         quantity: 1,
                         amount: product.price,
                         product_id: product.id,
+                        product: product,
                     })
                 }
             })
@@ -182,6 +184,9 @@ export default {
         removeFromCart(i) {
             this.orderItems.splice(i, 1)
         },
+    },
+    mounted() {
+        this.fetchAllCategories()
     },
 }
 </script>

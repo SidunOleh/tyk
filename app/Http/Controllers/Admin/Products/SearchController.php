@@ -18,10 +18,10 @@ class SearchController extends Controller
 
     public function __invoke(Request $request)
     {
-        $categoryId = $request->query('category_id', null);
+        $categoriesIds = $request->query('categories_ids', []);
 
-        if ($categoryId) {
-            $products = $this->productService->searchInCategory($request->query('s', ''), $categoryId);
+        if ($categoriesIds) {
+            $products = $this->productService->searchInCategories($request->query('s', ''), $categoriesIds);
         } else {
             $products = $this->productService->search($request->query('s', ''));
         }

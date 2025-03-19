@@ -377,6 +377,7 @@ export default {
                         quantity: item.quantity,
                         amount: item.product.price,
                         product_id: item.product.id,
+                        product: item.product,
                     }
                 }) ?? []
             }
@@ -417,6 +418,7 @@ export default {
                         quantity: item.quantity,
                         amount: item.product.price,
                         product_id: item.product.id,
+                        product: item.product,
                     }
                 }) ?? []
             }
@@ -488,21 +490,27 @@ export default {
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
 Товари: ${this.data.order_items?.map(orderItem => `${orderItem.name} x ${orderItem.quantity}`).join(' | ')}
 Куди: ${this.data.details.food_to?.map(address => address.address).join(' | ')}
-Метод оплати: ${this.data.payment_method ?? ''}`
+Метод оплати: ${this.data.payment_method ?? ''}
+Час: ${this.data.time}
+Нотатки: ${this.data.notes ?? ''}`
         },
         shippingText() {
             return `${this.data.service} №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
 Звідки: ${this.data.details.shipping_from?.address}
 Куди: ${this.data.details.shipping_to?.map(address => address.address).join(' | ')}
-Метод оплати: ${this.data.payment_method ?? ''}`
+Метод оплати: ${this.data.payment_method ?? ''}
+Час: ${this.data.time}
+Нотатки: ${this.data.notes ?? ''}`
         },
         taxiText() {
             return `${this.data.service} №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
 Звідки: ${this.data.details.taxi_from?.address}
 Куди: ${this.data.details.taxi_to?.map(address => address.address).join(' | ')}
-Метод оплати: ${this.data.payment_method ?? ''}`
+Метод оплати: ${this.data.payment_method ?? ''}
+Час: ${this.data.time}
+Нотатки: ${this.data.notes ?? ''}`
         },
         async calcShippingPrice() {
             const request = {

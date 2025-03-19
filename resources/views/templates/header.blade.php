@@ -43,7 +43,16 @@
                     </ul>
                     <div class="mobile-bottom">
                         <div class="buttons">
-                            @include('templates.cart-icon', ['cartTotal' => $cartTotal])
+                            @auth('web')
+                            <a href="{{ route('pages.cabinet') }}" class="account_btn">
+                                <img src="{{ asset('/assets/img/account.svg') }}" alt="" />
+                            </a>
+                            @endauth
+                            @guest('web')
+                            <div class="account_btn unlogged">
+                                <img src="{{ asset('/assets/img/account.svg') }}" alt="" />
+                            </div>
+                            @endguest
                             <a href="tel:7789956555" class="phone_btn">
                                 <img src="{{ asset('/assets/img/phone.svg') }}" alt="" />
                             </a>

@@ -29,16 +29,14 @@ export default {
 
         return res.data
     },
-    async search(s, categoryId) {
+    async search(s, categoriesIds) {
         if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
         const query = new URLSearchParams({s,})
 
-        if (categoryId) {
-            query.append('category_id', categoryId)
-        }
+        categoriesIds.forEach(id => query.append('categories_ids[]', id))
 
         const res = await axios.get(`/api/products/search?${query}`)
 

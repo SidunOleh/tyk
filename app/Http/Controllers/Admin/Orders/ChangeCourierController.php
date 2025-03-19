@@ -12,7 +12,15 @@ class ChangeCourierController extends Controller
 {
     public function __invoke(Order $order, ChangeCourierRequest $request)
     {
-        OrderService::make($order->type)->changeCourier($order, $request->courier_id);
+        OrderService::make($request->service)->changeCourier($order, $request->courier_id);
+
+        $order->load([
+            'orderItems',
+            'orderItems.product',
+            'orderItems.product.categories',
+            'client',
+            'courier',
+        ]);
 
         return response(['order' => new OrderResource($order),]);
     }

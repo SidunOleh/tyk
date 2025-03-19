@@ -106,7 +106,7 @@ export default {
                 <br>
                 <div>
                     Сума: <b>${formatPrice(order.total)}</b>
-                    Продути: <b>${order.order_items?.map(item => `${item.name} x ${item.quantity}`).join(' | ')}</b>
+                    Продути: <b>${order.order_items?.map(item => `${item.name} - ${item.product?.categories?.find(category => category.parent_id === null)?.name} x ${item.quantity}`).join(' | ')}</b>
                     Адреса: <b>${order.details.food_to.map(address => address.address).join(' | ')}</b>
                 </div>
             `

@@ -7,6 +7,7 @@ use App\Http\Requests\Clients\AddAddressRequest;
 use App\Http\Requests\Clients\DeleteAddressRequest;
 use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
 use App\Models\Client;
+use App\Models\Order;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,6 +26,8 @@ class ClientService extends Service
         $s = $request->query('s', '');
 
         $models = Client::with('ordersByDate')
+            ->with('ordersByDate.orderItems')
+            ->with('ordersByDate.client')
             ->with('ordersByDate.courier')
             ->orderBy($orderby, $order)
             ->search($s)
@@ -62,6 +65,12 @@ class ClientService extends Service
 
     public function getOrders(Client $client): Collection
     {
-        return $client->ordersByDate;
+        return Order::where('client_id', $client->id)
+            ->with('orderItems')
+            ->with('orderItems.product')
+            ->with('orderItems.product.categories')
+            ->with('client')
+            ->with('courier')
+            ->get();
     }
 }

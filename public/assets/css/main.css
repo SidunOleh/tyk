@@ -634,7 +634,7 @@ img {
     height: 68px
 }
 
-.header .header-nav .mobile-bottom .buttons .cart_btn,
+.header .header-nav .mobile-bottom .buttons .account_btn,
 .header .header-nav .mobile-bottom .buttons .phone_btn {
     height: 100%;
     width: 50%;
@@ -649,12 +649,12 @@ img {
     justify-content: center
 }
 
-.header .header-nav .mobile-bottom .buttons .cart_btn {
+.header .header-nav .mobile-bottom .buttons .account_btn {
     position: relative;
     cursor: pointer
 }
 
-.header .header-nav .mobile-bottom .buttons .cart_btn:after {
+.header .header-nav .mobile-bottom .buttons .account_btn:after {
     content: "";
     height: 24px;
     width: 1px;
@@ -883,8 +883,17 @@ img {
 }
 
 @media screen and (max-width:768px) {
-    .header .right .buttons .cart_btn,
+    .header .right .buttons .account_btn,
     .header .right .buttons .phone_btn {
+        display: none
+    }
+    .header .right .buttons .cart_btn::after {
+        display: none;
+    }
+}
+
+@media screen and (max-width:450px) {
+    .header .right .buttons .cart_btn .price {
         display: none
     }
 }
@@ -902,10 +911,9 @@ img {
     transform: translateY(-50%)
 }
 
-@media screen and (max-width:768px) {
-    .header .right .buttons .account_btn {
-        width: 56px;
-        padding: 0;
+@media screen and (max-width:450px) {
+    .header .right .buttons .cart_btn {
+        padding: 0 15px;
         -webkit-box-pack: center;
         -ms-flex-pack: center;
         justify-content: center
@@ -1474,6 +1482,9 @@ img {
 @media screen and (max-width:1024px) {
     .eaterie-list .eaterie-item {
         width: calc((100% - 24px) / 2)
+    }
+    .eaterie-list .eaterie-item:last-child {
+        margin-bottom: 24px;
     }
 }
 
@@ -2556,17 +2567,18 @@ section.catalog .eaterie-list {
 @media screen and (max-width:1024px) {
     .dishes .dishes__category .dishes__menu {
         display: none;
-        position: absolute;
-        width: 100%;
-        top: 110%;
         background-color: #fff;
         -webkit-box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11);
         box-shadow: 0px 4px 34.3px 0px rgba(62, 132, 127, 0.11);
-        z-index: 10;
         border-radius: 8px;
-        max-height: 310px;
         overflow: auto;
-        padding: 8px 0
+        padding: 8px 0;
+        z-index: 1000000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
     }
 }
 
@@ -5965,7 +5977,7 @@ section.catalog .eaterie-list {
 .popUp-Wrapper {
     padding: 24px;
     position: fixed;
-    z-index: 10000;
+    z-index: 10000000;
     background: rgba(0, 0, 0, 0.4);
     top: 0;
     left: 0;
@@ -7651,4 +7663,8 @@ textarea {
 
 .payments .radio-group {
     flex-direction: row;
+}
+
+.cart-section .empty {
+    text-align: center;
 }

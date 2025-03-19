@@ -13,6 +13,14 @@ class StoreController extends Controller
     {
         $order = OrderService::make($request->service)->create($request);
 
+        $order->load([
+            'orderItems',
+            'orderItems.product',
+            'orderItems.product.categories',
+            'client',
+            'courier',
+        ]);
+
         return response(['order' => new OrderResource($order),]);
     }
 }

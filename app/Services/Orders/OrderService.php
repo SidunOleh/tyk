@@ -35,9 +35,10 @@ abstract class OrderService extends Service
         $paid = $request->query('paid', []);
         $paid = array_map(fn ($paid) => $paid == 'true' ? true : false, $paid);
 
-        $models = $this->model::with('client')
-            ->with('client.ordersByDate')
-            ->with('client.ordersByDate.courier')
+        $models = $this->model::with('orderItems')
+            ->with('orderItems.product')
+            ->with('orderItems.product.categories')
+            ->with('client')
             ->with('courier')
             ->orderBy($orderby, $order)
             ->search($s)
@@ -51,7 +52,12 @@ abstract class OrderService extends Service
 
     public function getBetween(string $start, string $end): Collection
     {
-        $orders = Order::betweenDate($start, $end)
+        $orders = Order::with('orderItems')
+            ->with('orderItems.product')
+            ->with('orderItems.product.categories')
+            ->with('client')
+            ->with('courier')
+            ->betweenDate($start, $end)
             ->orderBy('created_at', 'DESC')
             ->get();
 

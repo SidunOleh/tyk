@@ -38,7 +38,7 @@
             </a-descriptions>
 
             <OrdersTable 
-                :data="record.orders"
+                :data="record.orders_by_date"
                 @edit="$emit('editOrder')"
                 @delete="$emit('deleteOrder')"/>
         </template>
