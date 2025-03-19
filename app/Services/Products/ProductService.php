@@ -39,7 +39,8 @@ class ProductService extends Service
         $s = $request->query('s', '');
         $categories = $request->query('categories', []);
 
-        $models = $this->model::orderBy($orderby, $order)
+        $models = $this->model::with('categories')
+            ->orderBy($orderby, $order)
             ->search($s)
             ->categories($categories)
             ->paginate($perpage, ['*'], 'page', $page);
