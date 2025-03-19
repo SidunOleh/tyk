@@ -12,7 +12,7 @@ class ChangeStatusController extends Controller
 {
     public function __invoke(Order $order, ChangeStatusRequest $request)
     {
-        OrderService::make($request->service)->changeStatus($order, $request->status);
+        OrderService::make($order->type)->changeStatus($order, $request->status);
 
         $order->load([
             'orderItems',
