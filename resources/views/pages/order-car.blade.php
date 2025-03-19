@@ -428,13 +428,18 @@ function Route(map) {
     this.addAddress = (address = {}) => {
         this.to.push(new Address(this, address))
 
-        this.map.refresh()
+        if (address.address) {
+            this.map.refresh()
+        }
     }
     this.removeAddress = i => {
-        this.to[i].removeMarker()
+        const address = this.to[i]
+        address.removeMarker()
         this.to.splice(i, 1)
 
-        this.map.refresh()
+        if (address.address) {
+            this.map.refresh()
+        }
     }
     this.setRoute = (from, to) => {
         this.from = new Address(this, from)
