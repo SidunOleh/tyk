@@ -802,21 +802,21 @@ const app = {
             data.courier_service = this.data.shipping_type
             
             data.route = []
-            if (! this.map.route.from.address) {
+            if (this.map.route.from.isEmpty()) {
                 return
             }
             data.route.push({
                 lat: this.map.route.from.lat,
                 lng: this.map.route.from.lng,
             })
-            this.map.route.to.forEach(address => {
-                if (address.address) {
+            this.map.route.to
+                .filter(address => !address.isEmpty())
+                .forEach(address => {
                     data.route.push({
                         lat: address.lat,
                         lng: address.lng,
                     })
-                }
-            })
+                })
             if (data.route.length < 2) {
                 return
             }
@@ -846,13 +846,15 @@ const app = {
             lat: this.map.route.from.lat,
             lng: this.map.route.from.lng,
         }
-        data.to = this.map.route.to.map(address => {
-            return {
-                address: address.address,
-                lat: address.lat,
-                lng: address.lng,
-            }
-        })
+        data.to = this.map.route.to
+            .filter(address => !address.isEmpty())
+            .map(address => {
+                return {
+                    address: address.address,
+                    lat: address.lat,
+                    lng: address.lng,
+                }
+            })
 
         data.date = this.data.formattedDate
         if (data.date == 'Сьогодні') {
@@ -873,8 +875,8 @@ const app = {
     },
     async send() {        
         const container = document.querySelector('.order-car__left')
+        container.classList.add('loading')
         try {
-            container.classList.add('loading')
             const res = await fetch('/orders/order-car', {
                 method: 'POST',
                 headers: {
@@ -883,7 +885,13 @@ const app = {
                 },
                 body: JSON.stringify(this.getData())
             })
+            
+            if (res.status != 200) {
+                throw new Error(res.statusText)
+            }
+
             const data = await res.json()
+
             location.href = `/zaversheno?order=${data.id}`
         } catch (err) {
             console.error(err)

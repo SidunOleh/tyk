@@ -7672,3 +7672,16 @@ textarea {
 .process-item .title_20 {
     text-align: center;
 }
+
+.btn.add-address,
+.btn.comment-btn {
+    background: transparent;
+    border: 1px solid #ec1220;
+    color: #ec1220;
+}
+
+.btn.add-address:hover,
+.btn.comment-btn:hover {
+    background: #ec1220;
+    color: white;
+}
