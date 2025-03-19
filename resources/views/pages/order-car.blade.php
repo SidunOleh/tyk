@@ -322,9 +322,9 @@ const getAddressFromPlace = place => {
 
 function Address(route, data = {}) {
     this.route = route
-    this.address = data.address
-    this.lat = data.lat
-    this.lng = data.lng
+    this.address = data.address ?? ''
+    this.lat = data.lat ?? null 
+    this.lng = data.lng ?? null
     this.id = 'id' + Math.random().toString(16).slice(2)
     this.value =  data.address ?? ''
     this.showList = false
@@ -425,10 +425,11 @@ function Route(map) {
     this.to = reactive([])
     this.to.push(new Address(this))
     this.getMap = () => this.map.map
-    this.addAddress = (address = {}) => {
-        this.to.push(new Address(this, address))
+    this.addAddress = (data = {}) => {
+        const address = new Address(this, data)
+        this.to.push(address)
 
-        if (address.address) {
+        if (! address.isEmpty()) {
             this.map.refresh()
         }
     }
@@ -437,13 +438,15 @@ function Route(map) {
         address.removeMarker()
         this.to.splice(i, 1)
 
-        if (address.address) {
+        if (! address.isEmpty()) {
             this.map.refresh()
         }
     }
     this.setRoute = (from, to) => {
         this.from = new Address(this, from)
-        this.to = reactive(to.map(address => new Address(this, address)))
+        this.to = reactive(
+            to.map(address => new Address(this, address))
+        )
 
         this.map.refresh()
     },
