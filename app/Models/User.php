@@ -67,6 +67,10 @@ class User extends Authenticatable implements ILogUser
         'password',
     ];
 
+    public const ADMIN = 'адмін';
+
+    public const DISPATCHER = 'диспетчер';
+
     protected static function booted(): void
     {
         static::created(function (self $user) {
@@ -102,5 +106,10 @@ class User extends Authenticatable implements ILogUser
     public function logName(): string
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role == self::ADMIN;
     }
 }

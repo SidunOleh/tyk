@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Order;
+use App\Models\User;
 use App\Services\Cart\Cart;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View as ViewView;
@@ -33,6 +36,18 @@ class AppServiceProvider extends ServiceProvider
             $cart = app()->make(Cart::class);
 
             $view->with('cartTotal', $cart->formattedTotal());
+        });
+
+        Gate::define('change-order-status', function (User $user, Order $order, string $status) {
+            if (
+                $order->status == Order::DONE and
+                $status != Order::DONE and
+                ! $user->isAdmin()
+            ) {
+                return false;
+            }
+
+            return true;
         });
 
         DB::listen(fn($sql) => $GLOBALS['sql'][] = $sql);

@@ -11,25 +11,18 @@
                 placeholder="Виберіть категорію"
                 multiple
                 :tree-data="categoryOptions"
-                v-model:value="categories.selected"/>
+                v-model:value="categories.selected"
+                @change="fetchProducts('')"/>
             <a-select
                 style="width: 60%"
                 placeholder="Знайдіть товар"
                 :allowClear="true"
-                :filter-option="false"
+                :filter-option="filterProducts"
                 :options="productOptions"
                 :showSearch="true"
                 :showArrow="false"
                 v-model:value="products.selected"
-                @search="fetchProducts"
                 @select="addToCart">
-                <template 
-                    v-if="products.fetching" 
-                    #notFoundContent>
-                    <a-spin 
-                        style="width: 100%" 
-                        size="small"/>
-                </template>
             </a-select>
     </a-flex>
     </a-form-item>
@@ -167,6 +160,9 @@ export default {
             const res = await productsApi.search(s, this.categories.selected)
             this.products.data = res
             this.products.fetching = false
+        },
+        filterProducts(input, option) {
+            return option.label.match(new RegExp(input, 'i'))
         },
         addToCart(productId) {
             this.products.data.map(product => {
