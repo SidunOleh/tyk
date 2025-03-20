@@ -62,7 +62,7 @@ class ImportCategories extends Command
                     'image' => $line[6] ? $this->uploadImage($line[6]) : null,
                     'description' => $line[3],
                     'parent_id' => $line[5] == 0 ? null : $line[5],
-                ],], uniqueBy: ['id'], update: []);
+                ],], uniqueBy: ['id'], update: ['parent_id']);
 
                 $this->info('upsert ' . $line[1]);
                 
