@@ -373,10 +373,10 @@ export default {
                 data.order_items = data.order_items?.map(item => {
                     return {
                         id: item.id,
-                        name: item.product.name,
+                        name: item.name,
                         quantity: item.quantity,
-                        amount: item.product.price,
-                        product_id: item.product.id,
+                        amount: item.amount,
+                        product_id: item.product?.id,
                         product: item.product,
                     }
                 }) ?? []
@@ -411,16 +411,18 @@ export default {
             this.data.details = order.details
 
             if (this.data.service == 'Доставка їжі') {
-                this.data.order_items = order.order_items?.map(item => {
-                    return {
-                        id: item.id,
-                        name: item.product.name,
-                        quantity: item.quantity,
-                        amount: item.product.price,
-                        product_id: item.product.id,
-                        product: item.product,
-                    }
-                }) ?? []
+                this.data.order_items = order.order_items
+                    ?.filter(item => item.product)
+                    ?.map(item => {
+                        return {
+                            id: item.id,
+                            name: item.product.name,
+                            quantity: item.quantity,
+                            amount: item.product.price,
+                            product_id: item.product.id,
+                            product: item.product,
+                        }
+                    }) ?? []
             }
         },
         async create() {
