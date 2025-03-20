@@ -27,7 +27,7 @@ class PermanentDelete extends Command
      */
     public function handle()
     {
-        Category::withTrashed()->delete();
-        Product::withTrashed()->delete();
+        Category::withTrashed()->restore();
+        Product::withTrashed()->restore();
     }
 }
