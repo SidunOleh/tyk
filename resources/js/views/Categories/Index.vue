@@ -42,7 +42,6 @@
 import { message } from 'ant-design-vue'
 import Table from './Table.vue'
 import Modal from './Modal.vue'
-import api from '../../api/products'
 import categoriesApi from '../../api/categories'
 import History from '../components/History.vue'
 

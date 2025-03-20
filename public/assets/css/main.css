@@ -1400,7 +1400,8 @@ img {
     justify-content: center;
     gap: 16px;
     overflow: auto;
-    padding: 4px
+    padding: 4px;
+    scrollbar-width: thin;
 }
 
 @media screen and (max-width:1024px) {

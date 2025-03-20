@@ -281,11 +281,31 @@ export default {
                 confirmPopup(this.bulkDelete, 'Ви впевнені що хочете видалити обрані категорії?')
             }
         },
+        makeCategoryFilters() {
+            let filters = []
+
+            this.categories.forEach(category => {
+                if (category.parent_id === null) {
+                    filters.push({
+                        text: category.name,
+                        value: category.id,
+                    })
+                }
+            })
+
+            return filters
+        },
     },
     watch: {
         query: {
             handler() {
                this.updateData()
+            },
+            deep: true,
+        },
+        categories: {
+            handler() {
+                this.columns[2].filters = this.makeCategoryFilters()
             },
             deep: true,
         },

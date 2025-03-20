@@ -84,6 +84,13 @@ class Category extends Model
         $query->whereNull('parent_id');
     }
 
+    public function scopeParents(Builder $query, array $parents): void
+    {
+        if ($parents) {
+            $query->whereIn('parent_id', $parents);
+        }
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(CategoryTag::class);
