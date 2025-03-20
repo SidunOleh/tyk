@@ -12,11 +12,10 @@ use Illuminate\Support\Facades\Auth;
 use Mavinoo\Batch\Traits\HasBatch;
 use Staudenmeir\EloquentJsonRelations\Relations\BelongsToJson;
 use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
-use Illuminate\Database\Eloquent\Prunable;
 
 class Category extends Model
 {
-    use SoftDeletes, History, HasBatch, HasJsonRelationships, Prunable;
+    use SoftDeletes, History, HasBatch, HasJsonRelationships;
 
     protected $fillable = [
         'id',
@@ -109,9 +108,4 @@ class Category extends Model
     {
         return $this->belongsToJson(Product::class, 'upsells');
     }
-
-    public function prunable()
-	{
-		return static::whereNotNull('deleted_at');
-	}
 }

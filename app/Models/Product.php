@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Prunable;
 
 class Product extends Model
 {
-    use SoftDeletes, History, Prunable;
+    use SoftDeletes, History;
 
     protected $fillable = [
         'id',
@@ -81,9 +80,4 @@ class Product extends Model
     {
         return $this->image ?: asset(self::PLACEHOLDER_IMAGE);
     }
-
-    public function prunable()
-	{
-		return static::whereNotNull('deleted_at');
-	}
 }
