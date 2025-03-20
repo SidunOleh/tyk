@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Mavinoo\Batch\Traits\HasBatch;
 use Staudenmeir\EloquentJsonRelations\Relations\BelongsToJson;
 use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+use Illuminate\Database\Eloquent\Prunable;
 
 class Category extends Model
 {
-    use SoftDeletes, History, HasBatch, HasJsonRelationships;
+    use SoftDeletes, History, HasBatch, HasJsonRelationships, Prunable;
 
     protected $fillable = [
         'id',

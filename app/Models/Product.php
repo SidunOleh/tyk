@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Prunable;
 
 class Product extends Model
 {
-    use SoftDeletes, History;
+    use SoftDeletes, History, Prunable;
 
     protected $fillable = [
         'id',
