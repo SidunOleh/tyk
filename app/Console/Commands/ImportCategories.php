@@ -47,14 +47,6 @@ class ImportCategories extends Command
     {
         foreach ($data as $line) {
             if ($line[5] == $parent) {
-                // Category::upsert([[
-                //     'id' => $line[0],
-                //     'name' => $line[1],
-                //     'slug' => $line[2],
-                //     'image' => $line[6] ? $this->uploadImage($line[6]) : null,
-                //     'description' => $line[3],
-                //     'parent_id' => $line[5] == 0 ? null : $line[5],
-                // ],], uniqueBy: ['id'], update: ['name', 'slug', 'image', 'description', 'parent_id',]);
                 Category::upsert([[
                     'id' => $line[0],
                     'name' => $line[1],
@@ -62,7 +54,7 @@ class ImportCategories extends Command
                     'image' => $line[6] ? $this->uploadImage($line[6]) : null,
                     'description' => $line[3],
                     'parent_id' => $line[5] == 0 ? null : $line[5],
-                ],], uniqueBy: ['id'], update: ['parent_id']);
+                ],], uniqueBy: ['id'], update: ['name', 'slug', 'image', 'description', 'parent_id',]);
 
                 $this->info('upsert ' . $line[1]);
                 
