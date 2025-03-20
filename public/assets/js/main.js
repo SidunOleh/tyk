@@ -248,7 +248,9 @@ $('.dishes__menu .menu__item .head').on('click', function() {
     $(this).addClass('active')
     $('.selected span').text($(this).text())
     $('.dishes .selected').toggleClass('open')
-    $('.dishes__menu').slideToggle(0)
+    if (window.innerWidth <= 1024)  {
+        $('.dishes__menu').slideToggle(0)
+    }
     changeCatalog($(this).data('id'))
 })
 
