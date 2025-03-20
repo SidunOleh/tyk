@@ -50,7 +50,7 @@ class ImportProducts extends Command
 
     private function upsert(array $data): Product
     {
-        $product = Product::find($data[0]);
+        $product = Product::withTrashed()->find($data[0]);
 
         $productData = [
             'id' => $data[0],
