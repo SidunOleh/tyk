@@ -81,4 +81,9 @@ class Product extends Model
     {
         return $this->image ?: asset(self::PLACEHOLDER_IMAGE);
     }
+
+    public function prunable()
+	{
+		return static::whereNotNull('deleted_at');
+	}
 }
