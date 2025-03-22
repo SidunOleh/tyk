@@ -194,7 +194,9 @@
                 </a-typography-text>
             </div>
 
-            <a-flex :gap="5">
+            <a-flex 
+                :gap="5"
+                :justify="'space-between'">
                 <a-button
                     type="primary"
                     :loading="loading"
@@ -202,12 +204,19 @@
                     Зберегти
                 </a-button>
 
-                <a-button
-                    v-if="action == 'edit'"
-                    type="primary"
-                    @click="copy">
-                    Копіювати
-                </a-button>
+                <a-flex :gap="5">
+                    <a-button
+                        v-if="action == 'edit'"
+                        @click="copy">
+                        Копі кур’єр
+                    </a-button>
+
+                    <a-button
+                        v-if="action == 'edit' && data.type == 'Доставка їжі'"
+                        @click="copyForPartner">
+                        Копі партнер
+                    </a-button>
+                </a-flex>
             </a-flex>
         </a-form>
     </a-modal>
@@ -335,16 +344,27 @@ export default {
                 }
             })
         },
+        subtotal() {
+            return this.data.order_items?.reduce((acc, item) => {
+                return acc += item.quantity * item.amount
+            }, 0)
+        },
         total() {
-           let subtotal = 0
+           return this.subtotal + this.data.shipping_price + this.data.additional_costs
+        },
+        zaklady() {
+            const zaklady = this.data.order_items?.map(item => {
+                return item.product?.categories.find(cat => {
+                    return cat.parent_id === null
+                })?.name ?? ''
+            }) ?? []
 
-           if (this.data.service == 'Доставка їжі') {
-                subtotal = this.data
-                    .order_items
-                    ?.reduce((acc, item) => acc += item.quantity * item.amount, 0)
-           }
+            return [...new Set(zaklady)]
+        },
+        copyTime() {
+            const date = new Date(this.data.time)
 
-           return subtotal + this.data.shipping_price + this.data.additional_costs
+            return `${String(date.getHours()).padStart(2, 0)}:${String(date.getMinutes()).padStart(2, 0)}`
         },
     },
     watch: {
@@ -469,6 +489,15 @@ export default {
 
             return data
         },
+        copyForPartner() {
+            const text = `Доставка їжі №${this.data.number}
+Товари: ${this.data.order_items?.map(orderItem => `${orderItem.name} x ${orderItem.quantity}`).join(' | ')}
+Час: ${this.copyTime}`
+
+            copyToClipboard(text)
+
+            message.success('Скопійовано в буфер обміну.')
+        },
         copy() {
             let text = ''
             switch (this.data.service) {
@@ -488,31 +517,46 @@ export default {
             message.success('Скопійовано в буфер обміну.')
         },
         foodShippingText() {
-            return `${this.data.service} №${this.data.number}
-Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+            return `Доставка їжі №${this.data.number}
+Заклад: ${this.zaklady.join(', ')}
 Товари: ${this.data.order_items?.map(orderItem => `${orderItem.name} x ${orderItem.quantity}`).join(' | ')}
+Нотатки: ${this.data.notes ?? ''}
+Час відбору: ${this.copyTime}
+
+Клієнт: ${this.selectedClient.phone}
 Куди: ${this.data.details.food_to?.map(address => address.address).join(' | ')}
+
 Метод оплати: ${this.data.payment_method ?? ''}
-Час: ${this.data.time}
-Нотатки: ${this.data.notes ?? ''}`
+Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
+Сума замовлення: ${formatPrice(this.subtotal)}
+Сума за доставку: ${formatPrice(this.data.shipping_price)}
+Загальна сума до оплати: ${formatPrice(this.total)}`
         },
         shippingText() {
-            return `${this.data.service} №${this.data.number}
+            return `Кур’єр №${this.data.number}
+Тип: ${this.data.details.shipping_type}
+
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+Час: ${this.data.time}
 Звідки: ${this.data.details.shipping_from?.address}
 Куди: ${this.data.details.shipping_to?.map(address => address.address).join(' | ')}
+Нотатки: ${this.data.notes ?? ''}
+
 Метод оплати: ${this.data.payment_method ?? ''}
-Час: ${this.data.time}
-Нотатки: ${this.data.notes ?? ''}`
+Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
+Загальна сума до оплати: ${formatPrice(this.total)}`
         },
         taxiText() {
-            return `${this.data.service} №${this.data.number}
+            return `Таксі №${this.data.number}
 Клієнт: ${this.selectedClient.full_name}, ${this.selectedClient.phone}
+Час: ${this.copyTime}
 Звідки: ${this.data.details.taxi_from?.address}
 Куди: ${this.data.details.taxi_to?.map(address => address.address).join(' | ')}
+Нотатки: ${this.data.notes ?? ''}
+
 Метод оплати: ${this.data.payment_method ?? ''}
-Час: ${this.data.time}
-Нотатки: ${this.data.notes ?? ''}`
+Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
+Загальна сума до оплати: ${formatPrice(this.total)}`
         },
         async calcShippingPrice() {
             const request = {

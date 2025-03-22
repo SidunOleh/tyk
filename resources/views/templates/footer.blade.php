@@ -68,19 +68,11 @@
                 </ul>
             </div>
             <div class="col">
-                @auth('web')
                 <a 
                     href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" 
                     class="btn delivery_btn">
                     Замовити кур’єра
                 </a>
-                @endauth
-
-                @guest('web')
-                <div class="btn delivery_btn unlogged">
-                    Замовити кур’єра
-                </div>
-                @endguest
                 <div class="download">
                     <p class="title">Завантажити додаток</p>
                     <div class="download-buttons">
@@ -97,6 +89,7 @@
     <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
     <script src="{{ asset('/assets/js/slick.min.js') }}"></script>
     <script src="{{ asset('/assets/js/fancybox.umd.js') }}"></script>
+    <script src="{{ asset('assets/js/lazysizes.min.js') }}"></script>
     <script src="{{ asset('/assets/js/main.js') }}"></script>
 </body>
 

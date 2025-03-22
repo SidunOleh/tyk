@@ -8,7 +8,11 @@
             <div class="dish__item" data-id="{{ $product->id }}">
                 <!-- <div class="label new">🔥 Новинка</div> -->
                 <div class="imgCard">
-                    <img src="{{ $product->imageUrl() }}" alt="" />
+                    <img 
+                        src="{{ asset('assets/img/placeholder.png') }}" 
+                        data-src="{{ $product->imageUrl() }}" 
+                        class="lazyload"
+                        alt=""/>
                 </div>
                 <div class="infoCard">
                     <div class="head">
