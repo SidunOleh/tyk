@@ -76,13 +76,13 @@ class CategoryService extends Service
             (
                 SELECT c1.id, c1.name, c1.slug, c1.image, c1.description, c1.parent_id, c1.order
                     FROM categories c1
-                    WHERE parent_id=:parent_id AND visible=true
+                    WHERE parent_id=:parent_id AND visible=true AND deleted_at IS NULL
                 UNION ALL
                 SELECT c2.id, c2.name, c2.slug, c2.image, c2.description, c2.parent_id, c2.order
                     FROM categories c2
                     JOIN cte
                     ON cte.id=c2.parent_id
-                    WHERE visible=true
+                    WHERE visible=true AND deleted_at IS NULL
             )
             SELECT * FROM cte ORDER BY -cte.order DESC;
         ", ['parent_id' => $parentId,]);
