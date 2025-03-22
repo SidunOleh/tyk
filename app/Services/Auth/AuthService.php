@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\TurboSmsException;
 use App\Models\Client;
 use App\Services\Cart\CartSession;
 use Daaner\TurboSMS\Facades\TurboSMS;
@@ -29,7 +30,7 @@ class AuthService
                 ! $result['success'] or 
                 $result['result'][0]['response_status'] != 'OK'
             ) {
-                throw new TurboSMSException(
+                throw new TurboSmsException(
                     $result['info'], 
                     $result['result'][0]['response_code']
                 );
