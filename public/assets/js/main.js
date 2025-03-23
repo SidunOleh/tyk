@@ -234,6 +234,7 @@ $('.home-eaterie .btn').on('click', () => {
  */
 $('.dishes .selected').on('click', function() {
     $(this).toggleClass('open')
+    $('body').addClass('no-scroll')
     $('.dishes__menu').slideToggle()
 })
 
@@ -250,6 +251,7 @@ $('.dishes__menu .menu__item .head').on('click', function() {
     $('.dishes .selected').toggleClass('open')
     if (window.innerWidth <= 1024)  {
         $('.dishes__menu').slideToggle(0)
+        $('body').removeClass('no-scroll')
     }
     changeCatalog($(this).data('id'))
 })

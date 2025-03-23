@@ -7683,3 +7683,7 @@ textarea {
     background: #ec1220;
     color: white;
 }
+
+body.no-scroll {
+    overflow: hidden;
+}
