@@ -459,6 +459,9 @@ function Route(map) {
 
         this.route = new google.maps.DirectionsRenderer({
             preserveViewport: true,
+            polylineOptions: {
+                strokeColor: '#ec1220',
+            }
         })
         this.route.setMap(this.getMap())
 
