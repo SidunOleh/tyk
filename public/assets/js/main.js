@@ -360,7 +360,7 @@ $('.account_btn.unlogged').on('click', () => {
     $('.popUp-Wrapper.signIn').addClass('open')
 })
 
-$('.checkout_btn.unlogged').on('click', () => {
+$(document).on('click', '.checkout_btn.unlogged', () => {
     $('#login').attr('data-event', 'checkout')
     $('.popUp-Wrapper.signIn').addClass('open')
 })
