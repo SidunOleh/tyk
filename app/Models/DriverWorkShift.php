@@ -61,6 +61,6 @@ class DriverWorkShift extends Model
 
     public function scopeOpen(Builder $query): void
     {
-        $query->where('status', 'open');
+        $query->where('status', self::OPEN);
     }
 }

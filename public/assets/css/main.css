@@ -7695,3 +7695,58 @@ body.no-scroll {
         z-index: 1000000;
     }
 }
+
+@media (max-width: 1054px) {
+    .hero__services {
+        display: none !important;
+    }
+    .hero__services-slider {
+        display: none !important;
+    }
+    .hero__head {
+        display: block !important;
+    }
+}
+
+@media (min-width: 1054px) {
+    .heroMobile {
+        display: none;
+    }
+}
+
+.heroMobile__img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.heroMobile__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.heroMobile__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.heroMobile__item img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.heroMobile__item span {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+}

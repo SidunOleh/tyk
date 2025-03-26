@@ -117,6 +117,23 @@
                 </div>
             </div>
         </div>
+        <div class="heroMobile">
+            <img src="/assets/img/map.png" alt="" class="heroMobile__img">
+            <div class="heroMobile__list">
+                <a href="{{ route('pages.order-car', ['service' => 'Таксі']) }}" class="heroMobile__item">
+                    <img src="/assets/img/hero-taxi.svg" alt="">
+                    <span>Таксі</span>
+                </a>
+                <a href="{{ route('pages.order-car', ['service' => 'Доставка їжі']) }}" class="heroMobile__item">
+                    <img src="/assets/img/hero-food.png" alt="">
+                    <span>Доставка їжі</span>
+                </a>
+                <a href="{{ route('pages.order-car', ['service' => 'Кур\'єр']) }}" class="heroMobile__item">
+                    <img src="/assets/img/hero-shipping.svg" alt="">
+                    <span>Кур’єрські послуги</span>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
