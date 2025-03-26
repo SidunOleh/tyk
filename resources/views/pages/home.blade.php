@@ -124,7 +124,7 @@
                     <img src="/assets/img/hero-taxi.svg" alt="">
                     <span>Таксі</span>
                 </a>
-                <a href="{{ route('pages.order-car', ['service' => 'Доставка їжі']) }}" class="heroMobile__item">
+                <a href="{{ route('pages.zaklady') }}" class="heroMobile__item">
                     <img src="/assets/img/hero-food.png" alt="">
                     <span>Доставка їжі</span>
                 </a>
