@@ -118,7 +118,7 @@
             </div>
         </div>
         <div class="heroMobile">
-            <img src="/assets/img/map.png" alt="" class="heroMobile__img">
+            <!-- <img src="/assets/img/map.png" alt="" class="heroMobile__img"> -->
             <div class="heroMobile__list">
                 <a href="{{ route('pages.order-car', ['service' => 'Таксі']) }}" class="heroMobile__item">
                     <img src="/assets/img/hero-taxi.svg" alt="">
