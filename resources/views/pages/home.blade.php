@@ -257,6 +257,7 @@
     </div>
 </section>
 
+
 @include('templates.reviews')
 
 @include('templates.footer')

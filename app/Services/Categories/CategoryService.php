@@ -221,4 +221,11 @@ class CategoryService extends Service
 
         CategoryTag::batchUpdate($updates, 'id');
     }
+
+    public function zaklady(): Collection
+    {
+        $zaklady = Category::zaklad()->visible()->get();
+
+        return $zaklady;
+    }
 }
