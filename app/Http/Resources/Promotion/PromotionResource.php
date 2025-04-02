@@ -14,13 +14,6 @@ class PromotionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'image' => $this->image,
-            'title' => $this->title,
-            'slug' => $this->slug,
-            'subtitle' => $this->subtitle,
-            'text' => $this->text,
-        ];
+        return parent::toArray($request);
     }
 }

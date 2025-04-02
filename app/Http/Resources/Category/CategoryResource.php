@@ -15,21 +15,10 @@ class CategoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'image' => $this->image,
-            'description' => $this->description,
-            'tags' => $this->tags,
-            'parent_id' => $this->parent_id,
-            'visible' => $this->visible,
-            'tags' => $this->tags,
-            'upsells' => Product::whereIn('id', $this->upsells ?? [])
-                ->with('categories')
-                ->get(),
-            'count' => $this->products()->count(),
-            'history' => $this->history,
-        ];
+        $data = parent::toArray($request);
+
+        $data['description'] = strip_tags($data['description']);
+
+        return $data;
     }
 }

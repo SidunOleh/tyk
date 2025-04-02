@@ -2,6 +2,8 @@
 
 namespace App\Services\Products;
 
+use App\Models\Category;
+use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -62,5 +64,19 @@ class ProductService extends Service
         }
 
         return $products;
+    }
+
+    public function upsells(array $productIds): Collection
+    {        
+        $categoryIds = CategoryProduct::whereIn('product_id', $productIds)->get()
+            ->pluck('category_id')
+            ->toArray();
+        $categories = Category::whereIn('id', $categoryIds)->get();
+
+        $upsells = Product::whereIn('id', $categories->pluck('upsells')->flatten())
+            ->whereNotIn('id', $productIds)
+            ->get(); 
+
+        return $upsells;
     }
 }

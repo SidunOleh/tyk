@@ -14,14 +14,6 @@ class TariffResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'fixed' => $this->fixed,
-            'fixed_price' => $this->fixed_price,
-            'per_km' => $this->per_km,
-            'color' => $this->color,
-            'default' => $this->default,
-        ];
+        return parent::toArray($request);
     }
 }

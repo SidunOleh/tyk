@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Client extends Authenticatable implements ILogUser
 {
-    use SoftDeletes, History;
+    use SoftDeletes, History, HasApiTokens;
     
     protected $fillable = [
         'phone',
@@ -69,11 +70,6 @@ class Client extends Authenticatable implements ILogUser
         return $this->hasMany(Order::class)->orderBy('created_at', 'desc');
     }
 
-    public function formattedBonuses(string $symb = '₴'): string
-    {
-        return number_format($this->bonuses, 2) . $symb;
-    }
-
     public function logName(): string
     {
         return $this->full_name ?? $this->phone;
@@ -104,7 +100,7 @@ class Client extends Authenticatable implements ILogUser
         return false;
     }
 
-    public function hasEnouphBonuses($amount): bool
+    public function hasEnouphBonuses(float $amount): bool
     {
         return $this->bonuses >= $amount;
     }

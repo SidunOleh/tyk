@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Tariffs;
 
+use App\Models\Tariff;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -23,9 +24,10 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'fixed' => 'required|boolean',
-            'fixed_price' => 'required_if:fixed,true|numeric|min:0|nullable',
-            'per_km' => 'required_if:fixed,false|numeric|min:0|nullable',
+            'type' => 'required|in:'.Tariff::FIXED.','.Tariff::MIXED.','.Tariff::PER_KM,
+            'fixed_price' => 'required_if:type,'.Tariff::FIXED.','.Tariff::MIXED.'|numeric|min:0|nullable',
+            'fixed_up_to_km' => 'required_if:type,'.Tariff::MIXED.'|numeric|min:0|nullable',
+            'per_km' => 'required_if:type,'.Tariff::PER_KM.','.Tariff::MIXED.'|numeric|min:0|nullable',
             'color' => 'required|string',
         ];
     }
@@ -33,8 +35,9 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'fixed_price.required_if' => 'Поле фіксована ціна є обов\'язковим, коли тариф фіксований.',
-            'per_km.required_if' => 'Поле за км є обов\'язковим, коли тариф не фіксований.',
+            'fixed_price.required_if' => 'Поле фіксована ціна є обов\'язковим, коли тариф фіксований, змішаний.',
+            'fixed_up_to_km.required_if' => 'Поле фіксована до км є обов\'язковим, коли тариф змішаний.',
+            'per_km.required_if' => 'Поле ціна за км є обов\'язковим, коли тариф за км, змішаний.',
         ];
     }
 }

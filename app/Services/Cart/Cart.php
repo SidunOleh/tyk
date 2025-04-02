@@ -2,11 +2,8 @@
 
 namespace App\Services\Cart;
 
-use App\Models\Category;
-use App\Models\CategoryProduct;
 use App\Models\Product;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 
 abstract class Cart
 {
@@ -59,29 +56,9 @@ abstract class Cart
         return array_reduce($this->items, fn (int $acc, CartItem $item) => $acc += $item->amount(), 0);
     }
 
-    public function formattedTotal(string $symb = '₴'): string
+    public function getProductsIds(): array
     {
-        return number_format($this->total(), 2) . $symb;
-    }
-
-    public function upsells(): Collection
-    {
-        $productIds = array_map(
-            fn (CartItem $item) => $item->product->id, 
-            $this->items
-        );
-        
-        $categoryIds = CategoryProduct::whereIn('product_id', $productIds)
-            ->get()
-            ->pluck('category_id')
-            ->toArray();
-        $categories = Category::whereIn('id', $categoryIds)->get();
-
-        $upsells = Product::whereIn('id', $categories->pluck('upsells')->flatten())
-            ->whereNotIn('id', $productIds)
-            ->get(); 
-
-        return $upsells;
+        return array_map(fn (CartItem $cartItem) => $cartItem->product->id, $this->items);
     }
 
     public static function make(string $driver): self

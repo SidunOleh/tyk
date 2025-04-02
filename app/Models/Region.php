@@ -16,6 +16,10 @@ class Region extends Model
         'points' => 'array',
     ];
 
+    protected $with = [
+        'tariff',
+    ];
+
     public function tariff(): BelongsTo
     {
         return $this->belongsTo(Tariff::class);

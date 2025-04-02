@@ -32,6 +32,9 @@ class CategoryService extends Service
         $parents = $request->query('parent', []);
 
         $models = $this->model::orderBy($orderby, $order)
+            ->with('tags')
+            ->with('upsells')
+            ->with('upsells.categories')
             ->search($s)
             ->parents($parents)
             ->paginate($perpage, ['*'], 'page', $page);

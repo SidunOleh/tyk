@@ -33,8 +33,14 @@
                                 size="small"/>
                         </template>
                     </a-select>
+                    
+                    <a-button   
+                        v-if="this.selectedClient"
+                        @click="this.clientsModal.edit = true">
+                        Редагувати клієнта
+                    </a-button>
 
-                    <a-button @click="this.clientsModal.open = true">
+                    <a-button @click="this.clientsModal.create = true">
                         Створити клієнта
                     </a-button>
                 </a-flex>
@@ -43,7 +49,7 @@
             <a-spin :spinning="fetchingClientOrders">
                 <OrdersList 
                     v-if="selectedClient"
-                    :orders="selectedClient?.orders"
+                    :orders="selectedClient?.orders ?? []"
                     :current="item?.id"
                     @repeat="repeatOrder"/>
             </a-spin>
@@ -222,11 +228,19 @@
     </a-modal>
 
     <ClientsModal
-        v-if="clientsModal.open"
+        v-if="clientsModal.create"
         title="Створення клієнта"
         action="create"
-        v-model:open="clientsModal.open"
-        @create="addClient"/>
+        v-model:open="clientsModal.create"
+        @create="createdClient"/>
+
+    <ClientsModal
+        v-if="clientsModal.edit"
+        title="Редагування клієнта"
+        action="edit"
+        :item="selectedClient"
+        v-model:open="clientsModal.edit"
+        @edit="editedClient"/>
 </template>
 
 <script>
@@ -282,7 +296,8 @@ export default {
                 fetching: false,
             },
             clientsModal: {
-                open: false,
+                create: false,
+                edit: false,
             },
             services: [
                 'Доставка їжі',
@@ -410,10 +425,16 @@ export default {
             this.clients.data = res
             this.clients.fetching = false
         },
-        addClient(client) {
+        createdClient(client) {
             this.clients.data = [client]
             this.data.client_id = client.id
-            this.clientsModal.open = false
+            this.clientsModal.create = false
+        },
+        editedClient(client) {
+            client.orders = this.selectedClient.orders
+            this.clients.data = [client]
+            this.data.client_id = client.id
+            this.clientsModal.edit = false
         },
         async fetchClientOrders() {
             try {

@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer(['pages.*', 'errors::*'], function (ViewView $view) {
             $cart = app()->make(Cart::class);
 
-            $view->with('cartTotal', $cart->formattedTotal());
+            $view->with('cartTotal', format_price($cart->total()));
         });
 
         Gate::define('change-order-status', function (User $user, Order $order, string $status) {

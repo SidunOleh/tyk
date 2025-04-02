@@ -14,3 +14,7 @@ function get_content_value(string $name, mixed $default = null): mixed {
 
     return $value;
 }
+
+function format_price(float $price, string $symb = '₴') {
+    return number_format($price, 2) . $symb;
+}

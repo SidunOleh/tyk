@@ -2,11 +2,11 @@
 
 namespace App\Services\Orders;
 
+use App\Exceptions\UnexpectedOrderTypeException;
 use App\Models\Order;
 use App\Services\Price\PriceService;
 use App\Services\Service;
 use App\Services\Settings\SettingsService;
-use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ abstract class OrderService extends Service
     )
     {
         
-    }  
+    }
 
     public function index(Request $request): LengthAwarePaginator
     {
@@ -108,7 +108,7 @@ abstract class OrderService extends Service
             case Order::TAXI:
                 return app()->make(TaxiService::class);
             default:
-                throw new Exception('Unexpected type: ' . $type);
+                throw new UnexpectedOrderTypeException($type);
         }
     }
 }

@@ -15,10 +15,6 @@ class RegionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'points' => $this->points,
-            'tariff' => new TariffResource($this->tariff),
-        ];
+        return parent::toArray($request);
     }
 }

@@ -38,7 +38,7 @@
                             </div>
                         </td>
                         <td class="price">
-                            {{ $item->product->formattedPrice() }}
+                            {{ format_price($item->product->price) }}
                         </td>
                         <td class="quantity">
                             <div class="counter">
@@ -48,7 +48,7 @@
                             </div>
                         </td>
                         <td class="subtotal_table">
-                            <span>{{ $item->formattedAmount() }}</span>
+                            <span>{{ format_price($item->amount()) }}</span>
                             <div class="delete">
                                 <img src="{{ asset('/assets/img/trash.svg') }}" alt="" />
                             </div>

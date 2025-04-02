@@ -8,7 +8,7 @@
                 Особистий кабінет
             </h2>
             <div class="bonuses title_20">
-                Мої бонуси:<span> {{ $client->formattedBonuses() }}</span>
+                Мої бонуси:<span> {{ format_price($client->bonuses) }}</span>
             </div>
         </div>
 
@@ -53,10 +53,10 @@
                                 №{{ $order->id }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->totalFormatted('₴') }}
+                                {{ format_price($order->total) }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->bonusesFormatted('₴') }} бонусами
+                                {{ format_price($order->bonuses) }} бонусами
                             </p>
                             <button class="btn food">
                                 Повторити
@@ -79,10 +79,10 @@
                                 №{{ $order->id }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->totalFormatted('₴') }}
+                                {{ format_price($order->total) }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->bonusesFormatted('₴') }} бонусами
+                                {{ format_price($order->bonuses) }} бонусами
                             </p>
                             <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити
@@ -105,10 +105,10 @@
                                 №{{ $order->id }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->totalFormatted('₴') }}
+                                {{ format_price($order->total) }}
                             </p>
                             <p class="sum-total">
-                                {{ $order->bonusesFormatted('₴') }} бонусами
+                                {{ format_price($order->bonuses) }} бонусами
                             </p>
                             <a class="btn" href="{{ route('pages.order-car', ['order' => $order->id]) }}">
                                 Повторити

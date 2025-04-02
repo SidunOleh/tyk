@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Exceptions\NotFoundClientByCodeException;
 use App\Exceptions\TurboSmsException;
 use App\Models\Client;
 use App\Services\Cart\CartSession;
@@ -24,7 +25,7 @@ class AuthService
         
             $client->update(['code' => $code]);
     
-            $result = TurboSMS::sendMessages('+38' . $phone, $code);
+            $result = TurboSMS::sendMessages('+38'.$phone, $code);
         
             if (
                 ! $result['success'] or 
@@ -47,12 +48,12 @@ class AuthService
         return $code;
     }
 
-    public function login(string $code): bool
+    public function login(string $code): void
     {
         $client = Client::firstWhere(['code' => $code]);
 
         if (! $client) {
-            return false;
+            throw new NotFoundClientByCodeException();
         }
 
         Auth::guard('web')->login($client);
@@ -60,15 +61,35 @@ class AuthService
         $client->update(['code' => null]);
 
         (new CartSession)->saveToDB($client);
-
-        return true;
     }
 
     public function logout(): void
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         Session::invalidate();
         Session::regenerateToken();
+    }
+
+    public function loginMobile(string $code): string
+    {
+        $client = Client::firstWhere(['code' => $code]);
+
+        if (! $client) {
+            throw new NotFoundClientByCodeException();
+        }
+
+        $token = $client->createToken(request()->header('User-Agent'))->plainTextToken;
+
+        $client->update(['code' => null]);
+
+        return $token;
+    }
+
+    public function logoutMobile(): void
+    {
+        $client = Auth::user();
+
+        $client->tokens()->delete();
     }
 }

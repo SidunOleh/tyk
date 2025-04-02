@@ -40,9 +40,9 @@
                             Проміжний підсумок
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}
+                            {{ format_price($order->total) }}
                             @if ($order->bonuses) 
-                            ({{ $order->bonusesFormatted() }} бонусами)
+                            ({{ format_price($order->bonuses) }} бонусами)
                             @endif
                         </p>
                     </div>
@@ -59,9 +59,9 @@
                             Загалом
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}
+                            {{ format_price($order->total) }}
                             @if ($order->bonuses) 
-                            ({{ $order->bonusesFormatted() }} бонусами)
+                            ({{ format_price($order->bonuses) }} бонусами)
                             @endif
                         </p>
                     </div>
@@ -104,9 +104,9 @@
                             Загалом
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}
+                            {{ format_price($order->total) }}
                             @if ($order->bonuses) 
-                            ({{ $order->bonusesFormatted() }} бонусами)
+                            ({{ format_price($order->bonuses) }} бонусами)
                             @endif
                         </p>
                     </div>
@@ -146,9 +146,9 @@
                             Загалом
                         </p>
                         <p class="sum">
-                            {{ $order->totalFormatted() }}
+                            {{ format_price($order->total) }}
                             @if ($order->bonuses) 
-                            ({{ $order->bonusesFormatted() }} бонусами)
+                            ({{ format_price($order->bonuses) }} бонусами)
                             @endif
                         </p>
                     </div>

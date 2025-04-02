@@ -18,9 +18,7 @@ class AddAddressController extends Controller
 
     public function __invoke(AddAddressRequest $request)
     {
-        $client = Auth::guard('web')->user();
-
-        $this->clientService->addAddress($client, $request);
+        $this->clientService->addAddress(Auth::guard('web')->user(), $request->address);
 
         return response(['message' => 'OK',]);
     }

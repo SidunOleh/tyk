@@ -28,7 +28,7 @@
                     </div>
                     <div class="bottom">
                         <p class="price">
-                            {{ $product->formattedPrice() }}
+                            {{ format_price($product->price) }}
                         </p>
                         <div class="quantity-counter">
                             <button class="quantity-btn--minus">-</button>

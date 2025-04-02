@@ -19,18 +19,18 @@
             </a-form-item>
 
             <a-form-item 
-                label="Фіксований"
+                label="Тип"
                 :required="true"
                 has-feedback
-                :validate-status="errors['fixed'] ? 'error' : ''"
-                :help="errors.fixed">
-                <a-checkbox v-model:checked="data.fixed">
-                    Фіксований
-                </a-checkbox>
+                :validate-status="errors['type'] ? 'error' : ''"
+                :help="errors.type">
+                <a-select
+                    :options="typesOptions"
+                    v-model:value="data.type"/>
             </a-form-item>
 
             <a-form-item 
-                v-if="data.fixed"
+                v-if="data.type == 'Фіксований' || data.type == 'Змішаний'"
                 label="Фіксована ціна"
                 :required="true"
                 has-feedback
@@ -43,7 +43,20 @@
             </a-form-item>
 
             <a-form-item 
-                v-if="! data.fixed"
+                v-if="data.type == 'Змішаний'"
+                label="Фіксована до км"
+                :required="true"
+                has-feedback
+                :validate-status="errors['fixed_up_to_km'] ? 'error' : ''"
+                :help="errors.fixed_up_to_km">
+                <a-input-number 
+                    style="width: 100%;"
+                    placeholder="Введіть км"
+                    v-model:value="data.fixed_up_to_km"/>
+            </a-form-item>
+
+            <a-form-item 
+               v-if="data.type == 'За км' || data.type == 'Змішаний'"
                 label="Ціна за км"
                 :required="true"
                 has-feedback
@@ -93,15 +106,30 @@ export default {
         return {
             data: {
                 name: '',
-                fixed: false,
+                type: 'За км',
                 fixed_price: null,
+                fixed_up_to_km: null,
                 per_km: null,
                 color: '#42a5f6',
             },
             errors: {},
+            types: [
+                'За км',
+                'Фіксований',
+                'Змішаний'            
+            ],
             loading: false,
         }
     },     
+    computed: {
+        typesOptions() {
+            return this.types.map(type => {
+                return {
+                    value: type,
+                }
+            })
+        },
+    },
     methods: {
         async create() {
             try {

@@ -1,5 +1,5 @@
 <div class="upsells">
-    @if (($upsells = $cart->upsells())->count())
+    @if ($upsells->count())
     <section class="additions">
         <div class="container">
             <h2 class="section_title">Не забудьте додати до корзини ці товари</h2>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="bottom">
                         <p class="price">
-                            {{ $product->formattedPrice() }}₴
+                            {{ format_price($product->price) }}
                         </p>
                         <button class="add">+</button>
                     </div>

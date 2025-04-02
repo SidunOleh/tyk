@@ -2,10 +2,8 @@
 
 namespace App\Services\Clients;
 
+use App\DTO\Clients\UpdatePersonalInfoDTO;
 use App\Http\Requests\Admin\Clients\FindOrCreateRequest;
-use App\Http\Requests\Clients\AddAddressRequest;
-use App\Http\Requests\Clients\DeleteAddressRequest;
-use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
 use App\Models\Client;
 use App\Models\Order;
 use App\Services\Service;
@@ -41,24 +39,24 @@ class ClientService extends Service
         return Client::firstOrCreate(['phone' => $request->phone], ['full_name' => $request->full_name ?? 'Новий клієнт']);
     }
 
-    public function updatePersonalInfo(Client $client, UpdatePersonalInfoRequest $request): void
+    public function updatePersonalInfo(Client $client, UpdatePersonalInfoDTO $dto): void
     {
-        $client->update($request->validated());
+        $client->update(['full_name' => $dto->fullName, 'phone' => $dto->phone,]);
     }
 
-    public function addAddress(Client $client, AddAddressRequest $request): void
+    public function addAddress(Client $client, string $address): void
     {        
-        $address = $this->getLatLng($request->address);
-        $address['address'] = $request->address;
+        $newAddress = $this->getLatLng($address);
+        $newAddress['address'] = $address;
 
-        $client->addAddresses([$address]);
+        $client->addAddresses([$newAddress]);
     }
 
-    public function deleteAddress(Client $client, DeleteAddressRequest $request): void
+    public function deleteAddress(Client $client, int $index): void
     {
         $addresses = $client->addresses;
 
-        unset($addresses[$request->index]);
+        unset($addresses[$index]);
 
         $client->update(['addresses' => $addresses]);
     }

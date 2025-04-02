@@ -18,7 +18,7 @@ class CategoriesController extends Controller
     public function __invoke(Request $request)
     {
         $categories = $this->categoryService->subtree(
-            $request->input('zaklad_id', null)
+            $request->query('zaklad_id', null)
         );
 
         return response($categories);

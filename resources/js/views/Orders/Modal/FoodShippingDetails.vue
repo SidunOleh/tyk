@@ -12,17 +12,17 @@
     </a-form-item>
 
     <a-form-item 
-        label="Час доставки"
+        label="Час приготування"
         has-feedback
-        :validate-status="errors['details.delivery_time'] ? 'error' : ''"
-        :help="errors['details.delivery_time']">
+        :validate-status="errors['details.cooking_time'] ? 'error' : ''"
+        :help="errors['details.cooking_time']">
         <a-date-picker
             style="width: 100%;"
             showTime
-            v-model:value="details.delivery_time"
+            v-model:value="details.cooking_time"
             format="YYYY-MM-DD hh:mm"
             valueFormat="YYYY-MM-DD hh:mm:ss"
-            placeholder="Виберіть час доставки"/>
+            placeholder="Виберіть час приготування"/>
     </a-form-item>
 </template>
 

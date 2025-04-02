@@ -36,7 +36,7 @@ export default {
 
         const query = new URLSearchParams({s,})
 
-        categoriesIds.forEach(id => query.append('categories_ids[]', id))
+        categoriesIds?.forEach(id => query.append('categories_ids[]', id))
 
         const res = await axios.get(`/api/products/search?${query}`)
 

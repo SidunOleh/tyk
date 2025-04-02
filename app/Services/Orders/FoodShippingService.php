@@ -2,12 +2,12 @@
 
 namespace App\Services\Orders;
 
-use App\Http\Requests\Orders\CheckoutRequest;
+use App\DTO\Orders\CheckoutDTO;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Services\Cart\Cart;
-use App\Services\Cart\CartItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class FoodShippingService extends OrderService
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
         $details['food_to'] = $data['details']['food_to'];
-        $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
+        $details['cooking_time'] = $data['details']['cooking_time'] ?? null;
 
         $client = Client::find($data['client_id']);
         $client->addAddresses($details['food_to']);
@@ -62,7 +62,7 @@ class FoodShippingService extends OrderService
         $data = $request->validated();
 
         $details['food_to'] = $data['details']['food_to'];
-        $details['delivery_time'] = $data['details']['delivery_time'] ?? null;
+        $details['cooking_time'] = $data['details']['cooking_time'] ?? null;
 
         $client = Client::find($data['client_id']);
         $client->addAddresses($details['food_to']);
@@ -121,59 +121,60 @@ class FoodShippingService extends OrderService
         }
     }
     
-    public function checkout(CheckoutRequest $request): Order
+    public function checkout(CheckoutDTO $dto): Order
     {
         DB::beginTransaction();
 
-        $data = $request->validated();
+        $client = Client::firstOrCreate(['phone' => $dto->phone]);
+        $client->update(['full_name' => $dto->fullName]);
 
-        $client = Client::firstOrCreate(['phone' => $data['phone']]);
-        $client->update(['full_name' => $data['full_name']]);
-
-        $address = $this->getLatLng($data['address']);
-        $address['address'] = $data['address'];
+        $address = $this->getLatLng($dto->address);
+        $address['address'] = $dto->address;
         $client->addAddresses([$address]);
 
-        if ($delivetyTime = $data['delivery_time'] ?? null) {
+        $delivetyTime = $dto->deliveryTime ?? null;
+        if ($delivetyTime) {
             $delivetyTime = now()
                 ->hour((int) explode(':', $delivetyTime)[0])
                 ->minute((int) explode(':', $delivetyTime)[1])
                 ->format('Y-m-d H:i:s');
+        } else {
+            $delivetyTime = now()->format('Y-m-d H:i:s');
         }
 
         $order = Order::create([
             'type' => Order::FOOD_SHIPPING,
-            'time' => now()->format('Y-m-d H:i:s'),
+            'time' => $delivetyTime,
             'duration' => Order::DEFAULT_DURATION,
             'notes' => $validated['notes'] ?? '',
             'status' => Order::CREATED,
             'client_id' => $client->id,
-            'payment_method' => $data['payment_method'],
+            'payment_method' => $dto->paymentMethod,
             'details' => [
                 'food_to' => [
                     $address
                 ],
-                'delivery_time' => $delivetyTime,
+                'cooking_time' => null,
             ],
         ]);
 
-        $cart = app()->make(Cart::class);
+        $orderItems = [];
+        foreach ($dto->cartItems as $i => $cartItem) {
+            $product = Product::find($cartItem['product_id']);
 
-        $order->orderItems()->createMany(array_map(fn (CartItem $cartItem) => [
-            'name' => $cartItem->product->name,
-            'quantity' => $cartItem->quantity,
-            'amount' => $cartItem->product->price,
-            'order_id' => $order->id,
-            'product_id' => $cartItem->product->id,
-        ], $cart->items));
+            $orderItems[$i]['name'] = $product->name;
+            $orderItems[$i]['quantity'] = $cartItem['quantity'];
+            $orderItems[$i]['amount'] = $product->price;
+            $orderItems[$i]['order_id'] = $order->id;
+            $orderItems[$i]['product_id'] = $product->id;
+        }
+        $order->orderItems()->createMany($orderItems);
         
         $order->updateAmount();
 
-        if ($data['use_bonuses'] ?? '' == 'on') {
+        if ($dto->useBonuses) {
             $order->useBonuses();
         }
-        
-        $cart->empty();
 
         DB::commit();
 

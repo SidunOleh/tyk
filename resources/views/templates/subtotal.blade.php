@@ -4,7 +4,7 @@
         <div class="subtotal-list">
             <div class="subtotal-item">
                 <p class="position">Проміжний підсумок</p>
-                <p class="sum">{{ $cart->formattedTotal() }}</p>
+                <p class="sum">{{ format_price($cart->total()) }}</p>
             </div>
             <div class="subtotal-item">
                 <p class="position">Доставка</p>
@@ -12,7 +12,7 @@
             </div>
             <div class="subtotal-item">
                 <p class="position">Загалом</p>
-                <p class="sum">{{ $cart->formattedTotal() }}</p>
+                <p class="sum">{{ format_price($cart->total()) }}</p>
             </div>
         </div>
         @if ($cart->items)

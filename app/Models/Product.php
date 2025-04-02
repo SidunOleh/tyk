@@ -71,11 +71,6 @@ class Product extends Model
         }
     }
 
-    public function formattedPrice(string $symb = '₴'): string
-    {
-        return number_format($this->price, 2) . $symb;
-    }
-
     public function imageUrl(): string
     {
         return $this->image ?: asset(self::PLACEHOLDER_IMAGE);

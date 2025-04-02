@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clients;
 
+use App\DTO\Clients\UpdatePersonalInfoDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clients\UpdatePersonalInfoRequest;
 use App\Services\Clients\ClientService;
@@ -18,7 +19,13 @@ class UpdatePersonalInfoController extends Controller
 
     public function __invoke(UpdatePersonalInfoRequest $request)
     {
-        $this->clientService->updatePersonalInfo(Auth::guard('web')->user(), $request);
+        $this->clientService->updatePersonalInfo(
+            Auth::guard('web')->user(), 
+            new UpdatePersonalInfoDTO(
+                $request->full_name,
+                $request->phone
+            )
+        );
 
         return response(['message' => 'OK',]);
     }

@@ -97,7 +97,7 @@
                         Проміжний підсумок
                     </p>
                     <p class="sum">
-                        {{ $cart->formattedTotal() }}
+                        {{ format_price($cart->total()) }}
                     </p>
                 </div>
                 <div class="subtotal-item">
@@ -113,7 +113,7 @@
                         Загалом
                     </p>
                     <p class="sum">
-                        {{ $cart->formattedTotal() }}
+                        {{ format_price($cart->total()) }}
                     </p>
                 </div>
                 <p class="remark">

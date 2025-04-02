@@ -14,15 +14,6 @@ class CourierResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'phone' => $this->phone,
-            'tg' => $this->tg,
-            'vehicles' => $this->vehicles,
-            'tg_link' => $this->tgLink(),
-            'history' => $this->history,
-        ];
+        return parent::toArray($request);
     }
 }

@@ -39,7 +39,7 @@ class UpdateRequest extends FormRequest
             'details.food_to.*.address' => 'required_if:service,Доставка їжі|string',
             'details.food_to.*.lat' => 'required_if:service,Доставка їжі|numeric|between:-90,90',
             'details.food_to.*.lng' => 'required_if:service,Доставка їжі|numeric|between:-180,180',
-            'details.delivery_time' => 'date_format:Y-m-d H:i:s|nullable',
+            'details.cooking_time' => 'date_format:Y-m-d H:i:s|nullable',
             'order_items' => 'required_if:service,Доставка їжі|array|min:1',
             'order_items.*.name' => 'required_if:service,Доставка їжі|string',
             'order_items.*.amount' => 'required_if:service,Доставка їжі|numeric|min:0',

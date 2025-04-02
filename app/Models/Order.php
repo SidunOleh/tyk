@@ -97,6 +97,21 @@ class Order extends Model
 
     public const DEFAULT_DURATION = 30;
 
+    public const SHIPPING_TYPES = [
+        'Посилка з пошти',
+        'Посилка з маршрутки',
+        'Закуп продуктів',
+        'Вручення квітів/подарунків',
+        'Забрати замовлення',
+        'Набрати води',
+        'Набрати бензин',
+        'Розвіз зелені',
+        'Розвіз хліб',
+        'Вантажні перевезення',
+        'Тверезий водій',
+        'Прикурити авто',
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (self $order) {
@@ -247,16 +262,6 @@ class Order extends Model
         return $this->belongsTo(Courier::class);
     }
 
-    public function totalFormatted(string $symb = '₴'): string
-    {
-        return number_format($this->total, 2) . $symb;
-    }
-    
-    public function bonusesFormatted(string $symb = '₴'): string
-    {
-        return number_format($this->bonuses, 2) . $symb;
-    } 
-
     public function useBonuses(): bool
     {
         if (! $this->client->hasEnouphBonuses(self::SPEND_BONUS_AMOUNT)) {
@@ -264,9 +269,9 @@ class Order extends Model
         }
 
         $bonuses = $this->total < self::SPEND_BONUS_AMOUNT ? $this->total : self::SPEND_BONUS_AMOUNT;
+        
         $this->client->removeBonus($bonuses);
-        $this->update(['bonuses' => $bonuses]);
 
-        return true;
+        return $this->update(['bonuses' => $bonuses]);
     }
 }

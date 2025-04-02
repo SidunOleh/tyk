@@ -2,7 +2,7 @@
 
 namespace App\Services\Orders;
 
-use App\Http\Requests\Orders\OrderCarRequest;
+use App\DTO\Orders\OrderCarDTO;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
@@ -87,42 +87,39 @@ class ShippingService extends OrderService
         
     }
 
-    public function orderCar(OrderCarRequest $request): Order
+    public function orderCar(OrderCarDTO $dto, Client $client): Order
     {
         DB::beginTransaction();
 
-        $data = $request->validated();
+        $time = "{$dto->date} {$dto->time}:00";
 
-        $time = "{$data['date']} {$data['time']}:00";
-
-        $details['shipping_from'] = $data['from'];
-        $details['shipping_to'] = $data['to'];
-        $details['shipping_type'] = $data['shipping_type'] ?? '';
+        $details['shipping_from'] = $dto->from;
+        $details['shipping_to'] = $dto->to;
+        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
+        
+        $details['shipping_type'] = $dto->shippingType;
 
         $shippingPrice = $this->priceService->calcForRoute([
-            'service' => $data['service'],
-            'route' => [$data['from'], ...$data['to'],],
-            'courier_service' => $data['shipping_type'] ?? '',
+            'service' => $dto->service,
+            'route' => [$dto->from, ...$dto->to,],
+            'courier_service' => $dto->shippingType ?? '',
         ]);
         $total = $shippingPrice;
 
-        $client = auth('web')->user();
-        $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
-
         $order = Order::create([
-            'type' => $data['service'],
+            'type' => $dto->service,
             'time' => $time,
             'duration' => Order::DEFAULT_DURATION,
             'status' => Order::CREATED,
             'client_id' => $client->id,
-            'payment_method' => $data['payment_method'],
-            'notes' => $data['comment'],
+            'payment_method' => $dto->paymentMethod,
+            'notes' => $dto->comment,
             'shipping_price' => $shippingPrice,
             'total' => $total,
             'details' => $details,
         ]);
 
-        if ($data['use_bonuses']) {
+        if ($dto->useBonuses) {
             $order->useBonuses();
         }
 

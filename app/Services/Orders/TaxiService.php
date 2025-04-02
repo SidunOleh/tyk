@@ -2,7 +2,7 @@
 
 namespace App\Services\Orders;
 
-use App\Http\Requests\Orders\OrderCarRequest;
+use App\DTO\Orders\OrderCarDTO;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
@@ -85,40 +85,36 @@ class TaxiService extends OrderService
  
     }
 
-    public function orderCar(OrderCarRequest $request): Order
+    public function orderCar(OrderCarDTO $dto, Client $client): Order
     {
         DB::beginTransaction();
 
-        $data = $request->validated();
+        $time = "{$dto->date} {$dto->time}:00";
 
-        $time = "{$data['date']} {$data['time']}:00";
-
-        $details['taxi_from'] = $data['from'];
-        $details['taxi_to'] = $data['to'];
-
+        $details['taxi_from'] = $dto->from;
+        $details['taxi_to'] = $dto->to;
+        $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
+        
         $shippingPrice = $this->priceService->calcForRoute([
-            'service' => $data['service'],
-            'route' => [$data['from'], ...$data['to'],],
+            'service' => $dto->service,
+            'route' => [$dto->from, ...$dto->to,],
         ]);
         $total = $shippingPrice;
 
-        $client = auth('web')->user();
-        $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
-
         $order = Order::create([
-            'type' => $data['service'],
+            'type' => $dto->service,
             'time' => $time,
             'duration' => Order::DEFAULT_DURATION,
             'status' => Order::CREATED,
             'client_id' => $client->id,
-            'payment_method' => $data['payment_method'],
-            'notes' => $data['comment'],
+            'payment_method' => $dto->paymentMethod,
+            'notes' => $dto->comment,
             'shipping_price' => $shippingPrice,
             'total' => $total,
             'details' => $details,
         ]);
 
-        if ($data['use_bonuses']) {
+        if ($dto->useBonuses) {
             $order->useBonuses();
         }
 

@@ -3,7 +3,7 @@
 @include('templates.cart', ['cart' => $cart])
 
 <div class="upsells-wrapper">
-@include('templates.upsells', ['cart' => $cart])
+@include('templates.upsells', ['upsells' => $upsells])
 </div>
 
 @include('templates.subtotal', ['cart' => $cart])

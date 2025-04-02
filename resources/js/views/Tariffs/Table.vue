@@ -21,16 +21,21 @@
                 <a-descriptions-item label="Назва">
                     {{ record.name }}
                 </a-descriptions-item>
-                <a-descriptions-item label="Фіксований">
-                    {{ record.fixed ? 'Так' : 'Ні' }}
+                <a-descriptions-item label="Тип">
+                    {{ record.type }}
                 </a-descriptions-item>
                 <a-descriptions-item 
-                    v-if="record.fixed"
+                    v-if="record.type == 'Фіксований' ||record.type == 'Змішаний'"
                     label="Фіксована ціна">
                     {{ formatPrice(record.fixed_price) }}
                 </a-descriptions-item>
                 <a-descriptions-item 
-                    v-if="! record.fixed"
+                    v-if="record.type == 'Змішаний'"
+                    label="Фіксований до км">
+                    {{ record.fixed_up_to_km }}
+                </a-descriptions-item>
+                <a-descriptions-item 
+                    v-if="record.type == 'За км' || record.type == 'Змішаний'"
                     label="Ціна за км">
                     {{ formatPrice(record.per_km) }}
                 </a-descriptions-item>
@@ -93,15 +98,19 @@
                 {{ record.name }}
             </template>
 
-            <template v-if="column.key === 'fixed'">
-                {{ record.fixed ? 'Так' : 'Ні' }}
+            <template v-if="column.key === 'type'">
+                {{ record.type }}
             </template>
 
-            <template v-if="column.key === 'fixed_price' && record.fixed">
+            <template v-if="column.key === 'fixed_price' && (record.type == 'Фіксований' || record.type == 'Змішаний')">
                 {{ formatPrice(record.fixed_price) }}
             </template>
 
-            <template v-if="column.key === 'per_km' && ! record.fixed">
+            <template v-if="column.key === 'fixed_up_to_km' && record.type == 'Змішаний'">
+                {{ record.fixed_up_to_km }} км
+            </template>
+
+            <template v-if="column.key === 'per_km' && (record.type == 'За км' || record.type == 'Змішаний')">
                 {{ formatPrice(record.per_km) }}
             </template>
 
@@ -175,12 +184,17 @@ export default {
                     key: 'name',
                 },
                 {
-                    title: 'Фіксований',
-                    key: 'fixed',
+                    title: 'Тип',
+                    key: 'type',
                 },
                 {
                     title: 'Фіксована ціна',
                     key: 'fixed_price',
+                    sorter: true,
+                },
+                {
+                    title: 'Фіксований до км',
+                    key: 'fixed_up_to_km',
                     sorter: true,
                 },
                 {
