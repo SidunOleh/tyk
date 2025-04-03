@@ -227,7 +227,7 @@ class CategoryService extends Service
 
     public function zaklady(): Collection
     {
-        $zaklady = Category::zaklad()->visible()->get();
+        $zaklady = Category::with('tags')->zaklad()->visible()->get();
 
         return $zaklady;
     }
