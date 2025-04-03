@@ -45,11 +45,9 @@ class Tariff extends Model
         } elseif ($this->type == Tariff::PER_KM) {
             return (int) $this->per_km * $km;
         } elseif ($this->type == Tariff::MIXED) {
-            if ($km > $this->fixed_up_to_km) {
-                return (int) $this->per_km * $km;
-            } else {
-                return (int) $this->fixed_price;
-            }
+            return ($km > $this->fixed_up_to_km
+                ? ($km - $this->fixed_up_to_km) * $this->per_km
+                : 0) + $this->fixed_price;
         } else {
             throw new UnexpectedTariffTypeException();
         }
