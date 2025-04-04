@@ -20,7 +20,7 @@ class OrderCarController extends Controller
                 $request->date,
                 $request->time,
                 $request->shipping_type,
-                $request->comment,
+                $request->notes,
                 $request->payment_method,
                 $request->use_bonuses
             ), 
