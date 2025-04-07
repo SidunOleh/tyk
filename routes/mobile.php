@@ -7,6 +7,7 @@ use App\Http\Controllers\Mobile\Auth\LogOutController;
 use App\Http\Controllers\Mobile\Auth\SendCodeController;
 use App\Http\Controllers\Mobile\Cart\GetUpsellsController;
 use App\Http\Controllers\Mobile\Client\AddAddressController;
+use App\Http\Controllers\Mobile\Client\DeleteAddressController;
 use App\Http\Controllers\Mobile\Client\UpdatePersonalInfoController;
 use App\Http\Controllers\Mobile\Order\CheckoutController;
 use App\Http\Controllers\Mobile\Order\GetShippingTypesController;
@@ -35,6 +36,8 @@ Route::prefix('/client')
         ->name('update');
     Route::post('/addresses', AddAddressController::class)
         ->name('addresses.add');
+    Route::delete('/addresses', DeleteAddressController::class)
+        ->name('addresses.delete');
     Route::delete('/', DeleteController::class)
         ->name('delete');
 });
