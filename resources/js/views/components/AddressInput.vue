@@ -32,7 +32,7 @@ export default {
                 componentRestrictions: {
                     country: 'ua',
                 },
-                types: ['geocode'],
+                // types: ['geocode'],
                 bounds: bounds,
                 strictBounds: true,
             }

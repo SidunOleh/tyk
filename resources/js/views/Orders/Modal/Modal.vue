@@ -551,7 +551,9 @@ export default {
 Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
 Сума замовлення: ${formatPrice(this.subtotal)}
 Сума за доставку: ${formatPrice(this.data.shipping_price)}
-Загальна сума до оплати: ${formatPrice(this.total)}`
+Загальна сума: ${formatPrice(this.total)}
+Бонуси: ${formatPrice(this.data.bonuses)}
+До оплати: ${formatPrice(this.total - this.data.bonuses)}`
         },
         shippingText() {
             return `Кур’єр №${this.data.number}
@@ -565,7 +567,9 @@ export default {
 
 Метод оплати: ${this.data.payment_method ?? ''}
 Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
-Загальна сума до оплати: ${formatPrice(this.total)}`
+Загальна сума: ${formatPrice(this.total)}
+Бонуси: ${formatPrice(this.data.bonuses)}
+До оплати: ${formatPrice(this.total - this.data.bonuses)}`
         },
         taxiText() {
             return `Таксі №${this.data.number}
@@ -577,7 +581,9 @@ export default {
 
 Метод оплати: ${this.data.payment_method ?? ''}
 Статус оплати: ${this.data.paid ? 'Оплачено' : 'Не оплачене'}
-Загальна сума до оплати: ${formatPrice(this.total)}`
+Загальна сума: ${formatPrice(this.total)}
+Бонуси: ${formatPrice(this.data.bonuses)}
+До оплати: ${formatPrice(this.total - this.data.bonuses)}`
         },
         async calcShippingPrice() {
             const request = {

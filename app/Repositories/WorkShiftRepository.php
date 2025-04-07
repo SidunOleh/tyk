@@ -118,7 +118,7 @@ class WorkShiftRepository
             ->additional_costs;
 
         $stat['to_returned'] = (float) DB::table('orders')
-            ->select(DB::raw("coalesce(sum(total), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
+            ->select(DB::raw("coalesce(sum(total - bonuses), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
