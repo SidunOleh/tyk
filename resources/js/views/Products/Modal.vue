@@ -67,12 +67,12 @@
             </a-form-item>
 
             <a-form-item
-                label="Упакування"
+                label="Пакування"
                 has-feedback
                 :validate-status="errors['packaging'] ? 'error' : ''"
                 :help="errors.packaging">
                 <a-select
-                    placeholder="Виберіть упакування"
+                    placeholder="Виберіть пакування"
                     mode="multiple"
                     :options="packagingOptions"
                     v-model:value="data.packaging"/>
