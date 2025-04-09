@@ -812,7 +812,7 @@ $('.reviews-list').slick({
 
 $('.home-eaterie .eaterie-filters').slick({
     slidesToShow: 7,
-    slidesToScroll: 2,
+    slidesToScroll: 1,
     arrows: false,
     dots: false,
     infinite: false,
