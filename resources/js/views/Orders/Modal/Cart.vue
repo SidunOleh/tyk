@@ -24,7 +24,7 @@
                 v-model:value="products.selected"
                 @select="addToCart">
             </a-select>
-    </a-flex>
+        </a-flex>
     </a-form-item>
 
     <a-list
@@ -44,6 +44,9 @@
                 <a-list-item-meta>
                     <template #title>
                         {{ item.name }} - <b>{{ item.product?.categories?.find(category => category.parent_id === null)?.name }}</b> x {{ item.quantity }}, {{ formatPrice(item.amount * item.quantity) }}
+                        <div style="font-size: 12px;">
+                            пакування: {{ formatPrice(packagingAmount(item)) }}
+                        </div>
                     </template>
                 </a-list-item-meta>
 
@@ -52,7 +55,7 @@
                         <a-button 
                             style="width: 25px;" 
                             size="small"
-                            @click="item.quantity > 1 && item.quantity--">
+                            @click="changeQuantity(item, item.quantity-1)">
                             -
                         </a-button>
                         <a-input
@@ -64,7 +67,7 @@
                         <a-button 
                             style="width: 25px;" 
                             size="small"
-                            @click="item.quantity++">
+                            @click="changeQuantity(item, item.quantity+1)">
                             +
                         </a-button>
                     </a-flex>
@@ -125,7 +128,7 @@ export default {
             })
         },
         subtotal() {
-            return this.orderItems.reduce((acc, item) => acc += item.quantity * item.amount, 0)
+            return this.orderItems.reduce((acc, item) => acc += item.quantity * item.amount + this.packagingAmount(item), 0)
         },
     },
     methods: {
@@ -167,15 +170,28 @@ export default {
         addToCart(productId) {
             this.products.data.map(product => {
                 if (product.id == productId) {
-                    this.orderItems.push({
-                        name: product.name,
-                        quantity: 1,
-                        amount: product.price,
-                        product_id: product.id,
-                        product: product,
-                    })
+                    this.orderItems.push(this.makeOrderItemFromProduct(product))
                 }
             })
+        },
+        makeOrderItemFromProduct(product) {
+            return {
+                name: product.name,
+                quantity: 1,
+                amount: product.price,
+                product_id: product.id,
+                product: product,
+                packaging: product.packaging_products?.map(product => this.makeOrderItemFromProduct(product)) ?? []
+            }
+        },
+        packagingAmount(orderItem) {
+            return orderItem.packaging.reduce((acc, item) => acc += item.amount * item.quantity, 0)
+        },
+        changeQuantity(orderItem, quantity) {
+            if (quantity > 0) {
+                orderItem.quantity = quantity
+                orderItem.packaging.map(item => item.quantity = quantity)
+            }
         },
         removeFromCart(i) {
             this.orderItems.splice(i, 1)

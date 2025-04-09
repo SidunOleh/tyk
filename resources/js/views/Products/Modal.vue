@@ -66,6 +66,18 @@
                     @change="checked => data.categories = checked.map(i => i.value)"/>
             </a-form-item>
 
+            <a-form-item
+                label="Упакування"
+                has-feedback
+                :validate-status="errors['packaging'] ? 'error' : ''"
+                :help="errors.packaging">
+                <a-select
+                    placeholder="Виберіть упакування"
+                    mode="multiple"
+                    :options="packagingOptions"
+                    v-model:value="data.packaging"/>
+            </a-form-item>
+
             <a-form-item 
                 label="Інгредієнти"
                 has-feedback
@@ -121,6 +133,7 @@ export default {
         'action',
         'item',
         'categories',
+        'packaging',
     ],
     components: {
         Upload,
@@ -133,6 +146,10 @@ export default {
                 regular_price: '',
                 short_description: '',
                 categories: [],
+                packaging: [],
+                ingredients: '',
+                weight: '',
+                description: '',
             },
             errors: {},
             loading: false,
@@ -144,6 +161,14 @@ export default {
             
             return options
         },
+        packagingOptions() {
+            return this.packaging.map(product => {
+                return {
+                    label: product.name,
+                    value: product.id,
+                }
+            })
+        },
     },      
     methods: {
         slugify,
@@ -151,7 +176,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.create(this.data)
+                await api.create(this.data)
                 message.success('Успішно створено.')
                 this.$emit('create')
                 this.$emit('update:open', false)
@@ -169,7 +194,7 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.edit(this.data.id, this.data)
+                await api.edit(this.data.id, this.data)
                 message.success('Успішно збережено.')
                 this.$emit('edit')
             } catch (err) {
@@ -204,6 +229,7 @@ export default {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
             this.data.categories = this.data.categories.map(category => category.id)
+            this.data.packaging = this.data.packaging_products.map(product => product.id)
         }
     },
 }

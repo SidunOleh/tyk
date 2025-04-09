@@ -18,6 +18,7 @@
         title="Створення товару"
         action="create"
         :categories="categories"
+        :packaging="packaging"
         v-model:open="create.open"
         @create="$refs.table.updateData()"/>
 
@@ -26,6 +27,7 @@
         title="Редагування товару"
         action="edit"
         :categories="categories"
+        :packaging="packaging"
         :item="edit.record"
         v-model:open="edit.open"
         @edit="$refs.table.updateData()"/>
@@ -64,6 +66,7 @@ export default {
                 record: null,
             },
             categories: [],
+            packaging: [],
         }
     },
     methods: {
@@ -75,9 +78,17 @@ export default {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
+        async fetchPackaging() {
+            try {
+                this.packaging = await api.getPackaging() 
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
     },
     mounted() {
         this.fetchAllCategories()
+        this.fetchPackaging()
     },
 }
 </script>

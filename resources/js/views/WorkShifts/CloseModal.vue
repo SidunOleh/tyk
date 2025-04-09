@@ -37,17 +37,17 @@
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ data.food_shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.food_shipping_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.food_shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
@@ -57,17 +57,17 @@
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ data.shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.shipping_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
@@ -77,17 +77,17 @@
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ data.taxi_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.taxi_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(data.taxi_total) }}
                 </a-card-grid>
                 <a-card-grid 
@@ -97,17 +97,17 @@
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ totalCount }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(totalBonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
-                    :hoverable="false">
+                    :hoverable="true">
                     {{ formatPrice(totalTotal) }}
                 </a-card-grid>
             </a-card>

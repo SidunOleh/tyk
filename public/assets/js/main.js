@@ -809,3 +809,48 @@ $('.reviews-list').slick({
         },
     ],
 })
+
+$('.home-eaterie .eaterie-filters').slick({
+    slidesToShow: 7,
+    slidesToScroll: 2,
+    arrows: false,
+    dots: false,
+    infinite: false,
+    responsive: [{
+            breakpoint: 1250,
+            settings: {
+                slidesToShow: 6,
+            },
+        },
+        {
+            breakpoint: 1100,
+            settings: {
+                slidesToShow: 5,
+            },
+        },
+        {
+            breakpoint: 950,
+            settings: {
+                slidesToShow: 4,
+            },
+        },
+        {
+            breakpoint: 800,
+            settings: {
+                slidesToShow: 3,
+            },
+        },
+        {
+            breakpoint: 650,
+            settings: {
+                slidesToShow: 2,
+            },
+        },
+        {
+            breakpoint: 500,
+            settings: {
+                slidesToShow: 1,
+            },
+        },
+    ],
+})

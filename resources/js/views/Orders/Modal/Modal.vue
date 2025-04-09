@@ -359,10 +359,11 @@ export default {
                 }
             })
         },
+        packagingPrice() {
+            return this.data.order_items.reduce((acc, item) => acc += item.packaging.reduce((acc, item) => acc += item.amount * item.quantity, 0), 0)
+        },
         subtotal() {
-            return this.data.order_items?.reduce((acc, item) => {
-                return acc += item.quantity * item.amount
-            }, 0)
+            return this.data.order_items?.reduce((acc, item) => acc += item.quantity * item.amount, 0) + this.packagingPrice
         },
         total() {
            return this.subtotal + this.data.shipping_price + this.data.additional_costs
@@ -399,9 +400,12 @@ export default {
         setData(data) {
             data = JSON.parse(JSON.stringify(data))
 
-            this.clients.data = [data.client]
+            if (data.client.id != this.selectedClient?.id) {
+                this.clients.data = [data.client]
             
-            data.client_id = data.client.id
+                data.client_id = data.client.id
+            }
+
             data.service = data.type
 
             if (data.service == 'Доставка їжі') {
@@ -413,6 +417,7 @@ export default {
                         amount: item.amount,
                         product_id: item.product?.id,
                         product: item.product,
+                        packaging: item.packaging,
                     }
                 }) ?? []
             }
@@ -448,29 +453,16 @@ export default {
             }
         },
         repeatOrder(order) {
-            this.data.service = order.type
-            this.data.details = order.details
-
-            if (this.data.service == 'Доставка їжі') {
-                this.data.order_items = order.order_items
-                    ?.filter(item => item.product)
-                    ?.map(item => {
-                        return {
-                            id: item.id,
-                            name: item.product.name,
-                            quantity: item.quantity,
-                            amount: item.product.price,
-                            product_id: item.product.id,
-                            product: item.product,
-                        }
-                    }) ?? []
-            }
+            const data = JSON.parse(JSON.stringify(order))
+            data.use_bonuses = false
+            
+            this.setData(data)
         },
         async create() {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.create(this.prepareData())
+                await api.create(this.getData())
                 message.success('Успішно збережено.')
                 this.$emit('create')
                 this.$emit('update:open', false)
@@ -488,7 +480,8 @@ export default {
             try {
                 this.loading = true
                 this.errors = {}
-                const res = await api.edit(this.data.id, this.prepareData())
+                const res = await api.edit(this.data.id, this.getData())
+                this.setData(res.order)
                 message.success('Успішно збережено.')
                 this.$emit('edit', res.order)
             } catch (err) {
@@ -501,7 +494,7 @@ export default {
                 this.loading = false
             }
         },
-        prepareData() {
+        getData() {
             const data = JSON.parse(JSON.stringify(this.data))
 
             if (data.service != 'Доставка їжі') {
@@ -603,11 +596,9 @@ export default {
                 if (this.data.details.shipping_from) {
                     request.route.push(this.data.details.shipping_from)
                 }
-
                 if (this.data.details.shipping_to.length) {
                     request.route = request.route.concat(this.data.details.shipping_to)
                 }
-
                 request.courier_service = this.data.details.shipping_type
             }
 
@@ -615,17 +606,12 @@ export default {
                 if (this.data.details.taxi_from) {
                     request.route.push(this.data.details.taxi_from)
                 }
-
                 if (this.data.details.taxi_to.length) {
                     request.route = request.route.concat(this.data.details.taxi_to)
                 }
             }
 
-            if (
-                ! request.service ||
-                request.route.length < 2 ||
-                (this.data.service == 'Кур\'єр' && ! request.courier_service)
-            ) {
+            if (! request.service || request.route.length < 2) {
                 message.error('Заповніть необхідні поля.')
                 return
             }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\Orders\OrderService;
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -64,7 +63,6 @@ class Order extends Model
         'status',
         'paid',
         'payment_method',
-        // 'details',
         'client_id',
         'courier_id',
     ];
@@ -115,12 +113,7 @@ class Order extends Model
     protected static function booted(): void
     {
         static::creating(function (self $order) {
-            $day = now()->format('d');
-            
-            $count = Order::whereDate('created_at', now()->format('Y-m-d'))->count() + 1;
-            $count = str_pad($count, 3, '0', STR_PAD_LEFT);
-
-            $order->number = "{$day}{$count}";
+            $order->number = self::makeOrderNumber();
         });
 
         static::created(function (self $order) {
@@ -128,14 +121,6 @@ class Order extends Model
         });
 
         static::updated(function (self $order) {
-            if ($order->status == Order::DONE and $order->getOriginal('status') != Order::DONE) {
-                OrderService::make($order->type)->addBonusToClient($order);
-            }
-    
-            if ($order->status != Order::DONE and $order->getOriginal('status') == Order::DONE) {
-                OrderService::make($order->type)->removeBonusFromClient($order);
-            }
-
             $order->log('змінено', Auth::user(), $order->getUpdates());
         });
 
@@ -144,29 +129,22 @@ class Order extends Model
         });
     }
 
+    public static function makeOrderNumber(): string
+    {
+        $day = now()->format('d');
+            
+        $count = Order::whereDate('created_at', now()->format('Y-m-d'))->count() + 1;
+        $count = str_pad($count, 3, '0', STR_PAD_LEFT);
+
+        return "{$day}{$count}";
+    }
+
     public function getUpdates(): array
     {
         $data = [];
         foreach ($this->loggable as $field) {
-            if (
-                ($field != 'details' and $this->wasChanged($field)) or
-                ($field == 'details' and $this->wereDetailsChanged())
-            ) {
-                if ($field == 'details') {
-                    $prev = [];
-                    foreach ($this->getOriginal('details') as $name => $val) {
-                        $prev[] = __('validation.attributes.'.$name) . ' - ' . implode(', ', array_map(fn (array $address) => $address['address'], $val ?? []));
-                    }
-                    $prev = implode(', ', $prev);
-
-                    $curr = [];
-                    foreach ($this->details as $name => $val) {
-                        $curr[] =  __('validation.attributes.'.$name) . ' - ' . implode(', ', array_map(fn (array $address) => $address['address'], $val ?? []));
-                    }
-                    $curr = implode(', ', $curr);
-
-                    $data['деталі'] = "з {$prev} на {$curr}";
-                } elseif ($field == 'client_id') {
+            if ($this->wasChanged($field)) {
+                if ($field == 'client_id') {
                     $data[__('validation.attributes.'.$field)] = 
                         'з ' . Client::find($this->getOriginal('client_id'))->fullName . ' на ' . $this->client->fullName;
                 } elseif ($field == 'courier_id') {
@@ -180,16 +158,6 @@ class Order extends Model
         }
 
         return $data;
-    }
-
-    protected function wereDetailsChanged(): bool
-    {
-        $prev = $this->getOriginal('details');
-        $curr = $this->details;
-        ksort($prev);
-        ksort($curr);
-        
-        return json_encode($prev) != json_encode($curr);
     }
 
     public function scopeSearch(Builder $query, string $s): void
@@ -238,14 +206,22 @@ class Order extends Model
 
     public function orderItems(): HasMany
     {
+        return $this->hasMany(OrderItem::class)->whereNull('packaging_for');
+    }
+
+    public function allOrderItems(): HasMany
+    {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function courier(): BelongsTo
+    {
+        return $this->belongsTo(Courier::class);
     }
 
     public function updateAmount(): bool
     {
-        $this->refresh();
-
-        $subtotal = $this->orderItems->reduce(function (float $carry, OrderItem $orderItem) {
+        $subtotal = $this->allOrderItems->reduce(function (float $carry, OrderItem $orderItem) {
             return $carry + $orderItem->amount * $orderItem->quantity;
         }, 0);
 
@@ -255,11 +231,6 @@ class Order extends Model
             'subtotal' => $subtotal,
             'total' => $total,
         ]);
-    }
-
-    public function courier(): BelongsTo
-    {
-        return $this->belongsTo(Courier::class);
     }
 
     public function useBonuses(): bool

@@ -7,6 +7,7 @@ use App\Models\CategoryProduct;
 use App\Models\Product;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,6 +43,7 @@ class ProductService extends Service
         $categories = $request->query('categories', []);
 
         $models = $this->model::with('categories')
+            ->with('packagingProducts')
             ->orderBy($orderby, $order)
             ->search($s)
             ->categories($categories)
@@ -52,13 +54,19 @@ class ProductService extends Service
 
     public function searchInCategories(string $s, array $categoriesIds): Collection
     {        
-        return Product::with('categories')->search($s)->categories($categoriesIds)->get();
+        return Product::with([
+            'categories', 
+            'packagingProducts',
+        ])->search($s)->categories($categoriesIds)->get();
     }
 
     public function search(string $s): Collection
     {        
         if ($s) {
-            $products = Product::with('categories')->search($s)->get();
+            $products = Product::with([
+                'categories', 
+                'packagingProducts',
+            ])->search($s)->get();
         } else {
             $products = new Collection;
         }
@@ -75,8 +83,20 @@ class ProductService extends Service
 
         $upsells = Product::whereIn('id', $categories->pluck('upsells')->flatten())
             ->whereNotIn('id', $productIds)
-            ->get(); 
+            ->with([
+                'categories', 
+                'packagingProducts',
+            ])->get(); 
 
         return $upsells;
+    }
+
+    public function getPackaging(): Collection
+    {
+        $packaging = Product::whereHas('categories', function (Builder $q) {
+            $q->where('name', Category::PACKAGING_NAME);
+        })->get();
+
+        return $packaging;
     }
 }

@@ -18,13 +18,16 @@ class ShippingService extends OrderService
 
         $data = $request->validated();
 
+        $client = Client::find($data['client_id']);
+        
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
-        $details['shipping_type'] = $data['details']['shipping_type']; 
+        $details = [];
+
+        $details['shipping_type'] = $data['details']['shipping_type'];
+
         $details['shipping_from'] = $data['details']['shipping_from'];
         $details['shipping_to'] = $data['details']['shipping_to'];
-
-        $client = Client::find($data['client_id']);
         $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
 
         $order = Order::create([
@@ -41,6 +44,7 @@ class ShippingService extends OrderService
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
         ]);
+
         $order->updateAmount();
 
         if ($data['use_bonuses']) {
@@ -58,11 +62,14 @@ class ShippingService extends OrderService
 
         $data = $request->validated();
         
+        $client = Client::find($data['client_id']);
+
+        $details = [];
+
         $details['shipping_type'] = $data['details']['shipping_type']; 
+        
         $details['shipping_from'] = $data['details']['shipping_from'];
         $details['shipping_to'] = $data['details']['shipping_to'];
-
-        $client = Client::find($data['client_id']);
         $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
 
         $order->update([
@@ -77,6 +84,7 @@ class ShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
         ]);
+
         $order->updateAmount();
         
         DB::commit();
@@ -93,6 +101,8 @@ class ShippingService extends OrderService
 
         $time = "{$dto->date} {$dto->time}:00";
 
+        $details = [];
+
         $details['shipping_from'] = $dto->from;
         $details['shipping_to'] = $dto->to;
         $client->addAddresses([$details['shipping_from'], ...$details['shipping_to'],]);
@@ -104,7 +114,6 @@ class ShippingService extends OrderService
             'route' => [$dto->from, ...$dto->to,],
             'courier_service' => $dto->shippingType ?? '',
         ]);
-        $total = $shippingPrice;
 
         $order = Order::create([
             'type' => $dto->service,
@@ -115,9 +124,10 @@ class ShippingService extends OrderService
             'payment_method' => $dto->paymentMethod,
             'notes' => $dto->comment,
             'shipping_price' => $shippingPrice,
-            'total' => $total,
             'details' => $details,
         ]);
+
+        $order->updateAmount();
 
         if ($dto->useBonuses) {
             $order->useBonuses();

@@ -76,16 +76,19 @@ class WorkShiftRepository
         $stat = [];
         $stat['food_shipping_count'] = 0;
         $stat['food_shipping_total'] = 0;
+        $stat['food_shipping_bonuses'] = 0;
         $stat['shipping_count'] = 0;
         $stat['shipping_total'] = 0;
+        $stat['shipping_bonuses'] = 0;
         $stat['taxi_count'] = 0;
         $stat['taxi_total'] = 0;
+        $stat['taxi_bonuses'] = 0;
 
         $start = $driverWorkShift->start;
         $end = $driverWorkShift->end ?? now();
 
         $data = DB::table('orders')
-            ->select(DB::raw('type, count(*) count, sum(shipping_price) total'))
+            ->select(DB::raw('type, count(*) count, sum(shipping_price) total, sum(bonuses) bonuses'))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
@@ -104,9 +107,10 @@ class WorkShiftRepository
 
             $stat["{$type}_count"] = (int) $item->count;
             $stat["{$type}_total"] = (float) $item->total;
+            $stat["{$type}_bonuses"] = (float) $item->bonuses;
         }
         
-        $stat['additional_costs'] = (float) DB::table('orders')
+        $result = DB::table('orders')
             ->select(DB::raw('coalesce(sum(additional_costs), 0) additional_costs'))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
@@ -114,10 +118,10 @@ class WorkShiftRepository
                 $end->format('Y-m-d H:i:s'),
             ])
             ->whereNot('status', Order::CANCELED)
-            ->first()
-            ->additional_costs;
+            ->first();
+        $stat['additional_costs'] = (float) $result->additional_costs;
 
-        $stat['to_returned'] = (float) DB::table('orders')
+        $result = DB::table('orders')
             ->select(DB::raw("coalesce(sum(total - bonuses), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
@@ -126,8 +130,8 @@ class WorkShiftRepository
             ])
             ->where('payment_method', Order::CASH)
             ->whereNot('status', Order::CANCELED)
-            ->first()
-            ->to_returned;
+            ->first();
+        $stat['to_returned'] = $result->to_returned;
         
         return $stat;
     }
@@ -137,16 +141,19 @@ class WorkShiftRepository
         $stat = [];
         $stat['food_shipping_count'] = 0;
         $stat['food_shipping_total'] = 0;
+        $stat['food_shipping_bonuses'] = 0;
         $stat['shipping_count'] = 0;
         $stat['shipping_total'] = 0;
+        $stat['shipping_bonuses'] = 0;
         $stat['taxi_count'] = 0;
         $stat['taxi_total'] = 0;
+        $stat['taxi_bonuses'] = 0;
 
         $start = $dispatcherWorkShift->start;
         $end = $driverWorkShift->end ?? now();
 
         $data = DB::table('orders')
-            ->select(DB::raw('type, count(*) count, sum(total) total'))
+            ->select(DB::raw('type, count(*) count, sum(total) total, sum(bonuses) bonuses'))
             ->where('user_id', $dispatcherWorkShift->dispatcher_id)
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
@@ -164,6 +171,7 @@ class WorkShiftRepository
                     : 'taxi');
 
             $stat["{$type}_count"] = (int) $item->count;
+            $stat["{$type}_bonuses"] = (int) $item->bonuses;
             $stat["{$type}_total"] = (float) $item->total;
         }
         

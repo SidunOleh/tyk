@@ -47,6 +47,8 @@ class Category extends Model
 
     public const PLACEHOLDER_IMAGE = '/assets/img/placeholder.webp';
 
+    public const PACKAGING_NAME = 'Упакування';
+
     protected static function booted(): void
     {
         static::created(function (self $category) {

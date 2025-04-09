@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\Events\OrderStatusChanged;
 use App\Exceptions\UnexpectedOrderTypeException;
 use App\Models\Order;
 use App\Services\Price\PriceService;
@@ -35,11 +36,14 @@ abstract class OrderService extends Service
         $paid = $request->query('paid', []);
         $paid = array_map(fn ($paid) => $paid == 'true' ? true : false, $paid);
 
-        $models = $this->model::with('orderItems')
-            ->with('orderItems.product')
-            ->with('orderItems.product.categories')
-            ->with('client')
-            ->with('courier')
+        $models = $this->model::with([
+                'orderItems',
+                'orderItems.packaging',
+                'orderItems.product',
+                'orderItems.product.categories',
+                'client',
+                'courier',
+            ])
             ->orderBy($orderby, $order)
             ->search($s)
             ->types($types)
@@ -52,11 +56,14 @@ abstract class OrderService extends Service
 
     public function getBetween(string $start, string $end): Collection
     {
-        $orders = Order::with('orderItems')
-            ->with('orderItems.product')
-            ->with('orderItems.product.categories')
-            ->with('client')
-            ->with('courier')
+        $orders = Order::with([
+                'orderItems',
+                'orderItems.packaging',
+                'orderItems.product',
+                'orderItems.product.categories',
+                'client',
+                'courier',
+            ])
             ->betweenDate($start, $end)
             ->orderBy('created_at', 'DESC')
             ->get();
@@ -66,7 +73,11 @@ abstract class OrderService extends Service
 
     public function changeStatus(Order $order, string $status): void
     {
+        $oldStatus = $order->status;
+
         $order->update(['status' => $status]);
+
+        OrderStatusChanged::dispatch($order, $oldStatus);
     }
 
     public function changeCourier(Order $order, ?int $courierId): void
@@ -74,9 +85,10 @@ abstract class OrderService extends Service
         $order->update(['courier_id' => $courierId]);
     }
 
-    public function addBonusToClient(Order $order): void
+    public function addBonusesForOrder(Order $order): void
     {
         $bonuses = 0;
+
         $settings = $this->settingsService->get();
         if ($order->type == Order::FOOD_SHIPPING) {
             $bonuses = $settings['bonuses_food_shipping'];
@@ -87,13 +99,15 @@ abstract class OrderService extends Service
         }
 
         $order->client->addBonus($bonuses);
-        $order->add_bonuses = $bonuses;
-        $order->saveQuietly();
+
+        $order->update(['add_bonuses' => $bonuses]);
     }
 
-    public function removeBonusFromClient(Order $order): void
+    public function removeBonusesForOrder(Order $order): void
     {
         $order->client->removeBonus($order->add_bonuses, true);
+
+        $order->update(['add_bonuses' => 0]);
     }
 
     abstract public function repeat(Order $order): void;

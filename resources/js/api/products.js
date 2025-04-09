@@ -42,6 +42,15 @@ export default {
 
         return res.data
     },
+    async getPackaging() {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.get('/api/products/packaging')
+
+        return res.data
+    },
     async create(data) {
         if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')

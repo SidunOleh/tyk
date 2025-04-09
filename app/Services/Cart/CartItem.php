@@ -17,6 +17,11 @@ class CartItem
 
     public function amount(): float
     {
-        return $this->product->price * $this->quantity;
+        return ($this->product->price + $this->product->packagingPrice()) * $this->quantity;
+    }
+
+    public function packagingPrice(): float
+    {
+        return $this->product->packagingPrice();
     }
 }

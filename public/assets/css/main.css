@@ -7750,3 +7750,11 @@ body.no-scroll {
     text-decoration: none;
     color: black;
 }
+
+.delivery-types .wrapper {
+    min-height: 550px;
+}
+
+.home-eaterie .eaterie-filters .filter-item {
+    margin: 10px;
+}

@@ -18,12 +18,14 @@ class TaxiService extends OrderService
 
         $data = $request->validated();
 
+        $client = Client::find($data['client_id']);
+
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
+
+        $details = [];
 
         $details['taxi_from'] = $data['details']['taxi_from'];
         $details['taxi_to'] = $data['details']['taxi_to'];
-
-        $client = Client::find($data['client_id']);
         $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
 
         $order = Order::create([
@@ -40,6 +42,7 @@ class TaxiService extends OrderService
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
         ]);
+
         $order->updateAmount();
 
         if ($data['use_bonuses']) {
@@ -56,11 +59,13 @@ class TaxiService extends OrderService
         DB::beginTransaction();
 
         $data = $request->validated();
+
+        $client = Client::find($data['client_id']);
+
+        $details = [];
         
         $details['taxi_from'] = $data['details']['taxi_from'];
         $details['taxi_to'] = $data['details']['taxi_to'];
-
-        $client = Client::find($data['client_id']);
         $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
 
         $order->update([
@@ -75,6 +80,7 @@ class TaxiService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
         ]);
+
         $order->updateAmount();
 
         DB::commit();
@@ -91,6 +97,8 @@ class TaxiService extends OrderService
 
         $time = "{$dto->date} {$dto->time}:00";
 
+        $details = [];
+        
         $details['taxi_from'] = $dto->from;
         $details['taxi_to'] = $dto->to;
         $client->addAddresses([$details['taxi_from'], ...$details['taxi_to'],]);
@@ -99,7 +107,6 @@ class TaxiService extends OrderService
             'service' => $dto->service,
             'route' => [$dto->from, ...$dto->to,],
         ]);
-        $total = $shippingPrice;
 
         $order = Order::create([
             'type' => $dto->service,
@@ -110,9 +117,10 @@ class TaxiService extends OrderService
             'payment_method' => $dto->paymentMethod,
             'notes' => $dto->comment,
             'shipping_price' => $shippingPrice,
-            'total' => $total,
             'details' => $details,
         ]);
+
+        $order->updateAmount();
 
         if ($dto->useBonuses) {
             $order->useBonuses();

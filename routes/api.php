@@ -56,6 +56,7 @@ use App\Http\Controllers\Admin\Orders\StoreController as OrdersStoreController;
 use App\Http\Controllers\Admin\Orders\UpdateController as OrdersUpdateController;
 use App\Http\Controllers\Admin\Products\BulkDeleteController as ProductsBulkDeleteController;
 use App\Http\Controllers\Admin\Products\DeleteController as ProductsDeleteController;
+use App\Http\Controllers\Admin\Products\GetPackagingController;
 use App\Http\Controllers\Admin\Products\IndexController as ProductsIndexController;
 use App\Http\Controllers\Admin\Products\SearchController as ProductsSearchController;
 use App\Http\Controllers\Admin\Products\StoreController as ProductsStoreController;
@@ -156,6 +157,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('index');
             Route::get('/search', ProductsSearchController::class)
                 ->name('search');
+            Route::get('/packaging', GetPackagingController::class)
+                ->name('packaging');
             Route::post('/', ProductsStoreController::class)
                 ->name('store');
             Route::put('/{product}', ProductsUpdateController::class)

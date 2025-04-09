@@ -11,6 +11,7 @@
                     <tr class="cart-head">
                         <th class="col">Товар</th>
                         <th class="col">Ціна</th>
+                        <th class="col">Пакування</th>
                         <th class="col">Кількість</th>
                         <th class="col">Проміжний підсумок</th>
                         <th class="col"></th>
@@ -39,6 +40,9 @@
                         </td>
                         <td class="price">
                             {{ format_price($item->product->price) }}
+                        </td>
+                        <td class="price">
+                            {{ format_price($item->packagingPrice()) }}
                         </td>
                         <td class="quantity">
                             <div class="counter">

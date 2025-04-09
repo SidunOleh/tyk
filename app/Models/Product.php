@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+use Staudenmeir\EloquentJsonRelations\Relations\BelongsToJson;
 
 class Product extends Model
 {
-    use SoftDeletes, History;
+    use SoftDeletes, History, HasJsonRelationships;
 
     protected $fillable = [
         'id',
@@ -23,11 +25,13 @@ class Product extends Model
         'ingredients',
         'weight',
         'history',
+        'packaging',
     ];
 
     protected $casts = [
         'price' => 'float',
         'history' => 'array',
+        'packaging' => 'json',
     ];
 
     protected $loggable = [
@@ -57,6 +61,11 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    public function packagingProducts(): BelongsToJson
+    {
+        return $this->belongsToJson(Product::class, 'packaging');
+    }
+
     public function scopeSearch(Builder $query, string $s): void
     {
         $query->whereAny([
@@ -74,5 +83,10 @@ class Product extends Model
     public function imageUrl(): string
     {
         return $this->image ?: asset(self::PLACEHOLDER_IMAGE);
+    }
+
+    public function packagingPrice(): float
+    {
+        return $this->packagingProducts->reduce(fn (float $carry, $product) => $carry + $product->price, 0);
     }
 }

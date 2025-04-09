@@ -39,6 +39,8 @@ class UpdateRequest extends FormRequest
             'weight' => 'string|nullable',
             'categories' => 'array',
             'categories.*' => 'required|exists:categories,id',
+            'packaging' => 'array',
+            'packaging.*' => 'required|exists:products,id',
         ];
     }
 }
