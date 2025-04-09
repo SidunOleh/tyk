@@ -47,7 +47,7 @@ class Category extends Model
 
     public const PLACEHOLDER_IMAGE = '/assets/img/placeholder.webp';
 
-    public const PACKAGING_NAME = 'Упакування';
+    public const PACKAGING_NAME = 'Пакування';
 
     protected static function booted(): void
     {
