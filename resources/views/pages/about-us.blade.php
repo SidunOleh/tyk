@@ -38,13 +38,14 @@
     </div>
 </section>
 
+@if ($items = get_content_value('about_examples_items', []))
 <section class="examples">
     <div class="container">
         <h2 class="section_title">
             {!! get_content_value('about_exapmles_title') !!}
         </h2>
         <div class="examples-list">
-            @foreach (get_content_value('about_examples_items', []) as $item)
+            @foreach ($items as $item)
             <div class="examples-item">
                 <div class="img-card"><img src="{{ $item['img'] }}" alt="" /></div>
                 <div class="card">
@@ -83,6 +84,7 @@
     </div>
 
 </section>
+@endif
 
 @include('templates.app')
 
