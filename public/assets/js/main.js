@@ -520,7 +520,7 @@ $(document).on('click', '.addressData .delete', async function() {
     try {
         const el = $(this).closest('.addressData')
         loading(el)
-        await deleteAddress({ index: el.data('index') })
+        await deleteAddress({ address: el.data('address') })
         await updatePage()
     } finally {
         loading($(this).closest('.addressData'), false)

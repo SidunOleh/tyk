@@ -113,7 +113,7 @@ class Client extends Authenticatable implements ILogUser
     public function removeBonus(float $amount, bool $canBeMinus = false): bool
     {
         if ($amount > $this->bonuses and ! $canBeMinus) {
-            throw new NotEnoughBonusesException('client ' . $this->id);
+            throw new NotEnoughBonusesException($this->id);
         }
 
         return $this->update(['bonuses' => $this->bonuses - $amount]);

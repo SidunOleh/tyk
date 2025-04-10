@@ -52,11 +52,16 @@ class ClientService extends Service
         $client->addAddresses([$newAddress]);
     }
 
-    public function deleteAddress(Client $client, int $index): void
+    public function deleteAddress(Client $client, string $address): void
     {
         $addresses = $client->addresses;
 
-        unset($addresses[$index]);
+        foreach ($addresses as $i => $addressItem) {
+            if ($addressItem['address'] == $address) {
+                unset($addresses[$i]);
+                break;
+            }
+        }
 
         $client->update(['addresses' => $addresses]);
     }

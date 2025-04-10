@@ -20,7 +20,7 @@ class DeleteAddressController extends Controller
     {
         $client = Auth::guard('web')->user();
 
-        $this->clientService->deleteAddress($client, $request->index);
+        $this->clientService->deleteAddress($client, $request->address);
 
         return response(['message' => 'OK',]);
     }

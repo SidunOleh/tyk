@@ -2,7 +2,7 @@
     @foreach ($addresses ?? [] as $i => $address)
     <div 
         class="addressData" 
-        data-index="{{ $i }}">
+        data-address="{{ $address['address'] }}">
         <div>
             <span>{{ $address['address'] }}</span>
         </div>

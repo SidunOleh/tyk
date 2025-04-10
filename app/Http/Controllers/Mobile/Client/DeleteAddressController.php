@@ -18,7 +18,7 @@ class DeleteAddressController extends Controller
 
     public function __invoke(DeleteAddressRequest $request)
     {
-        $this->clientService->deleteAddress(Auth::user(), $request->index);
+        $this->clientService->deleteAddress(Auth::user(), $request->address);
 
         return response(['message' => 'OK']);
     }

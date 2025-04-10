@@ -22,7 +22,7 @@ class DeleteAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'index' => 'required|integer',
+            'address' => 'required|string',
         ];
     }
 }
