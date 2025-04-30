@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Price;
+namespace App\Http\Requests\Admin\CourierServices;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveSettingsRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,9 @@ class SaveSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'call' => 'required|numeric|min:0',
-            'stop' => 'required|numeric|min:0',
+            'name' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'visibility' => 'required|boolean',
         ];
     }
 }

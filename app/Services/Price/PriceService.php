@@ -6,6 +6,7 @@ use App\Http\Requests\Price\SaveSettingsRequest;
 use App\Models\Order;
 use App\Models\Region;
 use App\Models\Tariff;
+use App\Services\CourierServices\CourierServiceService;
 use App\Services\Google\MapsService;
 use App\Services\Options\OptionService;
 
@@ -14,6 +15,7 @@ class PriceService
     public function __construct(
         private MapsService $mapsService,
         private OptionService $optionService,
+        private CourierServiceService $courierServiceService,
     )
     {
         
@@ -95,9 +97,9 @@ class PriceService
         $price += $settings['stop'] * $stopsCount;
 
         if ($data['service'] == Order::SHIPPING) {
-            foreach ($settings['courier_services'] as $item) {
-                if ($item['service'] == $data['courier_service'] ?? '') {
-                    $price += $item['price'];
+            foreach ($this->courierServiceService->all() as $item) {
+                if ($item->name == $data['courier_service'] ?? '') {
+                    $price += $item->price;
                     break;
                 }
             }
@@ -113,13 +115,6 @@ class PriceService
         return [
             'call' => $settings['call'] ?? 0,
             'stop' => $settings['stop'] ?? 0,
-            'courier_services' => $settings['courier_services'] ?? array_map(
-                fn ($service) => [
-                    'service' => $service, 
-                    'price' => 0,
-                ],
-                config('app.courier_services') ?? []
-            ),
         ];
     }
 

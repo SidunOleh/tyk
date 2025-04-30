@@ -28,6 +28,8 @@ class Category extends Model
         'order',
         'visible',
         'upsells',
+        'start_hour',
+        'end_hour',
     ];
 
     protected $casts = [
@@ -35,6 +37,8 @@ class Category extends Model
         'order' => 'integer',
         'visible' => 'boolean',
         'upsells' => 'array',
+        'start_hour' => 'datetime:H:i:s',
+        'end_hour' => 'datetime:H:i:s',
     ];
 
     protected $loggable = [

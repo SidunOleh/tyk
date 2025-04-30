@@ -113,6 +113,30 @@
                     v-model:value="data.description"/>
             </a-form-item>
 
+            <a-form-item 
+                label="Початок роботи"
+                has-feedback
+                :validate-status="errors['start_hour'] ? 'error' : ''"
+                :help="errors.start_hour">
+                <a-time-picker
+                    style="width: 100%;" 
+                    v-model:value="data.start_hour" 
+                    format="HH:mm"
+                    value-format="HH:mm:ss" />
+            </a-form-item>
+
+            <a-form-item 
+                label="Кінець роботи"
+                has-feedback
+                :validate-status="errors['end_hour'] ? 'error' : ''"
+                :help="errors.end_hour">
+                <a-time-picker 
+                    style="width: 100%;"
+                    v-model:value="data.end_hour" 
+                    format="HH:mm"
+                    value-format="HH:mm:ss" />
+            </a-form-item>
+
             <a-button
                 type="primary"   
                 :loading="loading"
@@ -161,6 +185,8 @@ export default {
                 tags: [],
                 upsells: [],
                 description: '',
+                start_hour: null,
+                end_hour: null,
             },
             products: {
                 data: [],

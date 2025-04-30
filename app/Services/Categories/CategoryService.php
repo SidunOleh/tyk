@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\Categories\Tags\UpdateRequest;
 use App\Models\Category;
 use App\Models\CategoryProduct;
 use App\Models\CategoryTag;
+use App\Models\Product;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -230,5 +231,24 @@ class CategoryService extends Service
         $zaklady = Category::with('tags')->zaklad()->visible()->get();
 
         return $zaklady;
+    }
+
+    public function closedZaklady(array $productsIds): array
+    {
+        $closed = [];
+        $products = Product::whereIn('id', $productsIds)->get();
+        foreach ($products as $product) {
+            foreach ($product->zaklady as $zaklad) {
+                if (! $zaklad->start_hour or ! $zaklad->end_hour) {
+                    continue;
+                }
+
+                if (now()->lt($zaklad->start_hour) or now()->gt($zaklad->end_hour)) {
+                    $closed[] = $zaklad;
+                }
+            }
+        }
+
+        return $closed;
     }
 }

@@ -95,21 +95,6 @@ class Order extends Model
 
     public const DEFAULT_DURATION = 30;
 
-    public const SHIPPING_TYPES = [
-        'Посилка з пошти',
-        'Посилка з маршрутки',
-        'Закуп продуктів',
-        'Вручення квітів/подарунків',
-        'Забрати замовлення',
-        'Набрати води',
-        'Набрати бензин',
-        'Розвіз зелені',
-        'Розвіз хліб',
-        'Вантажні перевезення',
-        'Тверезий водій',
-        'Прикурити авто',
-    ];
-
     protected static function booted(): void
     {
         static::creating(function (self $order) {

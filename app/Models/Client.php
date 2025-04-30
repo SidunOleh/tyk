@@ -37,8 +37,14 @@ class Client extends Authenticatable implements ILogUser
         'full_name',
     ];
 
+    public const BONUS_AFTER_REGISTER = 40;
+
     protected static function booted(): void
     {
+        static::creating(function (self $client) {
+            $client->bonuses = self::BONUS_AFTER_REGISTER;
+        });
+
         static::created(function (self $client) {
             $client->log('створено', Auth::user());
         });

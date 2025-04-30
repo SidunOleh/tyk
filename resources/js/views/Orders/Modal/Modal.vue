@@ -78,6 +78,7 @@
                 :is="detailsComponent"
                 :client="selectedClient"
                 :details="data.details"
+                :shippingTypes="shippingTypes"
                 :errors="errors"/>
 
             <a-form-item 
@@ -258,6 +259,7 @@ import {
     formatPrice,
     copyToClipboard, 
 } from '../../../helpers/helpers'
+import courierServicesApi from '../../../api/courier-services'
 
 export default {
     props: [
@@ -308,6 +310,7 @@ export default {
                 'Карта',
                 'Готівка',
             ],
+            shippingTypes: [],
             errors: {},
             loading: false,
             calcingPrice: false,
@@ -397,6 +400,14 @@ export default {
     },
     methods: {
         formatPrice,
+        async fetchShippingTypes() {
+            try {
+                this.shippingTypes = await courierServicesApi.all()
+            } catch (err) {
+                console.log(err)
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
         setData(data) {
             data = JSON.parse(JSON.stringify(data))
 
@@ -447,6 +458,7 @@ export default {
                 const res = await clientsApi.getOrders(this.selectedClient.id)
                 this.selectedClient.orders = res.orders
             } catch (err) {
+                console.log(err)
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {
                 this.fetchingClientOrders = false
@@ -467,6 +479,7 @@ export default {
                 this.$emit('create')
                 this.$emit('update:open', false)
             } catch (err) {
+                console.log(err)
                 if (err?.response?.status == 422) {
                     this.errors = err?.response?.data?.errors
                 } else {
@@ -485,6 +498,7 @@ export default {
                 message.success('Успішно збережено.')
                 this.$emit('edit', res.order)
             } catch (err) {
+                console.log(err)
                 if (err?.response?.status == 422) {
                     this.errors = err?.response?.data?.errors
                 } else {
@@ -621,6 +635,7 @@ export default {
                 const data = await priceApi.calcForRoute(request)
                 this.data.shipping_price = data.price
             } catch (err) {
+                console.log(err)
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {
                 this.calcingPrice = false
@@ -628,6 +643,8 @@ export default {
         },
     },
     mounted() {
+        this.fetchShippingTypes()
+        
         if (this.item) {
             this.setData(this.item)
         }

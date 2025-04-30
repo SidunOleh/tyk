@@ -40,6 +40,8 @@ class UpdateRequest extends FormRequest
             'tags.*' => 'exists:category_tags,id',
             'upsells' => 'array',
             'upsells' => 'exists:products,id',
+            'start_hour' => 'date_format:H:i:s|nullable',
+            'end_hour' => 'date_format:H:i:s|nullable',
         ];
     }
 }

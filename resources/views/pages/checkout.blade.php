@@ -59,6 +59,8 @@
                         @endif
 
                     </div>
+
+                    <div class="error-txt"></div>
                 </section>
 
                 <section class="form-section">

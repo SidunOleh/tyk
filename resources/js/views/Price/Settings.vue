@@ -28,24 +28,6 @@
                     v-model:value="data.stop"/>
             </a-form-item>
 
-            <a-divider>
-                Кур'єрські послуги    
-            </a-divider>
-
-            <a-form-item
-                v-for="(item, i) in data.courier_services" 
-                :label="item.service"
-                :required="true"
-                has-feedback
-                :validate-status="errors[`courier_services.${i}.price`] ? 'error' : ''"
-                :help="errors[`courier_services.${i}.price`]">
-                <a-input-number
-                    style="width: 100%;"
-                    :placeholder="`Введіть ціну за ${item.service}`"
-                    :min="0"
-                    v-model:value="item.price"/>
-            </a-form-item>
-
             <a-button
                 type="primary"
                 :loading="loading"
@@ -55,20 +37,28 @@
 
         </a-form>
     </a-spin>
+
+    <a-divider>
+        Кур'єрські послуги    
+    </a-divider>
+
+    <CourierServicesList/>
 </template>
 
 <script>
 import { message } from 'ant-design-vue'
-import courierServices from '../../data/courierServices'
 import api from '../../api/price'
+import CourierServicesList from '../CourierServices/List.vue'
 
 export default {
+    components: {
+        CourierServicesList,
+    },
     data() {
         return {
             data: {
                 call: 0,
                 stop: 0,
-                courier_services: [],
             },
             errors: {},
             loading: false,
@@ -104,8 +94,6 @@ export default {
         },
     },
     mounted() {
-        this.data.courier_services = courierServices.map(service => {return {service, price: 0,}})
-
         this.fetchSettings()
     },
 }

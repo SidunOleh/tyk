@@ -60,6 +60,11 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+    
+    public function zaklady(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class)->whereNull('categories.parent_id');
+    }
 
     public function packagingProducts(): BelongsToJson
     {

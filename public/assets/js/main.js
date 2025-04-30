@@ -599,7 +599,6 @@ $('#checkout-form').on('submit', async function(e) {
         const res = await checkout($(this).serialize())
         location.href = `/zaversheno?order=${res.id}`
     } catch (err) {
-        console.error(err)
         showFormErrors($(this), err)
         window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {

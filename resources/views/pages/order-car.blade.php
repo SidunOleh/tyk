@@ -173,6 +173,7 @@
                                         selected>
                                         Тип доставки
                                     </option>
+
                                     <option 
                                         v-for="type in shippingTypes"
                                         :value="type">
@@ -583,20 +584,7 @@ const app = {
         payment_method: 'Готівка',
         use_bonuses: false,
     },
-    shippingTypes: [
-        'Посилка з пошти',
-        'Посилка з маршрутки',
-        'Закуп продуктів',
-        'Вручення квітів/подарунків',
-        'Забрати замовлення',
-        'Набрати води',
-        'Набрати бензин',
-        'Розвіз зелені',
-        'Розвіз хліб',
-        'Вантажні перевезення',
-        'Тверезий водій',
-        'Прикурити авто',
-    ],
+    shippingTypes: {{ Js::from($courierServices->pluck('name')) }},
     leftSide: 'form',
     price: null,
     openPanel: true,

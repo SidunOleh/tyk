@@ -39,7 +39,6 @@
 
 <script>
 import AddressSelect from '../../components/AddressSelect.vue'
-import shippingTypes from '../../../data/courierServices'
 
 export default {
     components: {
@@ -48,6 +47,7 @@ export default {
     props: [
         'details',
         'client',
+        'shippingTypes',
         'errors',
     ],
     data() {
@@ -57,9 +57,9 @@ export default {
     },
     computed: {
         shippingTypeOptions() {
-            return shippingTypes.map(shippingType => {
+            return this.shippingTypes.map(shippingType => {
                 return {
-                    value: shippingType,
+                    value: shippingType.name,
                 }
             })
         },

@@ -2,8 +2,8 @@
 
 namespace App\Services\Cart;
 
+use App\Exceptions\NotFoundCartDriver;
 use App\Models\Product;
-use Exception;
 
 abstract class Cart
 {
@@ -69,7 +69,7 @@ abstract class Cart
             case 'db':
                 return new CartDB;
             default:
-                throw new Exception('Not found driver.');
+                throw new NotFoundCartDriver();
         }
     }
 }

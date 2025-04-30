@@ -45,6 +45,10 @@ use App\Http\Controllers\Admin\Couriers\GetCurrentLocationsController;
 use App\Http\Controllers\Admin\Couriers\IndexController as CouriersIndexController;
 use App\Http\Controllers\Admin\Couriers\StoreController as CouriersStoreController;
 use App\Http\Controllers\Admin\Couriers\UpdateController as CouriersUpdateController;
+use App\Http\Controllers\Admin\CourierServices\DeleteController as CourierServicesDeleteController;
+use App\Http\Controllers\Admin\CourierServices\GetController as CourierServicesGetController;
+use App\Http\Controllers\Admin\CourierServices\StoreController as CourierServicesStoreController;
+use App\Http\Controllers\Admin\CourierServices\UpdateController as CourierServicesUpdateController;
 use App\Http\Controllers\Admin\Images\UploadController;
 use App\Http\Controllers\Admin\Orders\BulkDeleteController as OrdersBulkDeleteController;
 use App\Http\Controllers\Admin\Orders\ChangeCourierController;
@@ -384,6 +388,17 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('get');
             Route::post('/', SettingsSaveController::class)
                 ->name('save');
+        });
+
+        Route::prefix('/courier-services')->name('courier-services.')->middleware('has_role:адмін')->group(function () {
+            Route::get('/all', CourierServicesGetController::class)
+                ->name('all');
+            Route::post('/', CourierServicesStoreController::class)
+                ->name('store');
+            Route::put('/{courierService}', CourierServicesUpdateController::class)
+                ->name('update');
+            Route::delete('/{courierService}', CourierServicesDeleteController::class)
+                ->name('delete');
         });
     });
 });

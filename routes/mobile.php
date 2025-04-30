@@ -12,6 +12,7 @@ use App\Http\Controllers\Mobile\Client\UpdatePersonalInfoController;
 use App\Http\Controllers\Mobile\Order\CheckoutController;
 use App\Http\Controllers\Mobile\Order\GetShippingTypesController;
 use App\Http\Controllers\Mobile\Order\OrderCarController;
+use App\Http\Controllers\Mobile\Price\CalcForRouteController;
 use App\Http\Controllers\Mobile\Shop\CategoriesController;
 use App\Http\Controllers\Mobile\Shop\ProductsController;
 use App\Http\Controllers\Mobile\Shop\TagsController;
@@ -63,3 +64,5 @@ Route::post('/checkout', CheckoutController::class)
 Route::post('/order-car', OrderCarController::class)
     ->middleware(['auth:sanctum',])
     ->name('order-car');
+Route::post('/order-car/price', CalcForRouteController::class)
+    ->name('order-car.price');

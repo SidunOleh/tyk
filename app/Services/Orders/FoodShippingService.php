@@ -193,7 +193,7 @@ class FoodShippingService extends OrderService
             'type' => Order::FOOD_SHIPPING,
             'time' => $delivetyTime->format('Y-m-d H:i:s'),
             'duration' => Order::DEFAULT_DURATION,
-            'notes' => $validated['notes'] ?? '',
+            'notes' => $dto->notes,
             'status' => Order::CREATED,
             'client_id' => $client->id,
             'payment_method' => $dto->paymentMethod,

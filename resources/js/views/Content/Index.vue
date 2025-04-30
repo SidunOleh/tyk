@@ -66,7 +66,9 @@
                                 v-model:value="data.home_courier_title"/>
                         </a-form-item>
                         <a-form-item label="Елементи">
-                            <CourierItems :items="data.home_courier_items"/>
+                            <CourierItems 
+                                :items="data.home_courier_items"
+                                :courierServices="courierServices"/>
                         </a-form-item>
                     </a-tab-pane>
                     <a-tab-pane key="5" tab="Додаток">
@@ -155,6 +157,7 @@ import CourierItems from './CourierItems.vue'
 import StepItems from './StepItems.vue'
 import InfoItems from './InfoItems.vue'
 import ExampleItems from './ExampleItems.vue'
+import courierServicesApi from '../../api/courier-services'
 
 export default {
     components: {
@@ -193,6 +196,7 @@ export default {
                 about_examples_title: '',
                 about_examples_items: [],
             },
+            courierServices: [],
             loading: false,
         }
     },
@@ -208,17 +212,29 @@ export default {
                 this.loading = false
             }
         },
+        async fetch() {
+            try {
+                this.loading = true
+                const data = await api.fetch()
+                this.data = Object.assign(this.data, data)
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            } finally {
+                this.loading = false
+            }
+        },
+        async fetchShippingTypes() {
+            try {
+                this.courierServices = await courierServicesApi.all()
+            } catch (err) {
+                console.log(err)
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
     },
     async mounted() {
-        try {
-            this.loading = true
-            const data = await api.fetch()
-            this.data = Object.assign(this.data, data)
-        } catch (err) {
-            message.error(err?.response?.data?.message ?? err.message)
-        } finally {
-            this.loading = false
-        }
+        this.fetch()
+        this.fetchShippingTypes()
     },
 }
 </script>

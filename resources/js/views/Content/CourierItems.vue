@@ -101,7 +101,6 @@
 
 <script>
 import Upload from '../components/Upload.vue'
-import courierServices from '../../data/courierServices'
 
 export default {
     components: {
@@ -109,13 +108,14 @@ export default {
     },
     props: [
         'items', 
+        'courierServices',
     ],
     computed: {
         courierServiceOptions() {
-            return courierServices.map(service => {
+            return this.courierServices.map(service => {
                 return {
-                    label: service,
-                    value: service,
+                    label: service.name,
+                    value: service.name,
                 }
             })
         },
