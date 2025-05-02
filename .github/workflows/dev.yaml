@@ -1,0 +1,77 @@
+on:
+  push: 
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --optimize-autoloader
+
+      - run: |
+          cp .env.example .env
+          sed -i 's/DB_HOST=/DB_HOST=${{ secrets.DB_HOST }}/g' .env
+          sed -i 's/DB_PORT=/DB_PORT=${{ secrets.DB_PORT }}/g' .env
+          sed -i 's/DB_DATABASE=/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
+          sed -i 's/DB_USERNAME=/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
+          sed -i 's/ADMIN_DOMAIN=/ADMIN_DOMAIN=${{ secrets.ADMIN_DOMAIN }}/g' .env
+          sed -i 's/MAIL_HOST=/MAIL_HOST=${{ secrets.MAIL_HOST }}/g' .env
+          sed -i 's/MAIL_PORT=/MAIL_PORT=${{ secrets.MAIL_PORT }}/g' .env
+          sed -i 's/MAIL_USERNAME=/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g' .env
+          sed -i 's/MAIL_PASSWORD=/MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}"/g' .env
+          sed -i 's/TURBOSMS_API_KEY=/TURBOSMS_API_KEY="${{ secrets.TURBOSMS_API_KEY }}"/g' .env
+          sed -i 's/GOOGLE_MAPS_KEY=/GOOGLE_MAPS_KEY="${{ secrets.GOOGLE_MAPS_KEY }}"/g' .env
+          sed -i 's/MAPON_API_KEY=/MAPON_API_KEY="${{ secrets.MAPON_API_KEY }}"/g' .env
+          sed -i 's/PHONET_DOMAIN=/PHONET_DOMAIN="${{ secrets.PHONET_DOMAIN }}"/g' .env
+          sed -i 's/PHONET_API_KEY=/PHONET_API_KEY="${{ secrets.PHONET_API_KEY }}"/g' .env
+          sed -i 's/TG_BOT_USERNAME=/TG_BOT_USERNAME="${{ secrets.TG_BOT_USERNAME }}"/g' .env
+          sed -i 's/TG_BOT_TOKEN=/TG_BOT_TOKEN="${{ secrets.TG_BOT_TOKEN }}"/g' .env
+          sed -i 's|TG_BOT_WEBHOOK=|TG_BOT_WEBHOOK="${{ secrets.TG_BOT_WEBHOOK }}"|g' .env
+          
+      - run: php artisan key:generate
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - run: |
+          npm install
+          npm run build
+          rm -rf node_modules
+
+      - uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          source: './'
+          target: '/var/www/tyk'
+
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+              cd /var/www/tyk
+              chown -R www-data:www-data .
+              find . -type d -exec chmod 755 {} \;
+              chmod -R 775 storage bootstrap/cache
+              find . -type f -exec chmod 644 {} \;
+              php artisan migrate --force
+              php artisan storage:link
+              php artisan optimize:clear
+              php artisan config:cache
+              php artisan event:cache
+              php artisan route:cache
+              php artisan view:cache

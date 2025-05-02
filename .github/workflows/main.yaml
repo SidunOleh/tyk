@@ -17,24 +17,24 @@ jobs:
 
       - run: |
           cp .env.example .env
-          sed -i 's/DB_HOST=/DB_HOST=${{ secrets.DB_HOST }}/g' .env
-          sed -i 's/DB_PORT=/DB_PORT=${{ secrets.DB_PORT }}/g' .env
-          sed -i 's/DB_DATABASE=/DB_DATABASE=${{ secrets.DB_DATABASE }}/g' .env
-          sed -i 's/DB_USERNAME=/DB_USERNAME=${{ secrets.DB_USERNAME }}/g' .env
-          sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g' .env
-          sed -i 's/ADMIN_DOMAIN=/ADMIN_DOMAIN=${{ secrets.ADMIN_DOMAIN }}/g' .env
-          sed -i 's/MAIL_HOST=/MAIL_HOST=${{ secrets.MAIL_HOST }}/g' .env
-          sed -i 's/MAIL_PORT=/MAIL_PORT=${{ secrets.MAIL_PORT }}/g' .env
-          sed -i 's/MAIL_USERNAME=/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g' .env
-          sed -i 's/MAIL_PASSWORD=/MAIL_PASSWORD="${{ secrets.MAIL_PASSWORD }}"/g' .env
-          sed -i 's/TURBOSMS_API_KEY=/TURBOSMS_API_KEY="${{ secrets.TURBOSMS_API_KEY }}"/g' .env
-          sed -i 's/GOOGLE_MAPS_KEY=/GOOGLE_MAPS_KEY="${{ secrets.GOOGLE_MAPS_KEY }}"/g' .env
-          sed -i 's/MAPON_API_KEY=/MAPON_API_KEY="${{ secrets.MAPON_API_KEY }}"/g' .env
-          sed -i 's/PHONET_DOMAIN=/PHONET_DOMAIN="${{ secrets.PHONET_DOMAIN }}"/g' .env
-          sed -i 's/PHONET_API_KEY=/PHONET_API_KEY="${{ secrets.PHONET_API_KEY }}"/g' .env
-          sed -i 's/TG_BOT_USERNAME=/TG_BOT_USERNAME="${{ secrets.TG_BOT_USERNAME }}"/g' .env
-          sed -i 's/TG_BOT_TOKEN=/TG_BOT_TOKEN="${{ secrets.TG_BOT_TOKEN }}"/g' .env
-          sed -i 's|TG_BOT_WEBHOOK=|TG_BOT_WEBHOOK="${{ secrets.TG_BOT_WEBHOOK }}"|g' .env
+          sed -i 's/DB_HOST=/DB_HOST=${{ secrets.PROD_DB_HOST }}/g' .env
+          sed -i 's/DB_PORT=/DB_PORT=${{ secrets.PROD_DB_PORT }}/g' .env
+          sed -i 's/DB_DATABASE=/DB_DATABASE=${{ secrets.PROD_DB_DATABASE }}/g' .env
+          sed -i 's/DB_USERNAME=/DB_USERNAME=${{ secrets.PROD_DB_USERNAME }}/g' .env
+          sed -i 's/DB_PASSWORD=/DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}/g' .env
+          sed -i 's/ADMIN_DOMAIN=/ADMIN_DOMAIN=${{ secrets.PROD_ADMIN_DOMAIN }}/g' .env
+          sed -i 's/MAIL_HOST=/MAIL_HOST=${{ secrets.PROD_MAIL_HOST }}/g' .env
+          sed -i 's/MAIL_PORT=/MAIL_PORT=${{ secrets.PROD_MAIL_PORT }}/g' .env
+          sed -i 's/MAIL_USERNAME=/MAIL_USERNAME=${{ secrets.PROD_MAIL_USERNAME }}/g' .env
+          sed -i 's/MAIL_PASSWORD=/MAIL_PASSWORD="${{ secrets.PROD_MAIL_PASSWORD }}"/g' .env
+          sed -i 's/TURBOSMS_API_KEY=/TURBOSMS_API_KEY="${{ secrets.PROD_TURBOSMS_API_KEY }}"/g' .env
+          sed -i 's/GOOGLE_MAPS_KEY=/GOOGLE_MAPS_KEY="${{ secrets.PROD_GOOGLE_MAPS_KEY }}"/g' .env
+          sed -i 's/MAPON_API_KEY=/MAPON_API_KEY="${{ secrets.PROD_MAPON_API_KEY }}"/g' .env
+          sed -i 's/PHONET_DOMAIN=/PHONET_DOMAIN="${{ secrets.PROD_PHONET_DOMAIN }}"/g' .env
+          sed -i 's/PHONET_API_KEY=/PHONET_API_KEY="${{ secrets.PROD_PHONET_API_KEY }}"/g' .env
+          sed -i 's/TG_BOT_USERNAME=/TG_BOT_USERNAME="${{ secrets.PROD_TG_BOT_USERNAME }}"/g' .env
+          sed -i 's/TG_BOT_TOKEN=/TG_BOT_TOKEN="${{ secrets.PROD_TG_BOT_TOKEN }}"/g' .env
+          sed -i 's|TG_BOT_WEBHOOK=|TG_BOT_WEBHOOK="${{ secrets.PROD_TG_BOT_WEBHOOK }}"|g' .env
           
       - run: php artisan key:generate
 
@@ -49,18 +49,18 @@ jobs:
 
       - uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.PROD_SERVER_IP }}
+          username: ${{ secrets.PROD_SERVER_USERNAME }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
           port: 22
           source: './'
           target: '/var/www/tyk'
 
       - uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.PROD_SERVER_IP }}
+          username: ${{ secrets.PROD_SERVER_USERNAME }}
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
           port: 22
           script: |
               cd /var/www/tyk
