@@ -390,14 +390,18 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('save');
         });
 
-        Route::prefix('/courier-services')->name('courier-services.')->middleware('has_role:адмін')->group(function () {
+        Route::prefix('/courier-services')->name('courier-services.')->group(function () {
             Route::get('/all', CourierServicesGetController::class)
+                ->middleware('has_role:адмін,диспетчер')
                 ->name('all');
             Route::post('/', CourierServicesStoreController::class)
+                ->middleware('has_role:адмін')
                 ->name('store');
             Route::put('/{courierService}', CourierServicesUpdateController::class)
+                ->middleware('has_role:адмін')
                 ->name('update');
             Route::delete('/{courierService}', CourierServicesDeleteController::class)
+                ->middleware('has_role:адмін')
                 ->name('delete');
         });
     });
