@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Mobile\Order\CheckoutRequest;
 use App\Services\Categories\CategoryService;
 use App\Services\Orders\FoodShippingService;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -25,6 +26,8 @@ class CheckoutController extends Controller
         if ($closed = $this->categoryService->closedZaklady($productsIds)) {
             return response(['message' => implode(', ', array_map(fn ($zaklad) => $zaklad->name, $closed)) . ' закритий. Повторіть замовлення в робочі години.'], 400);
         }
+
+        Log::info('checkout', $request->validated());
 
         $order = $this->orderService->checkout(
             new CheckoutDTO(
