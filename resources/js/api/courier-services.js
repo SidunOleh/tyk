@@ -2,7 +2,7 @@ import { hasRole } from '../helpers/helpers'
 
 export default {
     async all() {
-        if (!hasRole(['адмін', ])) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')
         }
 
