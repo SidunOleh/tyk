@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           port: 22
           source: './'
-          target: '/www/tyk-tyk.biz'
+          target: '/var/www/tyktyk/data/www/tyk-tyk.biz'
 
       - uses: appleboy/ssh-action@master
         with:
@@ -63,7 +63,7 @@ jobs:
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           port: 22
           script: |
-              cd /www/tyk-tyk.biz
+              cd /var/www/tyktyk/data/www/tyk-tyk.biz
               chown -R tyktyk:tyktyk .
               find . -type d -exec chmod 755 {} \;
               chmod -R 775 storage bootstrap/cache
@@ -75,4 +75,3 @@ jobs:
               php-8.2 artisan event:cache
               php-8.2 artisan route:cache
               php-8.2 artisan view:cache
-              
