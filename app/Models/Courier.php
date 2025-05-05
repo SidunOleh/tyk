@@ -39,6 +39,10 @@ class Courier extends Model
         'vehicles',
     ];
 
+    protected $appends = [
+        'tg_link',
+    ];
+
     protected static function booted(): void
     {
         static::creating(function (self $courier) {
@@ -85,6 +89,13 @@ class Courier extends Model
         );
     }
 
+    protected function tgLink(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => 'https://t.me/'.config('services.tg.bot_username').'?start='.$attributes['tg_key'],
+        );
+    }
+
     public function scopeVehicles(Builder $query, array $vehicles): void
     {
         if ($vehicles) {
@@ -96,9 +107,4 @@ class Courier extends Model
     {
         return $this->hasMany(Order::class);
     } 
-
-    public function tgLink(): string
-    {
-        return 'https://t.me/'.config('services.tg.bot_username').'?start='.$this->tg_key;
-    }
 }
