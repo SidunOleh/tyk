@@ -20,4 +20,4 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-Options FollowSymLink
+Options FollowSymLinks
