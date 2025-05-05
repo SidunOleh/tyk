@@ -75,4 +75,3 @@ jobs:
               php-8.2 artisan event:cache
               php-8.2 artisan route:cache
               php-8.2 artisan view:cache
-              
