@@ -68,10 +68,10 @@ jobs:
               find . -type d -exec chmod 755 {} \;
               chmod -R 775 storage bootstrap/cache
               find . -type f -exec chmod 644 {} \;
-              php artisan migrate --force
-              php artisan storage:link
-              php artisan optimize:clear
-              php artisan config:cache
-              php artisan event:cache
-              php artisan route:cache
-              php artisan view:cache
+              php-8.2 artisan migrate --force
+              php-8.2 artisan storage:link
+              php-8.2 artisan optimize:clear
+              php-8.2 artisan config:cache
+              php-8.2 artisan event:cache
+              php-8.2 artisan route:cache
+              php-8.2 artisan view:cache
