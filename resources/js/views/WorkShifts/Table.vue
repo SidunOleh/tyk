@@ -72,7 +72,7 @@
                 :column="1">
                 <a-descriptions-item 
                     v-for="dispatcher in record.dispatchers"
-                    :label="`${dispatcher.dispatcher.first_name} ${dispatcher.dispatcher.last_name}`">
+                    :label="`${dispatcher.dispatcher?.first_name} ${dispatcher.dispatcher?.last_name}`">
                     {{ formatDate(dispatcher.start) }} - {{ formatDate(dispatcher.end) }}
                 </a-descriptions-item>  
             </a-descriptions> 
@@ -91,7 +91,7 @@
                 :column="1">
                 <a-descriptions-item 
                     v-for="driver in record.drivers"
-                    :label="`${driver.courier.first_name} ${driver.courier.last_name}`">
+                    :label="`${driver.courier?.first_name} ${driver.courier?.last_name}`">
                     {{ formatDate(driver.start) }} - {{ formatDate(driver.end) }}
                 </a-descriptions-item>  
             </a-descriptions> 
