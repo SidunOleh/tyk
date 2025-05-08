@@ -492,7 +492,7 @@ function Route(map) {
             origin,
             destination,
             waypoints,
-            travelMode: google.maps.TravelMode.DRIVING,
+            travelMode: google.maps.TravelMode.BICYCLING,
         }, (result, status) => {
             if (status === google.maps.DirectionsStatus.OK) {
                 this.route.setDirections(result)
