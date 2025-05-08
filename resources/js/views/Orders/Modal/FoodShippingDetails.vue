@@ -20,8 +20,8 @@
             style="width: 100%;"
             showTime
             v-model:value="details.cooking_time"
-            format="YYYY-MM-DD hh:mm"
-            valueFormat="YYYY-MM-DD hh:mm:ss"
+            format="YYYY-MM-DD HH:mm"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
             placeholder="Виберіть час приготування"/>
     </a-form-item>
 </template>
