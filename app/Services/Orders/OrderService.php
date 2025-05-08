@@ -110,6 +110,11 @@ abstract class OrderService extends Service
         $order->update(['add_bonuses' => 0]);
     }
 
+    public function review(Order $order): void
+    {
+        $order->update(['reviewed' => true]);
+    }
+
     abstract public function repeat(Order $order): void;
 
     public static function make(string $type): self

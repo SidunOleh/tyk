@@ -32,7 +32,8 @@
                 :time="time"
                 :orders="orders"
                 :couriers="couriers"
-                @edit="order => {edit.record = order; edit.open = true;}"/>
+                @edit="order => {edit.record = order; edit.open = true;}"
+                @review="reviewOrder"/>
         </div>
     </a-spin>
 
@@ -167,6 +168,15 @@ export default {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
+        async reviewOrder(order) {
+            try {
+                await ordersApi.review(order.id)
+                order.reviewed = true
+                this.orders = this.orders.map(item => item.id == order.id ? order : item)
+            } catch (err) {
+                console.error(err)
+            }
+        }
     },
     watch: {
         time(time) {

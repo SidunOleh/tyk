@@ -45,6 +45,7 @@ class FoodShippingService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
+            'reviewed' => true,
         ]);
 
         $order->orderItems()->createMany($request['order_items']);

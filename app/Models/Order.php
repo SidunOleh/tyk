@@ -33,6 +33,7 @@ class Order extends Model
         'client_id',
         'courier_id',
         'user_id',
+        'reviewed',
         'history',
     ];
 
@@ -47,6 +48,7 @@ class Order extends Model
         'duration' => 'integer',
         'paid' => 'boolean',
         'details' => 'array',
+        'reviewed' => 'boolean',
         'history' => 'array',
     ];   
     

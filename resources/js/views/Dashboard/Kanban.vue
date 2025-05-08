@@ -63,6 +63,9 @@ export default {
                 ],
                 click: el => {
                     const order = JSON.parse(el.getAttribute('data-data'))
+                    if (!order.reviewed) {
+                        this.$emit('review', order)
+                    }
                     this.$emit('edit', order)
                 },
                 dropEl: (el, target) => {
@@ -101,7 +104,7 @@ export default {
         foodShippingElHtml(order) {
             return `
                 <div>
-                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>
@@ -114,7 +117,7 @@ export default {
         shippingElHtml(order) {
             return `
                 <div>
-                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>
@@ -127,7 +130,7 @@ export default {
         taxiElHtml(order) {
             return `
                 <div>
-                    <b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
                 </div>
                 <br>
                 <div>
@@ -191,4 +194,24 @@ export default {
 .kanban-board-header {
     color: white;
 }
+
+.not-reviewed {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #90ea37;
+    margin-right: 7px;
+    animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
+  }
+}
+
 </style>

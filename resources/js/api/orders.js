@@ -76,6 +76,15 @@ export default {
 
         return res.data
     },
+    async review(id) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/orders/${id}/review`)
+
+        return res.data
+    },
     async delete(id) {
         if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')

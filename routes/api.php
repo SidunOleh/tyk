@@ -56,6 +56,7 @@ use App\Http\Controllers\Admin\Orders\ChangeStatusController;
 use App\Http\Controllers\Admin\Orders\DeleteController as OrdersDeleteController;
 use App\Http\Controllers\Admin\Orders\GetBetweenController;
 use App\Http\Controllers\Admin\Orders\IndexController as OrdersIndexController;
+use App\Http\Controllers\Admin\Orders\ReviewController;
 use App\Http\Controllers\Admin\Orders\StoreController as OrdersStoreController;
 use App\Http\Controllers\Admin\Orders\UpdateController as OrdersUpdateController;
 use App\Http\Controllers\Admin\Products\BulkDeleteController as ProductsBulkDeleteController;
@@ -246,6 +247,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('change-status');
             Route::post('/{order}/courier', ChangeCourierController::class)
                 ->name('change-courier');
+            Route::post('/{order}/review', ReviewController::class)
+                ->name('review');
             Route::put('/{order}', OrdersUpdateController::class)
                 ->name('update');
             Route::delete('/bulk', OrdersBulkDeleteController::class)

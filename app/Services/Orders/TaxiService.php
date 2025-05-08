@@ -41,6 +41,7 @@ class TaxiService extends OrderService
             'payment_method' => $data['payment_method'],
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
+            'reviewed' => true,
         ]);
 
         $order->updateAmount();
