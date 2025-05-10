@@ -20,10 +20,8 @@ class AuthService
 
         if ($testMode) {
             $client->update(['code' => '000000']);
-        } elseif ($phone == '(090) 000-00-00') {
-            $code = '334263';
-        
-            $client->update(['code' => $code]);
+        } elseif ($phone == '(090) 000-00-00') {        
+            $client->update(['code' => Client::APPLE_LOGIN_CODE]);
         } else {
             $code = $this->generateCode();
         
@@ -47,7 +45,7 @@ class AuthService
     {
         do {
             $code = rand(100000, 999999);
-        } while (Client::firstWhere('code', $code));
+        } while (Client::firstWhere('code', $code) or $code == Client::APPLE_LOGIN_CODE);
         
         return $code;
     }

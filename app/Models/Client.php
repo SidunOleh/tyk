@@ -39,6 +39,8 @@ class Client extends Authenticatable implements ILogUser
 
     public const BONUS_AFTER_REGISTER = 40;
 
+    public const APPLE_LOGIN_CODE = '334263';
+
     protected static function booted(): void
     {
         static::creating(function (self $client) {
