@@ -82,7 +82,7 @@ class ClientService extends Service
     public function delete(Model $model): void
     {
         if ($model->phone == '(090) 000-00-00') {
-            DB::table('clients')->where('id',   $model->id)->delete();
+            DB::table('clients')->where('id', $model->id)->delete();
         } else {
             $model->delete();
         }
