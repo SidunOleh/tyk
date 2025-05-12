@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class ClientService extends Service
@@ -75,5 +76,14 @@ class ClientService extends Service
             ->with('client')
             ->with('courier')
             ->get();
+    }
+
+    public function delete(Model $model): void
+    {
+        if ($model->phone == '(090) 000-00-00') {
+            $model->forceDelete();
+        } else {
+            $model->delete();
+        }
     }
 }
