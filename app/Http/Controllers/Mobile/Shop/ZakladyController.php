@@ -17,7 +17,7 @@ class ZakladyController extends Controller
 
     public function __invoke()
     {
-        $zaklady = $this->categoryService->zaklady();
+        $zaklady = $this->categoryService->zakladyMobile();
 
         return response(new CategoriesSearchCollection($zaklady));
     }

@@ -233,6 +233,13 @@ class CategoryService extends Service
         return $zaklady;
     }
 
+    public function zakladyMobile(): Collection
+    {
+        $zaklady = Category::with('tags')->zaklad()->visible()->orderBy('order', 'ASC')->get();
+
+        return $zaklady;
+    }
+
     public function closedZaklady(array $productsIds): array
     {
         $closed = [];
