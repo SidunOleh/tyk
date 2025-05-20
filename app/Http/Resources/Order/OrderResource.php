@@ -17,6 +17,7 @@ class OrderResource extends JsonResource
         $data = parent::toArray($request);
 
         $data['time'] = $this->time->format('Y-m-d H:i:s');
+        $data['created_at'] = $this->created_at->format('Y-m-d H:i:s');
 
         return $data;
     }

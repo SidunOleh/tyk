@@ -22,6 +22,8 @@ class ShippingService extends OrderService
         
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
+        $createdAt = $data['created_at'] ?? now()->format('Y-m-d H:i:s');
+
         $details = [];
 
         $details['shipping_type'] = $data['details']['shipping_type'];
@@ -44,6 +46,7 @@ class ShippingService extends OrderService
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
             'reviewed' => true,
+            'created_at' => $createdAt,
         ]);
 
         $order->updateAmount();
@@ -84,6 +87,7 @@ class ShippingService extends OrderService
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
+            'created_at' => $data['created_at'],
         ]);
 
         $order->updateAmount();

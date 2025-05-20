@@ -2,10 +2,11 @@
 
 namespace App\Services\Google;
 
+use App\Interfaces\ICalcDistance;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-class MapsService
+class MapsService implements ICalcDistance
 {
     private string $key;
 

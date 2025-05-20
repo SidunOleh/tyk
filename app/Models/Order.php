@@ -35,6 +35,7 @@ class Order extends Model
         'user_id',
         'reviewed',
         'history',
+        'created_at',
     ];
 
     protected $casts = [

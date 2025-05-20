@@ -24,6 +24,7 @@ class SaveSettingsRequest extends FormRequest
         return [
             'call' => 'required|numeric|min:0',
             'stop' => 'required|numeric|min:0',
+            'outside_zolochiv' => 'required|numeric|min:0',
         ];
     }
 }

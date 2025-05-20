@@ -151,7 +151,7 @@ class CategoryService extends Service
     public function getProducts(Category $category): Collection
     {
         $products = $category->products()
-            ->select('products.id', 'products.name', 'products.image', 'products.price')
+            ->select('products.id', 'products.name', 'products.image', 'products.price', 'products.description')
             ->orderByRaw('-category_product.order DESC')
             ->get();
 

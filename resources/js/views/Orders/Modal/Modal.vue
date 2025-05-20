@@ -172,6 +172,21 @@
             </a-form-item>
 
             <a-form-item 
+                label="Дата створення"
+                :required="action == 'edit'"
+                has-feedback
+                :validate-status="errors['created_at'] ? 'error' : ''"
+                :help="errors.created_at">
+                <a-date-picker
+                    style="width: 100%;"
+                    showTime
+                    placeholder="Виберіть дату"
+                    format="YYYY-MM-DD HH:mm"
+                    valueFormat="YYYY-MM-DD HH:mm:ss"
+                    v-model:value="data.created_at"/>
+            </a-form-item>
+
+            <a-form-item 
                 has-feedback
                 :validate-status="errors['use_bonuses'] ? 'error' : ''"
                 :help="errors.use_bonuses">
@@ -292,6 +307,7 @@ export default {
                 payment_method: null,
                 notes: '',
                 use_bonuses: false,
+                created_at: null,
             },
             clients: {
                 data: [],

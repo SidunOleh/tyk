@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ICalcDistance;
 use App\Models\Order;
 use App\Models\User;
 use App\Services\Cart\Cart;
+use App\Services\Google\MapsService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
 
             return true;
         });
+
+        $this->app->bind(ICalcDistance::class, MapsService::class);
 
         DB::listen(fn($sql) => $GLOBALS['sql'][] = $sql);
     }

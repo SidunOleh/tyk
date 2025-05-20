@@ -26,6 +26,9 @@
                     <div class="components">
                         {{ $product->ingredients }}
                     </div>
+                    <div class="components">
+                        {{ $product->description }}
+                    </div>
                     <div class="bottom">
                         <p class="price">
                             {{ format_price($product->price) }}

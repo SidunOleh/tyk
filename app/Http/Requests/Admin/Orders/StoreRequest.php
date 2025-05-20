@@ -31,6 +31,7 @@ class StoreRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'paid' => 'required|boolean',
             'payment_method' => 'required_if:paid,true|string|nullable',
+            'created_at' => 'date_format:Y-m-d H:i:s|nullable',
             'use_bonuses' => 'required|boolean',
             
             'details' => 'required|array',

@@ -31,6 +31,7 @@ class UpdateRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'paid' => 'required|boolean',
             'payment_method' => 'required_if:paid,true|string|nullable',
+            'created_at' => 'required|date_format:Y-m-d H:i:s',
             
             'details' => 'required|array',
 

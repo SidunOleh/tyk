@@ -3,17 +3,17 @@
 namespace App\Services\Price;
 
 use App\Http\Requests\Price\SaveSettingsRequest;
+use App\Interfaces\ICalcDistance;
 use App\Models\Order;
 use App\Models\Region;
 use App\Models\Tariff;
 use App\Services\CourierServices\CourierServiceService;
-use App\Services\Google\MapsService;
 use App\Services\Options\OptionService;
 
 class PriceService
 {
     public function __construct(
-        private MapsService $mapsService,
+        private ICalcDistance $calcDistance,
         private OptionService $optionService,
         private CourierServiceService $courierServiceService,
     )
@@ -32,7 +32,7 @@ class PriceService
     private function calcTariffPrice(array $data): float
     {
         $insideRegions = $this->insideRegions($data['route']);
-        $kms = $this->mapsService->distanceInKm($data['route']);
+        $kms = $this->calcDistance->distanceInKm($data['route']);
         
         $prices = array_map(fn ($region) => $region->tariff->calcPrice($kms), $insideRegions);
 
@@ -40,7 +40,13 @@ class PriceService
             $prices[] = Tariff::getDefault()->calcPrice($kms);
         }
 
-        return max($prices);
+        $price = max($prices);
+
+        if ($this->isInsideZolochiv($data['route']) and $kms > 10) {
+            $price /= 2;
+        }
+
+        return $price;
     }
 
     private function outsideRegions(array $route): bool
@@ -105,7 +111,68 @@ class PriceService
             }
         }
 
+        if ($this->isOutsideZolochiv($data['route'])) {
+            $price += $settings['outside_zolochiv'];
+        }
+
         return $price;
+    }
+
+    private function isOutsideZolochiv(array $route, float $radius = 3): bool
+    {
+        $start = $route[0];
+        $end = $route[count($route)-1];
+
+        $zolochiv = [
+            'lat' => 49.8094,
+            'lng' => 24.9014,
+        ];
+
+        if (
+            $this->getDistanceInKm($start, $zolochiv) > $radius and
+            $this->getDistanceInKm($end, $zolochiv) > $radius
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isInsideZolochiv(array $route, float $radius = 3): bool
+    {
+        $start = $route[0];
+        $end = $route[count($route)-1];
+
+        $zolochiv = [
+            'lat' => 49.8094,
+            'lng' => 24.9014,
+        ];
+
+        if (
+            $this->getDistanceInKm($start, $zolochiv) <= $radius and
+            $this->getDistanceInKm($end, $zolochiv) <= $radius
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getDistanceInKm($point1 , $point2): float
+    {
+        $earthRadius = 6371;
+        $point1Lat = $point1['lat'];
+        $point2Lat =$point2['lat'];
+        $deltaLat = deg2rad($point2Lat - $point1Lat);
+        $point1Long =$point1['lng'];
+        $point2Long =$point2['lng'];
+        $deltaLong = deg2rad($point2Long - $point1Long);
+        $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+    
+        $distance = $earthRadius * $c;
+
+        return $distance;
     }
 
     public function getSettings(): array
@@ -115,6 +182,7 @@ class PriceService
         return [
             'call' => $settings['call'] ?? 0,
             'stop' => $settings['stop'] ?? 0,
+            'outside_zolochiv' => $settings['outside_zolochiv'] ?? 0,
         ];
     }
 

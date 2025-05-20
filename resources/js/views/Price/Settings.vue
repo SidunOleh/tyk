@@ -28,6 +28,19 @@
                     v-model:value="data.stop"/>
             </a-form-item>
 
+            <a-form-item 
+                label="Виклик за межами Золочева"
+                :required="true"
+                has-feedback
+                :validate-status="errors['outside_zolochiv'] ? 'error' : ''"
+                :help="errors.outside_zolochiv">
+                <a-input-number
+                    style="width: 100%;"
+                    placeholder="Введіть ціну за виклик за межами Золочева"
+                    :min="0"
+                    v-model:value="data.outside_zolochiv"/>
+            </a-form-item>
+
             <a-button
                 type="primary"
                 :loading="loading"

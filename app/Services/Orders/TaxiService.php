@@ -22,6 +22,8 @@ class TaxiService extends OrderService
 
         $time = $data['time'] ?? now()->format('Y-m-d H:i:s');
 
+        $createdAt = $data['created_at'] ?? now()->format('Y-m-d H:i:s');
+
         $details = [];
 
         $details['taxi_from'] = $data['details']['taxi_from'];
@@ -42,6 +44,7 @@ class TaxiService extends OrderService
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
             'reviewed' => true,
+            'created_at' => $createdAt,
         ]);
 
         $order->updateAmount();
@@ -80,6 +83,7 @@ class TaxiService extends OrderService
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
             'details' => $details,
+            'created_at' => $data['created_at'],
         ]);
 
         $order->updateAmount();

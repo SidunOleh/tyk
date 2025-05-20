@@ -237,5 +237,7 @@ return [
         'comment' => 'комент',
         'dispatcher_id' => 'диспетчер',
         'packaging' => 'пакування',
+        'outside_zolochiv' => 'за межами Золочева',
+        'created_at' => 'дата створення',
     ],
 ];
