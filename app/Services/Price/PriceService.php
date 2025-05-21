@@ -12,6 +12,11 @@ use App\Services\Options\OptionService;
 
 class PriceService
 {
+    public const ZOLOCHIV_LATLNG = [
+        'lat' => 49.8094,
+        'lng' => 24.9014,
+    ];
+
     public function __construct(
         private ICalcDistance $calcDistance,
         private OptionService $optionService,
@@ -43,7 +48,7 @@ class PriceService
         $price = max($prices);
 
         if ($this->isInsideZolochiv($data['route']) and $kms > 10) {
-            $price /= 2;
+            $price *= 0.75;
         }
 
         return $price;
@@ -112,7 +117,10 @@ class PriceService
         }
 
         if ($this->isOutsideZolochiv($data['route'])) {
-            $price += $settings['outside_zolochiv'];
+            $price += $settings['outside_zolochiv'] * $this->getDistanceInKm(
+                self::ZOLOCHIV_LATLNG, 
+                $data['route'][count($data['route'])-1]
+            );
         }
 
         return $price;
@@ -122,15 +130,10 @@ class PriceService
     {
         $start = $route[0];
         $end = $route[count($route)-1];
-
-        $zolochiv = [
-            'lat' => 49.8094,
-            'lng' => 24.9014,
-        ];
-
+        
         if (
-            $this->getDistanceInKm($start, $zolochiv) > $radius and
-            $this->getDistanceInKm($end, $zolochiv) > $radius
+            $this->getDistanceInKm($start, self::ZOLOCHIV_LATLNG) > $radius and
+            $this->getDistanceInKm($end, self::ZOLOCHIV_LATLNG) > $radius
         ) {
             return true;
         }
@@ -143,14 +146,9 @@ class PriceService
         $start = $route[0];
         $end = $route[count($route)-1];
 
-        $zolochiv = [
-            'lat' => 49.8094,
-            'lng' => 24.9014,
-        ];
-
         if (
-            $this->getDistanceInKm($start, $zolochiv) <= $radius and
-            $this->getDistanceInKm($end, $zolochiv) <= $radius
+            $this->getDistanceInKm($start, self::ZOLOCHIV_LATLNG) <= $radius and
+            $this->getDistanceInKm($end, self::ZOLOCHIV_LATLNG) <= $radius
         ) {
             return true;
         }
