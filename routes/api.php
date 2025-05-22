@@ -53,6 +53,7 @@ use App\Http\Controllers\Admin\Images\UploadController;
 use App\Http\Controllers\Admin\Orders\BulkDeleteController as OrdersBulkDeleteController;
 use App\Http\Controllers\Admin\Orders\ChangeCourierController;
 use App\Http\Controllers\Admin\Orders\ChangeStatusController;
+use App\Http\Controllers\Admin\Orders\ChangeTimeContoller;
 use App\Http\Controllers\Admin\Orders\DeleteController as OrdersDeleteController;
 use App\Http\Controllers\Admin\Orders\GetBetweenController;
 use App\Http\Controllers\Admin\Orders\IndexController as OrdersIndexController;
@@ -247,6 +248,8 @@ Route::domain(config('app.admin_domain'))->group(function () {
                 ->name('change-status');
             Route::post('/{order}/courier', ChangeCourierController::class)
                 ->name('change-courier');
+            Route::post('/{order}/time', ChangeTimeContoller::class)
+                ->name('change-time');
             Route::post('/{order}/review', ReviewController::class)
                 ->name('review');
             Route::put('/{order}', OrdersUpdateController::class)

@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Services\Price\PriceService;
 use App\Services\Service;
 use App\Services\Settings\SettingsService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -83,6 +84,14 @@ abstract class OrderService extends Service
     public function changeCourier(Order $order, ?int $courierId): void
     {
         $order->update(['courier_id' => $courierId]);
+    }
+
+    public function changeTime(Order $order, Carbon $time, int $duration): void
+    {
+        $order->update([
+            'time' => $time->format('Y-m-d H:i:s'),
+            'duration' => $duration,
+        ]);
     }
 
     public function addBonusesForOrder(Order $order): void

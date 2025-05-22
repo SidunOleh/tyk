@@ -76,6 +76,15 @@ export default {
 
         return res.data
     },
+    async changeTime(id, time, duration) {
+        if (!hasRole(['адмін', 'диспетчер', ])) {
+            throw new Error('Заборонено.')
+        }
+
+        const res = await axios.post(`/api/orders/${id}/time`, {time, duration,})
+
+        return res.data
+    },
     async review(id) {
         if (!hasRole(['адмін', 'диспетчер', ])) {
             throw new Error('Заборонено.')

@@ -25,15 +25,19 @@ export default {
     },
     computed: {
         resources() {
-            return this.couriers.map(courier => {
+            const resources = this.couriers.map(courier => {
                 return {
                     title: `${courier.first_name} ${courier.last_name}`,
                     id: courier.id,
                 }
-            }).concat({
-                title: 'потребує кур\'єра',
+            })
+            
+            resources.unshift({
+                title: {html: '<b>потребує кур\'єра</b>'},
                 id: null,
             })
+
+            return resources
         },
     },
     methods: {
@@ -64,7 +68,7 @@ export default {
             event.id = order.id
             event.start = new Date(order.time)
             event.end = new Date(event.start.getTime() + order.duration * 60000)
-            event.title = {html: `${order.type} №${order.number} ${formatPrice(order.total)}`}
+            event.title = {html: this.eventHtml(order)}
             event.resourceIds = [order.courier?.id ?? null]
             event.color = orderStatusColor(order.status)
             event.extendedProps = {order}
@@ -72,29 +76,94 @@ export default {
         },
         async changeCourier(orderId, courierId) {
             try {
-                this.orders[
+                const order = this.orders[
                     this.orders.findIndex(order => order.id == orderId)
-                ].courier = this.couriers[
+                ]
+                order.courier = this.couriers[
                     this.couriers.findIndex(courier => courier.id == courierId)
                 ]
+                
                 await api.changeCourier(orderId, courierId)
+
                 this.$emit('changeCourier')
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             }
         },
-        renderCurrentLine() {
-            const offset = (new Date().getHours() * 60 + new Date().getMinutes()) / (24 * 60) * 100
-            const currentLineEl = document.createElement('div')
-            currentLineEl.classList.add('current')
-            currentLineEl.style.left = `${offset}%`
-            for (const todayEl of document.querySelectorAll('.ec-today')) {
-                if (todayEl.querySelector('.current')) {
-                    todayEl.querySelector('.current').replaceWith(currentLineEl.cloneNode())
-                } else {
-                    todayEl.append(currentLineEl.cloneNode())   
-                }
+        async changeTime(orderId, start, end) {
+            try {
+                const time = `${start.getFullYear()}-${String(start.getMonth()+1).padStart(2, 0)}-${String(start.getDate()).padStart(2, 0)} ${String(start.getHours()).padStart(2, 0)}:${String(start.getMinutes()).padStart(2, 0)}:${String(start.getSeconds()).padStart(2, 0)}`
+                const duration = Math.floor((Math.abs(end - start)/1000)/60)
+                
+                const order = this.orders[
+                    this.orders.findIndex(order => order.id == orderId)
+                ]
+                order.time = time
+                order.duration = duration
+
+                await api.changeTime(orderId, time, duration)
+
+                this.$emit('changeTime')
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
             }
+        },
+        eventHtml(order) {
+            if (order.type == 'Доставка їжі') {
+                return this.foodShippingHtml(order)
+            }
+
+            if (order.type == 'Кур\'єр') {
+                return this.shippingHtml(order)
+            }
+
+            if (order.type == 'Таксі') {
+                return this.taxiHtml(order)
+            }
+        },
+        foodShippingHtml(order) {
+            return `
+            <div>
+                <b>${order.type} ${order.number}</b>
+                <br> 
+                <br> 
+                <b>Час приготування:</b> ${this.formatCookingTime(order.details.cooking_time)}
+                <br>
+                <b>Куди:</b> ${order.details.food_to.map(item => item.address).join(' | ')}
+                <br>
+                ${order.notes.replace(/\n/g, '<br/>')}
+            </div>`
+        },
+        shippingHtml(order) {
+            return `
+            <div>
+                <b>${order.type} ${order.number}</b>
+                <br>
+                <br>
+                <b>Звідки:</b> ${order.details.shipping_from.address}
+                <br>
+                <b>Куди:</b> ${order.details.shipping_to.map(item => item.address).join(' | ')}
+                <b>
+                ${order.notes.replace(/\n/g, '<br/>')}
+            </div>`
+        },
+        taxiHtml(order) {
+            return `
+            <div>
+                <b>${order.type} ${order.number}</b>
+                <br>
+                <br>
+                <b>Звідки:</b> ${order.details.taxi_from.address}
+                <br>
+                <b>Куди:</b> ${order.details.taxi_to.map(item => item.address).join(' | ')}
+                <b>
+                ${order.notes.replace(/\n/g, '<br/>')}
+            </div>`
+        },
+        formatCookingTime(time) {
+            const date = new Date(time)
+
+            return `${String(date.getHours()).padStart(2, 0)}:${String(date.getMinutes()).padStart(2, 0)}`
         },
     },
     watch: {
@@ -119,7 +188,7 @@ export default {
     },
     mounted() {
         this.timeline = new EventCalendar(document.getElementById('timeline'), {
-            view: 'resourceTimelineDay',
+            view: 'resourceTimeGridDay',
             headerToolbar: {
                 start: '',
                 center: '',
@@ -135,22 +204,19 @@ export default {
             selectable: false,
             pointer: false,
             locale: 'uk-UA',
-            slotWidth: 150,
+            slotHeight: 50,
             slotDuration: '00:30:00',
             nowIndicator: true,
             eventDrop: info => {
-                info.event.start = info.oldEvent.start
-                info.event.end = info.oldEvent.end
-                this.timeline.updateEvent(info.event)
+                this.changeTime(info.event.id, new Date(info.event.start), new Date(info.event.end))
+
                 const courierId = info.event.resourceIds[0] != 'null' 
                     ? info.event.resourceIds[0] 
                     : null
                 this.changeCourier(info.event.id, courierId)
             },
             eventResize: info => {
-                info.event.start = info.oldEvent.start
-                info.event.end = info.oldEvent.end
-                this.timeline.updateEvent(info.event)
+                this.changeTime(info.event.id, new Date(info.event.start), new Date(info.event.end))
             },
             eventClick: e => {
                 this.$emit('edit', e.event.extendedProps.order)
@@ -159,20 +225,22 @@ export default {
 
         this.changeDateInterval()
         this.changeData()
-
-        this.renderCurrentLine()
-        setInterval(() => this.renderCurrentLine(), 1000)
     }
 }
 </script>
 
 <style>
+#timeline {
+    position: relative;
+    z-index: 0;
+}
+
 .ec-toolbar {
     display: none !important;
 }
 
-.ec-timeline .ec-time, .ec-timeline .ec-line {
-  width: 150px !important;
+.ec-time-grid .ec-content .ec-time, .ec-time-grid .ec-line {
+    height: 50px !important;
 }
 
 .ec-timeline .ec-event-body {
@@ -181,31 +249,5 @@ export default {
 
 .ec-day {
     position: relative;
-}
-
-.ec-today .current {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: calc(100% + 1px);
-    width: 1px;
-    background: rgb(22 119 255);
-    transition: all linear 1s;
-    z-index: 10;
-}
-
-.ec-days:last-child .ec-today .current {
-    height: 100%;
-}
-
-.ec-days:nth-child(2) .ec-today .current::before {
-    content: '';
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: rgb(22 119 255);
-    top: 0;
-    right: -195%;
 }
 </style>
