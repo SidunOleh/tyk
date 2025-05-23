@@ -233,6 +233,7 @@ export default {
 #timeline {
     position: relative;
     z-index: 0;
+    min-width: 3000px;
 }
 
 #timeline .ec-body {
