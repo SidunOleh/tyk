@@ -131,7 +131,7 @@ export default {
                 <br>
                 <b>Куди:</b> ${order.details.food_to.map(item => item.address).join(' | ')}
                 <br>
-                ${order.notes.replace(/\n/g, '<br/>')}
+                ${order.notes?.replace(/\n/g, '<br/>') ?? ''}
             </div>`
         },
         shippingHtml(order) {
@@ -144,7 +144,7 @@ export default {
                 <br>
                 <b>Куди:</b> ${order.details.shipping_to.map(item => item.address).join(' | ')}
                 <b>
-                ${order.notes.replace(/\n/g, '<br/>')}
+                ${order.notes?.replace(/\n/g, '<br/>') ?? ''}
             </div>`
         },
         taxiHtml(order) {
@@ -157,7 +157,7 @@ export default {
                 <br>
                 <b>Куди:</b> ${order.details.taxi_to.map(item => item.address).join(' | ')}
                 <b>
-                ${order.notes.replace(/\n/g, '<br/>')}
+                ${order.notes?.replace(/\n/g, '<br/>') ?? ''}
             </div>`
         },
         formatCookingTime(time) {
@@ -204,7 +204,7 @@ export default {
             selectable: false,
             pointer: false,
             locale: 'uk-UA',
-            slotHeight: 50,
+            slotHeight: 150,
             slotDuration: '00:30:00',
             nowIndicator: true,
             eventDrop: info => {
@@ -235,12 +235,16 @@ export default {
     z-index: 0;
 }
 
+#timeline .ec-body {
+    height: calc(100vh - 178px); 
+}
+
 .ec-toolbar {
     display: none !important;
 }
 
 .ec-time-grid .ec-content .ec-time, .ec-time-grid .ec-line {
-    height: 50px !important;
+    height: 150px !important;
 }
 
 .ec-timeline .ec-event-body {
