@@ -44,6 +44,7 @@ abstract class OrderService extends Service
                 'orderItems.product.categories',
                 'client',
                 'courier',
+                'zakladAddonAmounts',
             ])
             ->orderBy($orderby, $order)
             ->search($s)
@@ -64,6 +65,7 @@ abstract class OrderService extends Service
                 'orderItems.product.categories',
                 'client',
                 'courier',
+                'zakladAddonAmounts',
             ])
             ->betweenDate($start, $end)
             ->orderBy('created_at', 'DESC')

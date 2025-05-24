@@ -72,6 +72,7 @@
             <Cart
                 v-if="data.service == 'Доставка їжі'"
                 :orderItems="data.order_items"
+                :zakladAddonAmounts="data.zaklad_addon_amounts"
                 :errors="errors"/>
             
             <component 
@@ -299,6 +300,7 @@ export default {
                 service: null,
                 details: {},
                 order_items: [],
+                zaklad_addon_amounts: [],
                 shipping_price: 0,
                 additional_costs: 0,
                 time: null,
@@ -384,8 +386,11 @@ export default {
         subtotal() {
             return this.data.order_items?.reduce((acc, item) => acc += item.quantity * item.amount, 0) + this.packagingPrice
         },
+        zakladyAddonAmount() {
+            return this.data.zaklad_addon_amounts?.reduce((acc, item) => acc += item.amount, 0)
+        },
         total() {
-           return this.subtotal + this.data.shipping_price + this.data.additional_costs
+           return this.subtotal + this.zakladyAddonAmount + this.data.shipping_price + this.data.additional_costs
         },
         zaklady() {
             const zaklady = this.data.order_items?.map(item => {
@@ -413,6 +418,12 @@ export default {
                this.fetchClientOrders()
             }
         },
+        'data.order_items': {
+            handler() {
+                this.refreshZakaldAddonAmount()
+            },
+            deep: true,
+        }
     },
     methods: {
         formatPrice,
@@ -482,7 +493,9 @@ export default {
         },
         repeatOrder(order) {
             const data = JSON.parse(JSON.stringify(order))
+            data.time = null
             data.use_bonuses = false
+            data.created_at = null
             
             this.setData(data)
         },
@@ -656,6 +669,30 @@ export default {
             } finally {
                 this.calcingPrice = false
             }
+        },
+        refreshZakaldAddonAmount() {
+            const zakladyAddonAmounts = []
+            for (const orderItem of this.data.order_items) {
+                for (const category of orderItem?.product?.categories ?? []) {
+                    if (
+                        category.parent_id === null && 
+                        ! zakladyAddonAmounts.find(item => item.zaklad_id == category.id)
+                    ) {
+                        let amount = 0;
+                        for (const zakladAddonAmount of this.data.zaklad_addon_amounts) {
+                            if (zakladAddonAmount.zaklad_id == category.id) {
+                                amount = zakladAddonAmount.amount
+                            }
+                        }
+
+                        zakladyAddonAmounts.push({
+                            zaklad_id: category.id,
+                            amount,
+                        })
+                    }
+                }
+            }
+            this.data.zaklad_addon_amounts = zakladyAddonAmounts
         },
     },
     mounted() {

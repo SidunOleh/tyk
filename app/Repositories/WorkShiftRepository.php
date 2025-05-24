@@ -34,6 +34,7 @@ class WorkShiftRepository
                 $end->format('Y-m-d H:i:s'),
             ])
             ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at')
             ->groupBy('type')
             ->get();
         foreach ($data as $item) {
@@ -64,9 +65,32 @@ class WorkShiftRepository
                 $workShift->start->format('Y-m-d H:i:s'), 
                 $workShift->end->format('Y-m-d H:i:s'),
             ])
+            ->whereNot('orders.status', Order::CANCELED)
+            ->whereNull('orders.deleted_at')
+            ->whereNull('order_items.deleted_at')
             ->whereIn('category_product.category_id', $zaklady->pluck('id'))
             ->groupBy('category_product.category_id')
             ->get();
+
+        $addons = DB::table('orders')
+            ->select(DB::raw('zaklad_addon_amounts.zaklad_id, sum(zaklad_addon_amounts.amount) addon_total'))
+            ->join('zaklad_addon_amounts', 'zaklad_addon_amounts.order_id', '=', 'orders.id')
+            ->whereBetween('orders.created_at', [
+                $workShift->start->format('Y-m-d H:i:s'), 
+                $workShift->end->format('Y-m-d H:i:s'),
+            ])
+            ->whereNot('orders.status', Order::CANCELED)
+            ->whereNull('orders.deleted_at')
+            ->groupBy('zaklad_addon_amounts.zaklad_id')
+            ->get();
+
+        foreach ($addons as $addon) {
+            foreach ($data as $item) {
+                if ($item->zaklad_id == $addon->zaklad_id) {
+                    $item->total = (float) $item->total + (float) $addon->addon_total;
+                }
+            }
+        }
 
         return $data->toArray();
     }
@@ -95,6 +119,7 @@ class WorkShiftRepository
                 $end->format('Y-m-d H:i:s'),
             ])
             ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at')
             ->groupBy('type')
             ->get();
             
@@ -118,6 +143,7 @@ class WorkShiftRepository
                 $end->format('Y-m-d H:i:s'),
             ])
             ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at')
             ->first();
         $stat['additional_costs'] = (float) $result->additional_costs;
 
@@ -130,6 +156,7 @@ class WorkShiftRepository
             ])
             ->where('payment_method', Order::CASH)
             ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at')
             ->first();
         $stat['to_returned'] = $result->to_returned;
         
@@ -160,6 +187,7 @@ class WorkShiftRepository
                 $end->format('Y-m-d H:i:s'),
             ])
             ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at')
             ->groupBy('type')
             ->get();
             

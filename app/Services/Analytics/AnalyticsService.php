@@ -218,6 +218,7 @@ class AnalyticsService
             WHERE DATE(o.created_at) >= DATE(:start) AND DATE(o.created_at) <= DATE(:end)
             AND o.status != :status
             AND o.deleted_at IS NULL
+            AND o_i.deleted_at IS NULL
             GROUP BY o_i.product_id
             ORDER BY SUM(o_i.amount * o_i.quantity) DESC
             LIMIT 15
@@ -236,6 +237,7 @@ class AnalyticsService
             WHERE DATE(o.created_at) >= DATE(:start) AND DATE(o.created_at) <= DATE(:end)
             AND o.status != :status
             AND o.deleted_at IS NULL
+            AND o_i.deleted_at IS NULL
             GROUP BY c.id
             ORDER BY SUM(o_i.amount * o_i.quantity) DESC
             LIMIT 15

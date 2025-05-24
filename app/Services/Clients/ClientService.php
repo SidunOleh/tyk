@@ -76,6 +76,7 @@ class ClientService extends Service
             ->with('orderItems.product.categories')
             ->with('client')
             ->with('courier')
+            ->with('zakladAddonAmounts')
             ->get();
     }
 

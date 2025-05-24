@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ZakladAddonAmount;
 use App\Services\Cart\Cart;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
@@ -51,11 +52,12 @@ class FoodShippingService extends OrderService
             'created_at' => $createdAt,
         ]);
 
-        $order->orderItems()->createMany($request['order_items']);
+        $order->orderItems()->createMany($data['order_items']);
 
         $order->refresh();
 
         $this->addPackaging($order);
+        $this->addZakladAddonAmounts($order, $data['zaklad_addon_amounts']);
         
         $order->updateAmount();
 
@@ -91,6 +93,27 @@ class FoodShippingService extends OrderService
                     $order->allOrderItems()->create($data);
                 }
             }
+        }
+    }
+
+    private function addZakladAddonAmounts(Order $order, array $amounts = []): void
+    {
+        $order->zakladAddonAmounts()->delete();
+
+        foreach ($order->getZaklady() as $zaklad) {
+            $amount = 0;
+            foreach ($amounts as $item) {
+                if ($item['zaklad_id'] == $zaklad->id) {
+                    $amount = $item['amount'];
+                    break;
+                }
+            }
+
+            ZakladAddonAmount::create([
+                'zaklad_id' => $zaklad->id,
+                'order_id' => $order->id,
+                'amount' => $amount,
+            ]);
         }
     }
 
@@ -149,6 +172,7 @@ class FoodShippingService extends OrderService
         $order->refresh();
 
         $this->addPackaging($order);
+        $this->addZakladAddonAmounts($order, $data['zaklad_addon_amounts']);
 
         $order->updateAmount();
 
@@ -220,6 +244,7 @@ class FoodShippingService extends OrderService
         $order->refresh();
         
         $this->addPackaging($order);
+        $this->addZakladAddonAmounts($order);
         
         $order->updateAmount();
 

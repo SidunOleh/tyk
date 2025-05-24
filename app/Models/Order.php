@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
@@ -207,13 +209,36 @@ class Order extends Model
         return $this->belongsTo(Courier::class);
     }
 
+    public function zakladAddonAmounts(): HasMany
+    {
+        return $this->hasMany(ZakladAddonAmount::class);
+    }
+
+    public function getZaklady(): Collection
+    {
+        $zaklady = new Collection();
+        $orderItems = $this->orderItems()->with([
+            'product',
+            'product.zaklady',
+        ])->get();
+        foreach ($orderItems as $orderItem) {
+            $zaklady->push(...$orderItem->product->zaklady);
+        }
+
+        return $zaklady->unique();
+    }
+
     public function updateAmount(): bool
     {
         $subtotal = $this->allOrderItems->reduce(function (float $carry, OrderItem $orderItem) {
             return $carry + $orderItem->amount * $orderItem->quantity;
         }, 0);
 
-        $total = $subtotal + $this->shipping_price + $this->additional_costs;
+        $zakladyAddonAmount = $this->zakladAddonAmounts->reduce(function (float $carry, ZakladAddonAmount $zakladAddonAmount) {
+            return $carry + $zakladAddonAmount->amount;
+        }, 0);
+
+        $total = $subtotal + $zakladyAddonAmount + $this->shipping_price + $this->additional_costs;
 
         return $this->updateQuietly([
             'subtotal' => $subtotal,

@@ -42,11 +42,16 @@ class StoreRequest extends FormRequest
             'details.food_to.*.lat' => 'required_if:service,Доставка їжі|numeric|between:-90,90',
             'details.food_to.*.lng' => 'required_if:service,Доставка їжі|numeric|between:-180,180',
             'details.cooking_time' => 'date_format:Y-m-d H:i:s|nullable',
+            
             'order_items' => 'required_if:service,Доставка їжі|array|min:1',
             'order_items.*.name' => 'required_if:service,Доставка їжі|string',
             'order_items.*.amount' => 'required_if:service,Доставка їжі|numeric|min:0',
             'order_items.*.quantity' => 'required_if:service,Доставка їжі|integer|min:1',
             'order_items.*.product_id' => 'required_if:service,Доставка їжі|exists:products,id',
+
+            'zaklad_addon_amounts' => 'required_if:service,Доставка їжі|array',
+            'zaklad_addon_amounts.*.zaklad_id' => 'required_if:service,Доставка їжі|exists:categories,id',
+            'zaklad_addon_amounts.*.amount' => 'required_if:service,Доставка їжі|numeric',
 
             'details.shipping_type' => 'required_if:service,Кур\'єр|string',
             'details.shipping_from' => 'required_if:service,Кур\'єр|array',

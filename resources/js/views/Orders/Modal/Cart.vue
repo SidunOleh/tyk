@@ -87,6 +87,38 @@
             {{ formatPrice(subtotal) }}
         </a-typography-text>
     </a-list>
+
+    <a-list
+        v-if="zakladAddonAmounts?.length"
+        style="margin-bottom: 15px;"
+        size="small"
+        item-layout="horizontal"
+        :data-source="zakladAddonAmounts">  
+        <template #header>
+            <a-typography-text strong>
+                Додаткові суми по закладам
+            </a-typography-text>
+        </template>
+
+        <template #renderItem="{ item, index }">
+            <a-list-item style="padding: 10px 0;">
+                <a-list-item-meta>
+                    <template #title>
+                        <a-flex 
+                            :gap="10"
+                            :align="'start'">
+                            <div style="width: 70%;">{{ getZakladName(item.zaklad_id) ?? '' }}</div>
+                            <a-input-number
+                                style="width: 30%;"
+                                placeholder="Сума"
+                                size="small"
+                                v-model:value="item.amount"/>
+                        </a-flex>
+                    </template>
+                </a-list-item-meta>
+            </a-list-item>
+        </template>
+    </a-list>
 </template>
 
 <script>
@@ -97,6 +129,7 @@ import { formatPrice } from '../../../helpers/helpers'
 export default {
     props: [
         'orderItems',
+        'zakladAddonAmounts',
         'errors',
     ],
     data() {
@@ -195,6 +228,17 @@ export default {
         },
         removeFromCart(i) {
             this.orderItems.splice(i, 1)
+        },
+        getZakladName(id) {
+            for (const orderItem of this.orderItems) {
+                for (const category of orderItem?.product?.categories ?? []) {
+                    if (category.id == id) {
+                        return category.name
+                    }
+                }
+            }
+
+            return null
         },
     },
     mounted() {
