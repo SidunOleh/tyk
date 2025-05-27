@@ -57,7 +57,7 @@ class WorkShiftRepository
         $zaklady = Category::establishment()->get();
 
         $data = DB::table('orders')
-            ->select(DB::raw('category_product.category_id zaklad_id, sum(order_items.quantity * order_items.amount) total'))
+            ->select(DB::raw('category_product.category_id zaklad_id, sum(order_items.quantity * order_items.amount + (select if(sum(packaging.quantity * packaging.amount), sum(packaging.quantity * packaging.amount), 0) from order_items as packaging where packaging.packaging_for = order_items.id)) total'))
             ->join('order_items', 'order_items.order_id', '=', 'orders.id')
             ->join('products', 'products.id', '=', 'order_items.product_id')
             ->join('category_product', 'category_product.product_id', '=', 'products.id')

@@ -87,7 +87,7 @@ class Category extends Model
 
     public function scopeZaklad(Builder $query): void
     {
-        $query->whereNull('parent_id');
+        $query->whereNull('parent_id')->whereNot('name', Category::PACKAGING_NAME);
     }
 
     public function scopeParents(Builder $query, array $parents): void
@@ -104,7 +104,7 @@ class Category extends Model
 
     public function scopeEstablishment(Builder $query): void
     {
-        $query->where('parent_id', null);
+        $query->where('parent_id', null)->whereNot('name', Category::PACKAGING_NAME);
     }
 
     public function scopeVisible(Builder $query): void
