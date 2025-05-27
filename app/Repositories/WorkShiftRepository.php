@@ -148,13 +148,13 @@ class WorkShiftRepository
         $stat['additional_costs'] = (float) $result->additional_costs;
 
         $result = DB::table('orders')
-            ->select(DB::raw("coalesce(sum(total - bonuses), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
+            ->select(DB::raw("coalesce(sum(if(payment_method = '".Order::CASH."', total, paid_by_cash) - bonuses), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
                 $end->format('Y-m-d H:i:s'),
             ])
-            ->where('payment_method', Order::CASH)
+            ->whereIn('payment_method', [Order::CASH, Order::COMBINE])
             ->whereNot('status', Order::CANCELED)
             ->whereNull('deleted_at')
             ->first();

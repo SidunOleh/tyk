@@ -239,5 +239,7 @@ return [
         'packaging' => 'пакування',
         'outside_zolochiv' => 'за межами Золочева',
         'created_at' => 'дата створення',
+        'paid_by_card' => 'сплачено картою',
+        'paid_by_cash' => 'сплачено готівкою',
     ],
 ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Orders;
 
+use App\Models\Order;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -31,6 +32,8 @@ class StoreRequest extends FormRequest
             'client_id' => 'required|exists:clients,id',
             'paid' => 'required|boolean',
             'payment_method' => 'required_if:paid,true|string|nullable',
+            'paid_by_card' => 'required_if:payment_method,'.Order::COMBINE.'|numeric|gte:0|nullable',
+            'paid_by_cash' => 'required_if:payment_method,'.Order::COMBINE.'|numeric|gte:0|nullable',
             'created_at' => 'date_format:Y-m-d H:i:s|nullable',
             'use_bonuses' => 'required|boolean',
             

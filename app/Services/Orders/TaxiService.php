@@ -41,6 +41,8 @@ class TaxiService extends OrderService
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
+            'paid_by_card' => $data['paid_by_card'] ?? null,
+            'paid_by_cash' => $data['paid_by_cash'] ?? null,
             'details' => $details,
             'user_id' => Auth::guard('admin')->id(),
             'reviewed' => true,
@@ -82,6 +84,8 @@ class TaxiService extends OrderService
             'client_id' => $data['client_id'],
             'paid' => $data['paid'],
             'payment_method' => $data['payment_method'],
+            'paid_by_card' => $data['paid_by_card'] ?? null,
+            'paid_by_cash' => $data['paid_by_cash'] ?? null,
             'details' => $details,
             'created_at' => $data['created_at'],
         ]);

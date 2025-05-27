@@ -163,6 +163,32 @@
             </a-form-item>
 
             <a-form-item 
+                v-if="data.payment_method == 'Готівка/Карта'"
+                label="Сплачено готівкою"
+                has-feedback
+                :validate-status="errors['paid_by_cash'] ? 'error' : ''"
+                :help="errors.paid_by_cash">
+                <a-input-number
+                    style="width: 100%"
+                    placeholder="Введіть суму"
+                    :min="0"
+                    v-model:value="data.paid_by_cash"/>
+            </a-form-item>
+
+            <a-form-item 
+                v-if="data.payment_method == 'Готівка/Карта'"
+                label="Сплачено картою"
+                has-feedback
+                :validate-status="errors['paid_by_card'] ? 'error' : ''"
+                :help="errors.paid_by_card">
+                <a-input-number
+                    style="width: 100%"
+                    placeholder="Введіть суму"
+                    :min="0"
+                    v-model:value="data.paid_by_card"/>
+            </a-form-item>
+
+            <a-form-item 
                 label="Нотатки"
                 has-feedback
                 :validate-status="errors['notes'] ? 'error' : ''"
@@ -307,6 +333,8 @@ export default {
                 duration: 30,
                 paid: false,
                 payment_method: null,
+                paid_by_cash: 0,
+                paid_by_card: 0,
                 notes: '',
                 use_bonuses: false,
                 created_at: null,
@@ -325,8 +353,9 @@ export default {
                 'Таксі',
             ],
             paymentMethods: [
-                'Карта',
                 'Готівка',
+                'Карта',
+                'Готівка/Карта',
             ],
             shippingTypes: [],
             errors: {},

@@ -31,6 +31,8 @@ class Order extends Model
         'status',
         'paid',
         'payment_method',
+        'paid_by_cash',
+        'paid_by_card',
         'details',
         'client_id',
         'courier_id',
@@ -50,6 +52,8 @@ class Order extends Model
         'time' => 'datetime',
         'duration' => 'integer',
         'paid' => 'boolean',
+        'paid_by_cash' => 'float',
+        'paid_by_card' => 'float',
         'details' => 'array',
         'reviewed' => 'boolean',
         'history' => 'array',
@@ -95,6 +99,8 @@ class Order extends Model
     public const CASH = 'Готівка';
 
     public const CARD = 'Карта';
+
+    public const COMBINE = 'Готівка/Карта';
 
     public const SPEND_BONUS_AMOUNT = 50;
 
