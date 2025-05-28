@@ -11,7 +11,7 @@ class HandleController extends Controller
 {
     public function __invoke(HandleRequest $request)
     {
-        Mail::to('sidunoleh@gmail.com')->send(new FormMail($request->all()));
+        Mail::to('deliverytyk2017@gmail.com')->send(new FormMail($request->all()));
 
         return response(['message' => 'OK',]);
     }
