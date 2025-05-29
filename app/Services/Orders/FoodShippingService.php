@@ -52,6 +52,7 @@ class FoodShippingService extends OrderService
             'user_id' => Auth::guard('admin')->id(),
             'reviewed' => true,
             'created_at' => $createdAt,
+            'callback' => $data['callback'],
         ]);
 
         $order->orderItems()->createMany($data['order_items']);
@@ -148,6 +149,7 @@ class FoodShippingService extends OrderService
             'paid_by_cash' => $data['paid_by_cash'] ?? null,
             'details' => $details,
             'created_at' => $data['created_at'],
+            'callback' => $data['callback'],
         ]);
 
         $oldOrderItemsIds = [];
@@ -231,6 +233,7 @@ class FoodShippingService extends OrderService
             'client_id' => $client->id,
             'payment_method' => $dto->paymentMethod,
             'details' => $details,
+            'callback' => $dto->callback,
         ]);
 
         $orderItems = [];

@@ -42,6 +42,7 @@ class CheckoutRequest extends FormRequest
             'notes' => 'string|nullable',
             'payment_method' => 'required|in:Готівка,Карта',
             'use_bonuses' => 'sometimes|accepted',
+            'callback' => 'sometimes|accepted',
         ];
     }
 

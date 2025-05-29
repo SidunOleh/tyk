@@ -44,6 +44,7 @@ class CheckoutController extends Controller
                 $request->payment_method,
                 $request->use_bonuses == 'on',
                 $cartItems,
+                $request->callback == 'on'
             )
         );
 

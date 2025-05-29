@@ -35,6 +35,7 @@ class StoreRequest extends FormRequest
             'paid_by_card' => 'required_if:payment_method,'.Order::COMBINE.'|numeric|gte:0|nullable',
             'paid_by_cash' => 'required_if:payment_method,'.Order::COMBINE.'|numeric|gte:0|nullable',
             'created_at' => 'date_format:Y-m-d H:i:s|nullable',
+            'callback' => 'required|boolean',
             'use_bonuses' => 'required|boolean',
             
             'details' => 'required|array',

@@ -12,7 +12,8 @@ class CheckoutDTO
         public ?string $notes,
         public string $paymentMethod,
         public bool $useBonuses,
-        public array $cartItems
+        public array $cartItems,
+        public bool $callback,
     )
     {
         

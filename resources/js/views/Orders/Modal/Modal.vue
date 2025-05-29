@@ -214,6 +214,15 @@
             </a-form-item>
 
             <a-form-item 
+                label="Зробити дзвінок"
+                :required="true"
+                has-feedback
+                :validate-status="errors['callback'] ? 'error' : ''"
+                :help="errors.callback">
+                <a-switch v-model:checked="data.callback"/>
+            </a-form-item>
+
+            <a-form-item 
                 has-feedback
                 :validate-status="errors['use_bonuses'] ? 'error' : ''"
                 :help="errors.use_bonuses">
@@ -336,6 +345,7 @@ export default {
                 paid_by_cash: 0,
                 paid_by_card: 0,
                 notes: '',
+                callback: false,
                 use_bonuses: false,
                 created_at: null,
             },

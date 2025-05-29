@@ -36,6 +36,7 @@ class CheckoutController extends Controller
                 $request->payment_method,
                 $request->use_bonuses,
                 $request->cart_items,
+                false
             )
         );
         

@@ -7614,6 +7614,12 @@ textarea {
     font-weight: 700;
 }
 
+.callback label {
+    color: #323232;
+    font-size: 18px;
+    font-weight: 700;
+}
+
 .payments-settings {
     margin-top: 40px;
     display: flex;
@@ -7757,4 +7763,12 @@ body.no-scroll {
 
 .home-eaterie .eaterie-filters .filter-item {
     margin: 10px;
+}
+
+.order-car .callback {
+    margin-top: 10px;
+}
+
+.order-car .callback label {
+    font-weight: 400;
 }

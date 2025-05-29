@@ -39,6 +39,7 @@ class Order extends Model
         'reviewed',
         'history',
         'created_at',
+        'callback',
     ];
 
     protected $casts = [
@@ -56,6 +57,7 @@ class Order extends Model
         'details' => 'array',
         'reviewed' => 'boolean',
         'history' => 'array',
+        'callback' => 'boolean',
     ];   
     
     protected $loggable = [

@@ -13,7 +13,8 @@ class OrderCarDTO
         public ?string $shippingType,
         public ?string $comment,
         public string $paymentMethod,
-        public bool $useBonuses
+        public bool $useBonuses,
+        public bool $callback
     )
     {
         

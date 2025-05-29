@@ -104,7 +104,7 @@ export default {
         foodShippingElHtml(order) {
             return `
                 <div>
-                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)} ${order.callback ? '📞' : ''}
                 </div>
                 <br>
                 <div>
@@ -117,7 +117,7 @@ export default {
         shippingElHtml(order) {
             return `
                 <div>
-                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)} ${order.callback ? '📞' : ''}
                 </div>
                 <br>
                 <div>
@@ -130,7 +130,7 @@ export default {
         taxiElHtml(order) {
             return `
                 <div>
-                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)}
+                    ${order.reviewed ? '' : '<span class="not-reviewed"></span>'}<b>${order.type}</b> <b>№${order.number}</b> ${formatDate(order.created_at, false)} ${order.callback ? '📞' : ''}
                 </div>
                 <br>
                 <div>

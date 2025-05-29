@@ -22,7 +22,8 @@ class OrderCarController extends Controller
                 $request->shipping_type,
                 $request->comment,
                 $request->payment_method,
-                $request->use_bonuses
+                $request->use_bonuses,
+                false
             ), 
             Auth::user()
         );

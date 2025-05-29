@@ -124,7 +124,7 @@ export default {
         foodShippingHtml(order) {
             return `
             <div>
-                <b>${order.type} ${order.number}</b>
+                <b>${order.type} ${order.number}</b> ${order.callback ? '📞' : ''}
                 <br> 
                 <br> 
                 <b>Час приготування:</b> ${this.formatCookingTime(order.details.cooking_time)}
@@ -137,7 +137,7 @@ export default {
         shippingHtml(order) {
             return `
             <div>
-                <b>${order.type} ${order.number}</b>
+                <b>${order.type} ${order.number}</b> ${order.callback ? '📞' : ''}
                 <br>
                 <br>
                 <b>Звідки:</b> ${order.details.shipping_from.address}
@@ -150,7 +150,7 @@ export default {
         taxiHtml(order) {
             return `
             <div>
-                <b>${order.type} ${order.number}</b>
+                <b>${order.type} ${order.number}</b> ${order.callback ? '📞' : ''}
                 <br>
                 <br>
                 <b>Звідки:</b> ${order.details.taxi_from.address}

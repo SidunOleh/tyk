@@ -161,6 +161,19 @@
                     </div>
                 </div>
                 @endif
+                <div class="callback">
+                    <div class="form-group">
+                        <input 
+                            form="checkout-form" 
+                            id="callback"
+                            type="checkbox" 
+                            class="custom-checkbox"
+                            name="callback"/>
+                        <label for="callback">
+                            Виконати дзвінок про виконання
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <button

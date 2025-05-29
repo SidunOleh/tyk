@@ -225,6 +225,21 @@
                                     </label>
                                 </div>
                             </div>
+
+                            <div class="callback">
+                                <div class="form-group">
+                                    <input 
+                                        id="callback"
+                                        type="checkbox" 
+                                        class="custom-checkbox"
+                                        v-model="data.callback"/>
+                                    <label for="callback">
+                                        <span>
+                                            Виконати дзвінок про виконання
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <button 
@@ -583,6 +598,7 @@ const app = {
         comment: '',
         payment_method: 'Готівка',
         use_bonuses: false,
+        callback: false,
     },
     shippingTypes: {{ Js::from($courierServices->pluck('name')) }},
     leftSide: 'form',
@@ -864,6 +880,7 @@ const app = {
         data.comment = this.data.comment
         data.payment_method = this.data.payment_method
         data.use_bonuses = this.data.use_bonuses
+        data.callback = this.data.callback
 
         return data
     },

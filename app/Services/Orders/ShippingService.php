@@ -49,6 +49,7 @@ class ShippingService extends OrderService
             'user_id' => Auth::guard('admin')->id(),
             'reviewed' => true,
             'created_at' => $createdAt,
+            'callback' => $data['callback'],
         ]);
 
         $order->updateAmount();
@@ -92,6 +93,7 @@ class ShippingService extends OrderService
             'paid_by_cash' => $data['paid_by_cash'] ?? null,
             'details' => $details,
             'created_at' => $data['created_at'],
+            'callback' => $data['callback'],
         ]);
 
         $order->updateAmount();
@@ -134,6 +136,7 @@ class ShippingService extends OrderService
             'notes' => $dto->comment,
             'shipping_price' => $shippingPrice,
             'details' => $details,
+            'callback' => $dto->callback,
         ]);
 
         $order->updateAmount();
