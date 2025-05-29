@@ -33,5 +33,9 @@ class ManageBonusForOrder
         if ($oldStatus == Order::DONE and $order->status != Order::DONE) {
             OrderService::make($order->type)->removeBonusesForOrder($order);
         }
+
+        if ($oldStatus != Order::CANCELED and $order->status == Order::CANCELED) {
+            OrderService::make($order->type)->resetUsedBonuses($order);
+        }
     }
 }

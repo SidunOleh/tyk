@@ -121,6 +121,13 @@ abstract class OrderService extends Service
         $order->update(['add_bonuses' => 0]);
     }
 
+    public function resetUsedBonuses(Order $order): void
+    {
+        $order->client->addBonus($order->bonuses);
+
+        $order->update(['bonuses' => 0]);
+    }
+
     public function review(Order $order): void
     {
         $order->update(['reviewed' => true]);
