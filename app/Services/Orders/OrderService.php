@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 abstract class OrderService extends Service
 {
@@ -109,23 +110,35 @@ abstract class OrderService extends Service
             $bonuses = $settings['bonuses_taxi'];
         }
 
+        DB::beginTransaction();
+
         $order->client->addBonus($bonuses);
 
         $order->update(['add_bonuses' => $bonuses]);
+
+        DB::commit();
     }
 
     public function removeBonusesForOrder(Order $order): void
     {
+        DB::beginTransaction();
+
         $order->client->removeBonus($order->add_bonuses, true);
 
         $order->update(['add_bonuses' => 0]);
+
+        DB::commit();
     }
 
     public function resetUsedBonuses(Order $order): void
     {
+        DB::beginTransaction();
+
         $order->client->addBonus($order->bonuses);
 
         $order->update(['bonuses' => 0]);
+
+        DB::commit();
     }
 
     public function review(Order $order): void
