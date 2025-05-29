@@ -244,5 +244,6 @@ return [
         'schedule' => 'розклад',
         'schedule.*.start' => 'початок',
         'schedule.*.end' => 'кінець',
+        'bonuses' => 'бонуси',
     ],
 ];
