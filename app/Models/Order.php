@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
@@ -240,11 +239,11 @@ class Order extends Model
             return $carry + $orderItem->amount * $orderItem->quantity;
         }, 0);
 
-        $zakladyAddonAmount = $this->zakladAddonAmounts->reduce(function (float $carry, ZakladAddonAmount $zakladAddonAmount) {
+        $subtotal += $this->zakladAddonAmounts->reduce(function (float $carry, ZakladAddonAmount $zakladAddonAmount) {
             return $carry + $zakladAddonAmount->amount;
         }, 0);
 
-        $total = $subtotal + $zakladyAddonAmount + $this->shipping_price + $this->additional_costs;
+        $total = $subtotal + $this->shipping_price + $this->additional_costs;
 
         return $this->updateQuietly([
             'subtotal' => $subtotal,

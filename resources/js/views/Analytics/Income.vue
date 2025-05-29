@@ -3,7 +3,8 @@
         <a-flex 
             class="top"
             wrap="wrap"
-            :gap="10">
+            :gap="10"
+            :align="'flex-start'">
             <a-card 
                 title="Загалом" 
                 style="width: 300px;"
@@ -31,6 +32,33 @@
                 size="small">
                 {{ formatPrice(data.taxi_total ?? null) }}
             </a-card>
+        </a-flex>
+
+        <a-flex 
+            :vertical="true"
+            :gap="10"
+            class="top">
+            <a-typography-text strong>
+                Методи оплати
+            </a-typography-text>
+            <a-flex 
+                wrap="wrap"
+                :gap="10"
+                :align="'flex-start'">
+                <a-card 
+                    title="Готівка" 
+                    style="width: 300px;"
+                    size="small">
+                    {{ formatPrice(data.paid_by_cash ?? null) }}
+                </a-card>
+
+                <a-card 
+                    title="Карта" 
+                    style="width: 300px;"
+                    size="small">
+                    {{ formatPrice(data.paid_by_card ?? null) }}
+                </a-card>
+            </a-flex>
         </a-flex>
 
         <div class="chart">

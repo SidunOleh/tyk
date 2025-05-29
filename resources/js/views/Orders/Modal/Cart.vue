@@ -81,11 +81,6 @@
                 </template>
             </a-list-item>
         </template>
-
-        Проміжна сума: 
-        <a-typography-text strong>
-            {{ formatPrice(subtotal) }}
-        </a-typography-text>
     </a-list>
 
     <a-list
@@ -119,6 +114,13 @@
             </a-list-item>
         </template>
     </a-list>
+
+    <div style="margin-bottom: 15px;">
+        Проміжна сума:
+        <a-typography-text strong>
+            {{ formatPrice(subtotal) }}
+        </a-typography-text>
+    </div>
 </template>
 
 <script>
@@ -161,7 +163,10 @@ export default {
             })
         },
         subtotal() {
-            return this.orderItems.reduce((acc, item) => acc += item.quantity * item.amount + this.packagingAmount(item), 0)
+            return this.orderItems.reduce((acc, item) => acc += item.quantity * item.amount + this.packagingAmount(item), 0) + this.zakladyAddonAmount
+        },
+        zakladyAddonAmount() {
+            return this.zakladAddonAmounts?.reduce((acc, item) => acc += item.amount, 0)
         },
     },
     methods: {

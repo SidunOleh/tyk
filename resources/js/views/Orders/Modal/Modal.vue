@@ -413,13 +413,13 @@ export default {
             return this.data.order_items.reduce((acc, item) => acc += item.packaging.reduce((acc, item) => acc += item.amount * item.quantity, 0), 0)
         },
         subtotal() {
-            return this.data.order_items?.reduce((acc, item) => acc += item.quantity * item.amount, 0) + this.packagingPrice
+            return this.data.order_items?.reduce((acc, item) => acc += item.quantity * item.amount, 0) + this.packagingPrice + this.zakladyAddonAmount
         },
         zakladyAddonAmount() {
             return this.data.zaklad_addon_amounts?.reduce((acc, item) => acc += item.amount, 0)
         },
         total() {
-           return this.subtotal + this.zakladyAddonAmount + this.data.shipping_price + this.data.additional_costs
+           return this.subtotal + this.data.shipping_price + this.data.additional_costs
         },
         zaklady() {
             const zaklady = this.data.order_items?.map(item => {
