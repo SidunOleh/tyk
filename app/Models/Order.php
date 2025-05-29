@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -260,9 +261,15 @@ class Order extends Model
         }
 
         $bonuses = $this->total < self::SPEND_BONUS_AMOUNT ? $this->total : self::SPEND_BONUS_AMOUNT;
+
+        DB::beginTransaction();
         
         $this->client->removeBonus($bonuses);
 
-        return $this->update(['bonuses' => $bonuses]);
+        $this->update(['bonuses' => $bonuses]);
+
+        DB::commit();
+
+        return true;
     }
 }
