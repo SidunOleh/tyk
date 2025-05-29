@@ -245,5 +245,6 @@ return [
         'schedule.*.start' => 'початок',
         'schedule.*.end' => 'кінець',
         'bonuses' => 'бонуси',
+        'callback' => 'дзвінок про виконання',
     ],
 ];
