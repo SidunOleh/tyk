@@ -241,5 +241,8 @@ return [
         'created_at' => 'дата створення',
         'paid_by_card' => 'сплачено картою',
         'paid_by_cash' => 'сплачено готівкою',
+        'schedule' => 'розклад',
+        'schedule.*.start' => 'початок',
+        'schedule.*.end' => 'кінець',
     ],
 ];

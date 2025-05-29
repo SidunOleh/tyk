@@ -32,8 +32,21 @@ class StoreRequest extends FormRequest
             'tags.*' => 'exists:category_tags,id',
             'upsells' => 'array',
             'upsells' => 'exists:products,id',
-            'start_hour' => 'date_format:H:i:s|nullable',
-            'end_hour' => 'date_format:H:i:s|nullable',
+            'schedule' => 'array|nullable',
+            'schedule.0.start' => 'required_unless:schedule.0.end,null|date_format:H:i|nullable',
+            'schedule.1.start' => 'required_unless:schedule.1.end,null|date_format:H:i|nullable',
+            'schedule.2.start' => 'required_unless:schedule.2.end,null|date_format:H:i|nullable',
+            'schedule.3.start' => 'required_unless:schedule.3.end,null|date_format:H:i|nullable',
+            'schedule.4.start' => 'required_unless:schedule.4.end,null|date_format:H:i|nullable',
+            'schedule.5.start' => 'required_unless:schedule.5.end,null|date_format:H:i|nullable',
+            'schedule.6.start' => 'required_unless:schedule.6.end,null|date_format:H:i|nullable',
+            'schedule.0.end' => 'required_unless:schedule.0.start,null|date_format:H:i|nullable',
+            'schedule.1.end' => 'required_unless:schedule.1.start,null|date_format:H:i|nullable',
+            'schedule.2.end' => 'required_unless:schedule.2.start,null|date_format:H:i|nullable',
+            'schedule.3.end' => 'required_unless:schedule.3.start,null|date_format:H:i|nullable',
+            'schedule.4.end' => 'required_unless:schedule.4.start,null|date_format:H:i|nullable',
+            'schedule.5.end' => 'required_unless:schedule.5.start,null|date_format:H:i|nullable',
+            'schedule.6.end' => 'required_unless:schedule.6.start,null|date_format:H:i|nullable',
         ];
     }
 }

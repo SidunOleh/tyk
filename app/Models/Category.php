@@ -30,6 +30,7 @@ class Category extends Model
         'upsells',
         'start_hour',
         'end_hour',
+        'schedule',
     ];
 
     protected $casts = [
@@ -39,6 +40,7 @@ class Category extends Model
         'upsells' => 'array',
         'start_hour' => 'datetime:H:i:s',
         'end_hour' => 'datetime:H:i:s',
+        'schedule' => 'array',
     ];
 
     protected $loggable = [

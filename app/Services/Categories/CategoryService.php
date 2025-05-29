@@ -12,6 +12,7 @@ use App\Models\CategoryProduct;
 use App\Models\CategoryTag;
 use App\Models\Product;
 use App\Services\Service;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -246,11 +247,21 @@ class CategoryService extends Service
         $products = Product::whereIn('id', $productsIds)->get();
         foreach ($products as $product) {
             foreach ($product->zaklady as $zaklad) {
-                if (! $zaklad->start_hour or ! $zaklad->end_hour) {
+                if (! $schedule = $zaklad->schedule) {
                     continue;
                 }
 
-                if (now()->lt($zaklad->start_hour) or now()->gt($zaklad->end_hour)) {
+                $day = $schedule[now()->dayOfWeekIso-1];
+
+                if (! $day['start'] or ! $day['end']) {
+                    $closed[] = $zaklad;
+                    continue;
+                }
+
+                $start = Carbon::createFromFormat('H:i', $day['start']);
+                $end = Carbon::createFromFormat('H:i', $day['end']);
+
+                if (now()->lt($start) or now()->gt($end)) {
                     $closed[] = $zaklad;
                 }
             }

@@ -113,29 +113,10 @@
                     v-model:value="data.description"/>
             </a-form-item>
 
-            <a-form-item 
-                label="Початок роботи"
-                has-feedback
-                :validate-status="errors['start_hour'] ? 'error' : ''"
-                :help="errors.start_hour">
-                <a-time-picker
-                    style="width: 100%;" 
-                    v-model:value="data.start_hour" 
-                    format="HH:mm"
-                    value-format="HH:mm:ss" />
-            </a-form-item>
-
-            <a-form-item 
-                label="Кінець роботи"
-                has-feedback
-                :validate-status="errors['end_hour'] ? 'error' : ''"
-                :help="errors.end_hour">
-                <a-time-picker 
-                    style="width: 100%;"
-                    v-model:value="data.end_hour" 
-                    format="HH:mm"
-                    value-format="HH:mm:ss" />
-            </a-form-item>
+            <Schedule 
+                v-if="data.parent_id === null"
+                v-model:value="data.schedule"
+                :errors="errors"/>
 
             <a-button
                 type="primary"   
@@ -161,6 +142,7 @@ import Upload from '../components/Upload.vue'
 import slugify from 'slugify'
 import TagsModal from './Tags/Modal.vue'
 import productsApi from '../../api/products'
+import Schedule from '../components/Schedule.vue'
 
 export default {
     props: [
@@ -174,6 +156,7 @@ export default {
     components: {
         Upload, 
         TagsModal,
+        Schedule,
     },
     data() {
         return {
@@ -185,8 +168,7 @@ export default {
                 tags: [],
                 upsells: [],
                 description: '',
-                start_hour: null,
-                end_hour: null,
+                schedule: null,
             },
             products: {
                 data: [],
