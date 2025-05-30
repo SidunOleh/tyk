@@ -170,7 +170,7 @@
                             class="custom-checkbox"
                             name="callback"/>
                         <label for="callback">
-                            Виконати дзвінок про виконання
+                            Зателефонувати для підтвердження
                         </label>
                     </div>
                 </div>

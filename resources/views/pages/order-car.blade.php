@@ -235,7 +235,7 @@
                                         v-model="data.callback"/>
                                     <label for="callback">
                                         <span>
-                                            Виконати дзвінок про виконання
+                                            Зателефонувати для підтвердження
                                         </span>
                                     </label>
                                 </div>
