@@ -598,7 +598,7 @@ const app = {
         comment: '',
         payment_method: 'Готівка',
         use_bonuses: false,
-        callback: false,
+        callback: true,
     },
     shippingTypes: {{ Js::from($courierServices->pluck('name')) }},
     leftSide: 'form',

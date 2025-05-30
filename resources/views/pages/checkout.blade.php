@@ -168,7 +168,8 @@
                             id="callback"
                             type="checkbox" 
                             class="custom-checkbox"
-                            name="callback"/>
+                            name="callback"
+                            checked/>
                         <label for="callback">
                             Зателефонувати для підтвердження
                         </label>
