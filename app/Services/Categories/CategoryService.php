@@ -248,6 +248,7 @@ class CategoryService extends Service
         foreach ($products as $product) {
             foreach ($product->zaklady as $zaklad) {
                 if (! $schedule = $zaklad->schedule) {
+                    $closed[] = $zaklad;
                     continue;
                 }
 
