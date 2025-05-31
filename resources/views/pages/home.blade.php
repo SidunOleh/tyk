@@ -158,7 +158,7 @@
         </div>
         <div class="eaterie-list">
             @foreach ($zaklady as $i => $zaklad)
-                @include('templates.esteblishment', ['zaklad' => $zaklad])
+                @include('templates.esteblishment', ['zaklad' => $zaklad, 'class' => $i > 5 ? 'hide' : ''])
             @endforeach
         </div>
         <a class="btn clear show-more">

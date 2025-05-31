@@ -1,6 +1,6 @@
 <a 
     href="{{ route('pages.category', ['category' => $zaklad->slug,]) }}" 
-    @class(['eaterie-item' => true, 'closed' => $zaklad->closed()])
+    @class([('eaterie-item ' . ($class ?? '')) => true, 'closed' => $zaklad->closed()])
     data-tags="{{ json_encode($zaklad->tags->pluck('id')) }}">
     <div class="img-card">
         <img src="{{ $zaklad->imageUrl() }}" alt="" />
