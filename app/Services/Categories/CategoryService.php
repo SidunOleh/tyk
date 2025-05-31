@@ -247,22 +247,7 @@ class CategoryService extends Service
         $products = Product::whereIn('id', $productsIds)->get();
         foreach ($products as $product) {
             foreach ($product->zaklady as $zaklad) {
-                if (! $schedule = $zaklad->schedule) {
-                    $closed[] = $zaklad;
-                    continue;
-                }
-
-                $day = $schedule[now()->dayOfWeekIso-1];
-
-                if (! $day['start'] or ! $day['end']) {
-                    $closed[] = $zaklad;
-                    continue;
-                }
-
-                $start = Carbon::createFromFormat('H:i', $day['start']);
-                $end = Carbon::createFromFormat('H:i', $day['end']);
-
-                if (now()->lt($start) or now()->gt($end)) {
+                if ($zaklad->closed()) {
                     $closed[] = $zaklad;
                 }
             }

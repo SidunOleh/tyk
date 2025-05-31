@@ -7771,4 +7771,34 @@ body.no-scroll {
 
 .order-car .callback label {
     font-weight: 400;
+    font-size: 16px;
+}
+
+.order-car .callback label::before {
+    width: 16px;
+    height: 16px;
+}
+
+.order-car .callback span {
+    font-size: 16px;
+}
+
+.eaterie-item.closed {
+    position: relative;
+}
+
+.eaterie-item.closed .img-card,
+.eaterie-item.closed .info-card {
+    opacity: 0.7;
+}
+
+.eaterie-item .closed {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+}
+
+.eaterie-item.closed .closed {
+    display: block;
 }

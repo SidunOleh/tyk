@@ -158,31 +158,7 @@
         </div>
         <div class="eaterie-list">
             @foreach ($zaklady as $i => $zaklad)
-            <a 
-                href="{{ route('pages.category', ['category' => $zaklad->slug,]) }}" 
-                @class(['eaterie-item', 'hide' => $i > 5,])
-                data-tags="{{ json_encode($zaklad->tags->pluck('id')) }}">
-                <div class="img-card">
-                    <img src="{{ $zaklad->imageUrl() }}" alt="" />
-                </div>
-                <div class="info-card">
-                    <div class="title">
-                        <!-- <div class="icon">
-                            <img src="./img/drink-img.jpg" alt="" />
-                        </div> -->
-                        {{ $zaklad->name }}
-                    </div>
-                    <div class="bottom">
-                        <div class="work-time">
-                            <img src="{{ asset('/assets/img/clock.svg') }}" alt="" />
-                            {!! $zaklad->description !!}
-                        </div>
-                        <!-- <div class="label top">
-                            🔥 ТОП
-                        </div> -->
-                    </div>
-                </div>
-            </a>
+                @include('templates.esteblishment', ['zaklad' => $zaklad])
             @endforeach
         </div>
         <a class="btn clear show-more">

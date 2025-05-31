@@ -1,3 +1,7 @@
+@php
+$closed = $category->closed();
+@endphp
+
 <div class="dishes__catalog">
     <div class="catalog__item">
         <div class="title">
@@ -33,11 +37,13 @@
                         <p class="price">
                             {{ format_price($product->price) }}
                         </p>
+                        @if (! $closed)
                         <div class="quantity-counter">
                             <button class="quantity-btn--minus">-</button>
                             <input type="text" class="quantity-input" value="{{ $cart->quantity($product->id) }}" readonly />
                             <button class="quantity-btn--plus">+</button>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

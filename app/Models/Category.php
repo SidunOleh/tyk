@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\History;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -122,5 +123,48 @@ class Category extends Model
     public function upsells(): BelongsToJson
     {
         return $this->belongsToJson(Product::class, 'upsells');
+    }
+
+    public function isZakald(): bool
+    {
+        return $this->parent_id === null and $this->name != self::PACKAGING_NAME;
+    }
+
+    public function getZaklad(): self
+    {
+        if ($this->isZakald()) {
+            return $this;
+        }
+
+        $parent = $this->parent;
+        while ($parent->parent !== null) {
+            $parent = $parent->parent;
+        }
+
+        return $parent;
+    }
+
+    public function closed(): bool
+    {
+        $schedule = $this->isZakald() ? $this->schedule : $this->getZaklad()->schedule;
+
+        if (! $schedule) {
+            return true;
+        }
+
+        $day = $schedule[now()->dayOfWeekIso-1];
+
+        if (! $day['start'] or ! $day['end']) {
+            return true;
+        }
+
+        $start = Carbon::createFromFormat('H:i', $day['start']);
+        $end = Carbon::createFromFormat('H:i', $day['end']);
+
+        if (now()->lt($start) or now()->gt($end)) {
+            return true;
+        }
+
+        return false;
     }
 }

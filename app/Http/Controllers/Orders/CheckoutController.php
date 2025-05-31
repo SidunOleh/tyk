@@ -31,7 +31,7 @@ class CheckoutController extends Controller
         $productsIds = array_map(fn ($item) => $item['product_id'], $cartItems);
 
         if ($closed = $this->categoryService->closedZaklady($productsIds)) {
-            return response(['message' => implode(', ', array_map(fn ($zaklad) => $zaklad->name, $closed)) . ' закритий. Повторіть замовлення в робочі години.'], 400);
+            return response(['message' => implode(', ', array_map(fn ($zaklad) => $zaklad->name, $closed)) . (count($closed) > 1 ? ' закриті' : ' закритий') . '. Повторіть замовлення в робочі години.'], 400);
         }
 
         $order = $this->orderService->checkout(
