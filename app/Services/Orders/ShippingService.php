@@ -3,6 +3,7 @@
 namespace App\Services\Orders;
 
 use App\DTO\Orders\OrderCarDTO;
+use App\Exceptions\MethodIsNotSupportedException;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
@@ -103,7 +104,7 @@ class ShippingService extends OrderService
 
     public function repeat(Order $order): void
     {
-        
+        throw new MethodIsNotSupportedException();
     }
 
     public function orderCar(OrderCarDTO $dto, Client $client): Order

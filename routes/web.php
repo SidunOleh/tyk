@@ -159,4 +159,5 @@ Route::post('/form', HandleController::class)
 /**
  * Tg 
  */
-Route::post('/tg', HandlerController::class);
+Route::post('/tg', HandlerController::class)
+    ->name('tg.webhook');

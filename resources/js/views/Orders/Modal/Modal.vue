@@ -345,7 +345,7 @@ export default {
                 paid_by_cash: 0,
                 paid_by_card: 0,
                 notes: '',
-                callback: false,
+                callback: true,
                 use_bonuses: false,
                 created_at: null,
             },
