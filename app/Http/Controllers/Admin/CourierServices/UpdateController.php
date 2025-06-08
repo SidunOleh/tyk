@@ -18,7 +18,7 @@ class UpdateController extends Controller
 
     public function __invoke(CourierService $courierService, UpdateRequest $request)
     {
-        $this->courierServiceService->update($courierService, $request);
+        $this->courierServiceService->update($courierService, $request->validated());
 
         return response(['message' => 'OK']);
     }

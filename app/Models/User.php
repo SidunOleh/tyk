@@ -8,6 +8,7 @@ use App\Contracts\ILogUser;
 use App\Traits\History;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,7 @@ class User extends Authenticatable implements ILogUser
         'password',
         'phonet_number',
         'history',
+        'courier_id',
     ];
 
     /**
@@ -70,6 +72,8 @@ class User extends Authenticatable implements ILogUser
     public const ADMIN = 'адмін';
 
     public const DISPATCHER = 'диспетчер';
+
+    public const COURIER = 'кур\'єр';
 
     protected static function booted(): void
     {
@@ -111,5 +115,10 @@ class User extends Authenticatable implements ILogUser
     public function isAdmin(): bool
     {
         return $this->role == self::ADMIN;
+    }
+
+    public function courier(): BelongsTo
+    {
+        return $this->belongsTo(Courier::class);
     }
 }

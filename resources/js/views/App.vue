@@ -10,10 +10,12 @@
 import Layout from './Layout/Layout.vue'
 import AuthLayout from './Layout/AuthLayout.vue'
 import ukUa from 'ant-design-vue/lib/locale/uk_UA'
+import { hasRole } from '../helpers/helpers'
+import DriverLayout from './Layout/DriverLayout.vue'
 
 export default {
     components: {
-        Layout, AuthLayout,
+        Layout, AuthLayout, DriverLayout,
     },
     data() {
         return {
@@ -30,7 +32,7 @@ export default {
                 case 'password.reset':
                     return 'AuthLayout'  
                 default:
-                    return 'Layout'
+                    return hasRole(['кур\'єр']) ? 'DriverLayout' : 'Layout'
             }
         }
     }

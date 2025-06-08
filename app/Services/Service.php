@@ -7,23 +7,22 @@ use App\Services\Google\MapsService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
 class Service
 {
     protected string $model;
 
-    public function create(FormRequest $request): Model
+    public function create(array $data): Model
     {
-        $model = $this->model::create($request->validated());
+        $model = $this->model::create($data);
 
         return $model;
     }
 
-    public function update(Model $model, FormRequest $request): void
+    public function update(Model $model, array $data): void
     {
-        $model->update($request->validated());
+        $model->update($data);
     }
 
     public function delete(Model $model): void

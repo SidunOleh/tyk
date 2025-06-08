@@ -10,27 +10,32 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
 class ProductService extends Service
 {
     protected string $model = Product::class;
 
-    public function create(FormRequest $request): Model
+    public function create(array $data): Model
     {
-        $model = $this->model::create($request->except('categories'));
+        $categories = $data['categories'];
 
-        $model->categories()->sync($request->categories);
+        unset($data['categories']);
+
+        $model = $this->model::create($data);
+
+        $model->categories()->sync($categories);
 
         return $model;
     }
 
-    public function update(Model $model, FormRequest $request): void
+    public function update(Model $model, array $data): void
     {
-        $model->update($request->except('categories'));
+        $model->categories()->sync($data['categories']);
 
-        $model->categories()->sync($request->categories);
+        unset($data['categories']);
+
+        $model->update($data);
     }
     
     public function index(Request $request): LengthAwarePaginator

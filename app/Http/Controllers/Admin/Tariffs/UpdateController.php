@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Tariff $tariff, UpdateRequest $request)
     {
-        $this->tariffService->update($tariff, $request);
+        $this->tariffService->update($tariff, $request->validated());
 
         return response(['tariff' => new TariffResource($tariff)]);
     }

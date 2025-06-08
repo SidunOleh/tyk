@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Category $category, UpdateRequest $request)
     {
-        $this->categoryService->update($category, $request);
+        $this->categoryService->update($category, $request->validated());
 
         return response(['category' => new CategoryResource($category),]);
     }

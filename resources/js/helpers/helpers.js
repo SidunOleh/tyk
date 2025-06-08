@@ -140,6 +140,11 @@ function copyToClipboard(text) {
     textArea.remove()
 }
 
+function daysInMonth(iMonth, iYear) {
+    return new Date(iYear, iMonth, 0).getDate()
+}
+
+
 export {
     auth,
     hasRole,
@@ -153,4 +158,5 @@ export {
     orderStatusColor,
     formatPhone,
     copyToClipboard,
+    daysInMonth,
 }

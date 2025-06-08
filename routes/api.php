@@ -49,6 +49,12 @@ use App\Http\Controllers\Admin\CourierServices\DeleteController as CourierServic
 use App\Http\Controllers\Admin\CourierServices\GetController as CourierServicesGetController;
 use App\Http\Controllers\Admin\CourierServices\StoreController as CourierServicesStoreController;
 use App\Http\Controllers\Admin\CourierServices\UpdateController as CourierServicesUpdateController;
+use App\Http\Controllers\Admin\Driver\ChangePasswordController;
+use App\Http\Controllers\Admin\Driver\CurrentWorkShiftController;
+use App\Http\Controllers\Admin\Driver\GetController as DriverGetController;
+use App\Http\Controllers\Admin\Driver\StatisticController;
+use App\Http\Controllers\Admin\Driver\UpdateController as DriverUpdateController;
+use App\Http\Controllers\Admin\Driver\WorkShiftsController;
 use App\Http\Controllers\Admin\Images\UploadController;
 use App\Http\Controllers\Admin\Orders\BulkDeleteController as OrdersBulkDeleteController;
 use App\Http\Controllers\Admin\Orders\ChangeCourierController;
@@ -409,6 +415,21 @@ Route::domain(config('app.admin_domain'))->group(function () {
             Route::delete('/{courierService}', CourierServicesDeleteController::class)
                 ->middleware('has_role:адмін')
                 ->name('delete');
+        });
+
+        Route::prefix('/driver')->name('driver.')->middleware('has_role:кур\'єр')->group(function () {
+            Route::get('/', DriverGetController::class)
+                ->name('get');
+            Route::get('/statistic', StatisticController::class)
+                ->name('statistic');
+            Route::put('/', DriverUpdateController::class)
+                ->name('update');
+            Route::post('/change-password', ChangePasswordController::class)
+                ->name('change-password');
+            Route::get('/work-shifts', WorkShiftsController::class)
+                ->name('work-shifts');
+            Route::get('/work-shifts/current', CurrentWorkShiftController::class)
+                ->name('work-shifts.current');
         });
     });
 });

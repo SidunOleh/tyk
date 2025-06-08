@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Promotion $promotion, UpdateRequest $request)
     {
-        $this->promotionService->update($promotion, $request);
+        $this->promotionService->update($promotion, $request->validated());
 
         return response(new PromotionResource($promotion));
     }

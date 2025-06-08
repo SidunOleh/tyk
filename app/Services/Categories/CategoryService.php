@@ -12,11 +12,9 @@ use App\Models\CategoryProduct;
 use App\Models\CategoryTag;
 use App\Models\Product;
 use App\Services\Service;
-use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -44,20 +42,26 @@ class CategoryService extends Service
         return $models;
     }
 
-    public function create(FormRequest $request): Model
+    public function create(array $data): Model
     {
-        $category = Category::create($request->except('tags'));
+        $tags = $data['tags'] ?? [];
+        
+        unset($data['tags']);
 
-        $category->tags()->sync($request->tags ?? []);
+        $category = Category::create($data);
+
+        $category->tags()->sync($tags);
 
         return $category;
     }
 
-    public function update(Model $category, FormRequest $request): void
+    public function update(Model $category, array $data): void
     {
-        $category->update($request->except('tags'));
+        $category->tags()->sync($data['tags'] ?? []);
+        
+        unset($data['tags']);
 
-        $category->tags()->sync($request->tags ?? []);
+        $category->update($data);
     }
 
     public function all(): Collection

@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Car $car, UpdateRequest $request)
     {
-        $this->carService->update($car, $request);
+        $this->carService->update($car, $request->validated());
 
         return response(['car' => new CarResource($car),]);
     }

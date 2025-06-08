@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $courierService = $this->courierServiceService->create($request);
+        $courierService = $this->courierServiceService->create($request->validated());
 
         return response(['courier_service' => new CourierServiceResource($courierService)]);
     }

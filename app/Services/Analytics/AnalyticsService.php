@@ -2,8 +2,11 @@
 
 namespace App\Services\Analytics;
 
+use App\Exceptions\NotSupportedIntervalException;
 use App\Models\Category;
+use App\Models\Courier;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class AnalyticsService
@@ -263,5 +266,49 @@ class AnalyticsService
         ", ['start' => $start, 'end' => $end, 'status' => Order::CANCELED, 'packaging' => Category::PACKAGING_NAME,]);
 
         return $data;
+    }
+
+    public function courierStatistic(Courier $courier, Carbon $start, Carbon $end, string $interval): array
+    {
+        $q = DB::table('orders')
+            ->where('courier_id', $courier->id)
+            ->whereNot('status', Order::CANCELED)
+            ->whereNull('deleted_at');
+
+        if ($interval == 'years') {
+            $q->selectRaw('type, count(*) count, sum(shipping_price) total, YEAR(created_at) AS year')
+                ->whereBetween(DB::raw('YEAR(created_at)'), [
+                    $start->format('Y'),
+                    $end->format('Y'),
+                ])
+                ->groupByRaw('type, YEAR(created_at)')
+                ->orderByRaw('YEAR(created_at) ASC');
+        } elseif ($interval == 'months') {
+            $q->selectRaw('type, count(*) count, sum(shipping_price) total, YEAR(created_at) AS year, MONTH(created_at) AS month')
+                ->whereBetween(DB::raw('YEAR(created_at)'), [
+                    $start->format('Y'),
+                    $end->format('Y'),
+                ])
+                ->whereBetween(DB::raw('MONTH(created_at)'), [
+                    $start->format('m'),
+                    $end->format('m'),
+                ])
+                ->groupByRaw('type, YEAR(created_at), MONTH(created_at)')
+                ->orderByRaw('YEAR(created_at), MONTH(created_at) ASC');
+        } elseif ($interval == 'days') {
+            $q->selectRaw('type, count(*) count, sum(shipping_price) total, DATE(created_at) AS date')
+                ->whereBetween(DB::raw('DATE(created_at)'), [
+                    $start->format('Y-m-d'),
+                    $end->format('Y-m-d'),
+                ])
+                ->groupByRaw('type, DATE(created_at)')
+                ->orderByRaw('DATE(created_at) ASC');
+        } else {
+            throw new NotSupportedIntervalException();
+        }
+
+        $result = $q->get()->toArray();
+
+        return $result;
     }
 }

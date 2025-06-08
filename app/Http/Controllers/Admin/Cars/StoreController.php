@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $car = $this->carService->create($request);
+        $car = $this->carService->create($request->validated());
 
         return response(['car' => new CarResource($car),]);
     }

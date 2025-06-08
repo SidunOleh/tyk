@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $client = $this->clientService->create($request);
+        $client = $this->clientService->create($request->validated());
 
         return response(['client' => new ClientResource($client),]);
     }

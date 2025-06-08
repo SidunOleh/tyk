@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Users;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -40,6 +41,7 @@ class UpdateRequest extends FormRequest
                 'nullable',
             ],
             'role' => 'required|string',
+            'courier_id' => 'required_if:role,'.User::COURIER.'|exists:couriers,id|nullable',
             'phonet_number' => 'string|nullable',
         ];
     }

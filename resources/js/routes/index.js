@@ -288,6 +288,19 @@ const routes = [{
         title: 'Налаштування',
     },
 }, {
+    path: '/driver',
+    component: defineAsyncComponent({
+        loader: () =>
+            import ('../views/Driver/Index.vue'),
+        loadingComponent: Loader,
+    }),
+    name: 'driver.index',
+    meta: {
+        roles: ['кур\'єр', ],
+        key: 'driver.index',
+        title: 'Водій',
+    },
+}, {
     path: '/:pathMatch(.*)*',
     component: defineAsyncComponent({
         loader: () =>

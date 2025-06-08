@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $tariff = $this->tariffService->create($request);
+        $tariff = $this->tariffService->create($request->validated());
 
         return response(['tariff' => new TariffResource($tariff)]);
     }

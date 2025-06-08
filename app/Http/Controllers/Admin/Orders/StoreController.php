@@ -11,7 +11,7 @@ class StoreController extends Controller
 {
     public function __invoke(StoreRequest $request)
     {
-        $order = OrderService::make($request->service)->create($request);
+        $order = OrderService::make($request->service)->create($request->validated());
 
         $order->load([
             'orderItems',

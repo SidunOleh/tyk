@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $promotion = $this->promotionService->create($request);
+        $promotion = $this->promotionService->create($request->validated());
 
         return response(new PromotionResource($promotion));
     }

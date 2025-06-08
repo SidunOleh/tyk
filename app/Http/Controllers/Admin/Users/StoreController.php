@@ -19,7 +19,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $user = $this->userService->create($request);
+        $user = $this->userService->create($request->validated());
 
         UserCreated::dispatch($user, $request->password);
 

@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Product $product, UpdateRequest $request)
     {
-        $this->productService->update($product, $request);
+        $this->productService->update($product, $request->validated());
 
         return response(['product' => new ProductResource($product),]);
     }

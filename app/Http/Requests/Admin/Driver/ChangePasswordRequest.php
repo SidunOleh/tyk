@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin\Couriers\Cashes;
+namespace App\Http\Requests\Admin\Driver;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
-class StoreRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +23,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'received' => 'required|numeric|min:0',
-            'returned' => 'required|numeric|min:0',
+            'password' => [
+                'required',
+                Password::min(8),
+            ],
         ];
     }
 }

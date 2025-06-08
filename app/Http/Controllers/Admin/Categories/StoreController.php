@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $category = $this->categoryService->create($request);
+        $category = $this->categoryService->create($request->validated());
 
         return response(['category' => new CategoryResource($category),]);
     }

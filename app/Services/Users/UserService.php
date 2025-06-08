@@ -7,20 +7,28 @@ use App\Services\Service;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
 class UserService extends Service
 {
     protected string $model = User::class;
 
-    public function update(Model $model, FormRequest $request): void
+    public function update(Model $model, array $data): void
     {
-        $model->update($request->except(['password',]));
+        $password = $data['password'] ?? null;
 
-        if ($password = $request->password) {
+        if ($password) {
             $model->update(['password' => $password,]);
         }
+
+        unset($data['password']);
+
+        $model->update($data);
+    }
+
+    public function changePassword(User $user, string $password): void
+    {
+        $user->update(['password' => $password,]);
     }
 
     public function index(Request $request): LengthAwarePaginator

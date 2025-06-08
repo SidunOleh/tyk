@@ -63,4 +63,14 @@ class DriverWorkShift extends Model
     {
         $query->where('status', self::OPEN);
     }
+
+    public function scopeClose(Builder $query): void
+    {
+        $query->where('status', self::CLOSE);
+    }
+
+    public function scopeCourier(Builder $query, Courier $courier): void
+    {
+        $query->where('courier_id', $courier->id);
+    }
 }

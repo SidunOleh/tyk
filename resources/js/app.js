@@ -8,6 +8,9 @@ import { QuillEditor, } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import Vue3ColorPicker from 'vue3-colorpicker'
 import 'vue3-colorpicker/style.css'
+import dayjs from 'dayjs'
+import 'dayjs/locale/uk'
+dayjs.locale('uk')
 
 QuillEditor.props.globalOptions.default = () => { return { theme: 'snow', } }
 

@@ -64,6 +64,7 @@
 <script>
 import { message } from 'ant-design-vue'
 import { auth } from '../../helpers/helpers'
+import { hasRole } from '../../helpers/helpers'
 
 export default {
     data() {
@@ -82,7 +83,12 @@ export default {
                 this.loading = true
                 this.errors = {}
                 await auth.login(this.credentials)
-                location.href = '/'
+
+                if (hasRole(['кур\'єр'])) {
+                    location.href = '/driver'
+                } else {
+                    location.href = '/'
+                }
             } catch (err) {
                 if (err?.response?.status == 422) {
                     this.errors = err?.response?.data?.errors

@@ -10,17 +10,14 @@ use App\Models\Product;
 use App\Models\ZakladAddonAmount;
 use App\Services\Cart\Cart;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FoodShippingService extends OrderService
 {
-    public function create(FormRequest $request): Model
+    public function create(array $data): Model
     {
         DB::beginTransaction();
-
-        $data = $request->validated();
 
         $client = Client::find($data['client_id']);
 
@@ -120,11 +117,9 @@ class FoodShippingService extends OrderService
         }
     }
 
-    public function update(Model $order, FormRequest $request): void
+    public function update(Model $order, array $data): void
     {
         DB::beginTransaction();
-
-        $data = $request->validated();
 
         $client = Client::find($data['client_id']);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Users;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
@@ -32,6 +33,7 @@ class StoreRequest extends FormRequest
                 Password::min(8),
             ],
             'role' => 'required|string',
+            'courier_id' => 'required_if:role,'.User::COURIER.'|exists:couriers,id|nullable',
             'phonet_number' => 'string|nullable',
         ];
     }

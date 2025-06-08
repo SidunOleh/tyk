@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $product = $this->productService->create($request);
+        $product = $this->productService->create($request->validated());
 
         return response(['product' => new ProductResource($product),]);
     }

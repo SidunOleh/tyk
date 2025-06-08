@@ -7,17 +7,14 @@ use App\Exceptions\MethodIsNotSupportedException;
 use App\Models\Client;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ShippingService extends OrderService
 {
-    public function create(FormRequest $request): Model
+    public function create(array $data): Model
     {
         DB::beginTransaction();
-
-        $data = $request->validated();
 
         $client = Client::find($data['client_id']);
         
@@ -64,11 +61,9 @@ class ShippingService extends OrderService
         return $order;
     }
 
-    public function update(Model $order, FormRequest $request): void
+    public function update(Model $order, array $data): void
     {
         DB::beginTransaction();
-
-        $data = $request->validated();
         
         $client = Client::find($data['client_id']);
 

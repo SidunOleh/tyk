@@ -18,7 +18,7 @@ class StoreController extends Controller
 
     public function __invoke(StoreRequest $request)
     {
-        $region = $this->regionService->create($request);
+        $region = $this->regionService->create($request->validated());
 
         return response(['region' => new RegionResource($region)]);
     }

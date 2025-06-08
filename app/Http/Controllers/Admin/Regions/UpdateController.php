@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Region $region, UpdateRequest $request)
     {
-        $this->regionService->update($region, $request);
+        $this->regionService->update($region, $request->validated());
 
         return response(['region' => new RegionResource($region)]);
     }

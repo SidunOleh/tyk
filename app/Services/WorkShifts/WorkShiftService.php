@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\WorkShifts\Drivers\OpenRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\UpdateRequest;
 use App\Http\Requests\Admin\WorkShifts\ZakladReports\UpdateRequest as ZakladReportsUpdateRequest;
 use App\Http\Requests\Admin\WorkShifts\Dispatchers\OpenRequest as DispatchersOpenRequest;
+use App\Models\Courier;
 use App\Models\DispatcherWorkShift;
 use App\Models\DriverWorkShift;
 use App\Models\WorkShift;
@@ -151,6 +152,35 @@ class WorkShiftService extends Service
         $driverWorkShift->update($data);
 
         DriverWorkShiftClosed::dispatch($driverWorkShift);
+    }
+
+    public function getOpenDriverWorkShift(Courier $courier): ?DriverWorkShift
+    {
+        $workShift = DriverWorkShift::with('courier')
+            ->with('car')
+            ->with('workShift')
+            ->open()
+            ->first();
+
+        return $workShift;
+    }
+
+    public function getClosedDriverWorkShifts(Courier $courier, Request $request): LengthAwarePaginator
+    {
+        $page = $request->query('page', 1);
+        $perpage = $request->query('perpage', 15);
+        $orderby = $request->query('orderby', 'created_at');
+        $order = $request->query('order', 'DESC');
+
+        $models = DriverWorkShift::with('courier')
+            ->with('car')
+            ->with('workShift')
+            ->close()
+            ->courier($courier)
+            ->orderBy($orderby, $order)
+            ->paginate($perpage, ['*'], 'page', $page);
+
+        return $models;
     }
 
     public function openDispatcherWorkShift(

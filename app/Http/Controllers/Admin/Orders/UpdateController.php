@@ -12,7 +12,7 @@ class UpdateController extends Controller
 {
     public function __invoke(Order $order, UpdateRequest $request)
     {
-        OrderService::make($request->service)->update($order, $request);
+        OrderService::make($request->service)->update($order, $request->validated());
 
         $order->load([
             'orderItems',

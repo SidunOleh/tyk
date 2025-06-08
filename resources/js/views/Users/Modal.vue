@@ -84,6 +84,19 @@
                     v-model:value="data.role"/>
             </a-form-item>
 
+            <a-form-item
+                v-if="data.role == 'кур\'єр'"
+                label="Кур'єр"
+                :required="true"
+                has-feedback
+                :validate-status="errors['courier_id'] ? 'error' : ''"
+                :help="errors.courier_id">
+                <a-select
+                    placeholder="Виберіть кур'єра"
+                    :options="courierOptions"
+                    v-model:value="data.courier_id"/>
+            </a-form-item>
+
             <a-form-item 
                 label="Phonet номер"
                 has-feedback
@@ -112,6 +125,7 @@ import api from '../../api/users'
 import { 
     formatPhone,
 } from '../../helpers/helpers'
+import couriersApi from '../../api/couriers'
 
 export default {
     props: [
@@ -135,7 +149,9 @@ export default {
             roles: [
                'адмін',
                'диспетчер',
+               'кур\'єр',
             ],
+            couriers: [],
             loading: false,
         }
     },
@@ -144,6 +160,14 @@ export default {
             return this.roles.map(role => {
                 return {
                     value: role,
+                }
+            })
+        },
+        courierOptions() {
+            return this.couriers.map(courier => {
+                return {
+                    label: `${courier.first_name} ${courier.last_name}`,
+                    value: courier.id,
                 }
             })
         },
@@ -188,11 +212,36 @@ export default {
                 this.loading = false
             }
         },
+        async fetchCouriers() {
+            try {
+                this.couriers = await couriersApi.all()
+            } catch (err) {
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
+    },
+    watch: {
+        'data.courier_id': {
+            handler(id) {
+                if (! id) {
+                    return
+                }
+
+                const courier = this.couriers.find(courier => courier.id == id)
+                if (courier) {
+                    this.data.first_name = courier.first_name
+                    this.data.last_name = courier.last_name
+                    this.data.phone = courier.phone
+                }
+            },
+        },  
     },
     mounted() {
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
         }
+
+        this.fetchCouriers()
     },
 }
 </script>

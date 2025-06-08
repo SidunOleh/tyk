@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Couriers\Cashes;
+namespace App\Http\Requests\Admin\Driver;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,8 +24,15 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'received' => 'required|numeric|min:0',
-            'returned' => 'required|numeric|min:0',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore(Auth::id()),
+            ],
+            'phone' => 'required|string|regex:/^\([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}$/',
+            'tg' => 'string|nullable',
         ];
     }
 }
