@@ -327,6 +327,7 @@ router.beforeEach((to, from) => {
     }
 
     if (to.meta.roles && !hasRole(to.meta.roles)) {
+        router.push({ name: 'login' })
         message.error('Заборонено.')
         return false
     }
