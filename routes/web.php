@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Auth\LogInController;
 use App\Http\Controllers\Admin\Auth\LogOutController;
 use App\Http\Controllers\Admin\IndexController;
+use App\Http\Controllers\App\RedirectController;
 use App\Http\Controllers\Auth\LogInController as AuthLogInController;
 use App\Http\Controllers\Auth\LogOutController as AuthLogOutController;
 use App\Http\Controllers\Auth\SendCodeController;
@@ -161,3 +162,9 @@ Route::post('/form', HandleController::class)
  */
 Route::post('/tg', HandlerController::class)
     ->name('tg.webhook');
+
+/**
+ * App
+ */
+Route::get('/app', RedirectController::class)
+    ->name('app.redirect');
