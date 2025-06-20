@@ -14,7 +14,7 @@ class RedirectController extends Controller
         $agent->setHttpHeaders($request->headers->all());
 
         if ($agent->is('iPhone')) {
-            return redirect('https://apps.apple.com/ua/app/tyktyk/id1542962830');
+            return redirect('https://apps.apple.com/ua/app/тук-тук-сервіс-твого-міста/id6745031284?l=uk');
         } else {
             return redirect('https://play.google.com/store/apps/details?id=com.tyktyk.tyktyk');
         }   
