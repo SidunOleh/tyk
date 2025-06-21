@@ -168,3 +168,4 @@ Route::post('/tg', HandlerController::class)
  */
 Route::get('/app', RedirectController::class)
     ->name('app.redirect');
+    
