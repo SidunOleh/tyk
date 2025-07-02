@@ -100,7 +100,7 @@ export default {
                 last_name: '',
                 phone: '',
                 tg: '',
-                vehicle: [],
+                vehicles: [],
             },
             errors: {},
             vehicles: [

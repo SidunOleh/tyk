@@ -24,6 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'brand' => 'required|string',
             'number' => 'required|string',
+            'owner_id' => 'exists:couriers,id|nullable',
             'mapon_id' => 'integer|nullable',
         ];
     }

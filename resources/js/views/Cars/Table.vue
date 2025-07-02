@@ -26,8 +26,8 @@
                 <a-descriptions-item label="Номер">
                     {{ record.number }}
                 </a-descriptions-item>
-                <a-descriptions-item label="Mapon id">
-                    {{ record.mapon_id }}
+                <a-descriptions-item label="Власник">
+                    {{ record.owner ? `${record.owner.first_name} ${record.owner.last_name}` : '' }}
                 </a-descriptions-item>       
             </a-descriptions>
         </template>
@@ -85,8 +85,8 @@
                 {{ record.number }}
             </template>
 
-            <template v-if="column.key === 'mapon_id'">
-                {{ record.mapon_id }}
+            <template v-if="column.key === 'owner_id'">
+                {{ record.owner ? `${record.owner.first_name} ${record.owner.last_name}` : '' }}
             </template>
 
             <template v-if="column.key === 'actions'">
@@ -146,8 +146,8 @@ export default {
                     key: 'number',
                 },
                 {
-                    title: 'Mapon id',
-                    key: 'mapon_id',
+                    title: 'Власник',
+                    key: 'owner_id',
                 },
                 {
                     key: 'actions',

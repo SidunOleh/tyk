@@ -30,6 +30,18 @@
             </a-form-item>
 
             <a-form-item 
+                label="Власник"
+                has-feedback
+                :validate-status="errors['owner_id'] ? 'error' : ''"
+                :help="errors.owner_id">
+                <a-select
+                    placeholder="Виберіть власника"
+                    :options="ownerOptions"
+                    :allowClear="true"
+                    v-model:value="data.owner_id"/>
+            </a-form-item>
+
+            <a-form-item 
                 label="Mapon id"
                 has-feedback
                 :validate-status="errors['mapon_id'] ? 'error' : ''"
@@ -54,6 +66,7 @@
 <script>
 import { message } from 'ant-design-vue'
 import api from '../../api/cars'
+import couriersApi from '../../api/couriers'
 
 export default {
     props: [
@@ -67,12 +80,24 @@ export default {
             data: {
                 brand: '',
                 number: '',
+                owner_id: null,
                 mapon_id: '',
             },
             errors: {},
             loading: false,
+            couriers: [],
         }
-    },      
+    },
+    computed: {
+        ownerOptions() {
+            return this.couriers.map(courier => {
+                return {
+                    label: `${courier.first_name} ${courier.last_name}`,
+                    value: courier.id,
+                }
+            })
+        },
+    },     
     methods: {
         async create() {
             try {
@@ -109,8 +134,18 @@ export default {
                 this.loading = false
             }
         },
+        async fetchCouriers() {
+            try {
+                this.couriers = await couriersApi.all()
+            } catch (err) {
+                console.error(err)
+                message.error(err?.response?.data?.message ?? err.message)
+            }
+        },
     },
     mounted() {
+        this.fetchCouriers()
+
         if (this.item) {
             this.data = JSON.parse(JSON.stringify(this.item))
         }
