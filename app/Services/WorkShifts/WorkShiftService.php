@@ -3,6 +3,7 @@
 namespace App\Services\WorkShifts;
 
 use App\Events\DriverWorkShiftClosed;
+use App\Exceptions\AttachCarToNotOwnerException;
 use App\Http\Requests\Admin\WorkShifts\CloseRequest as WorkShiftsCloseRequest;
 use App\Http\Requests\Admin\WorkShifts\Dispatchers\CloseRequest as DispatchersCloseRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\CloseRequest;
@@ -10,6 +11,7 @@ use App\Http\Requests\Admin\WorkShifts\Drivers\OpenRequest;
 use App\Http\Requests\Admin\WorkShifts\Drivers\UpdateRequest;
 use App\Http\Requests\Admin\WorkShifts\ZakladReports\UpdateRequest as ZakladReportsUpdateRequest;
 use App\Http\Requests\Admin\WorkShifts\Dispatchers\OpenRequest as DispatchersOpenRequest;
+use App\Models\Car;
 use App\Models\Courier;
 use App\Models\DispatcherWorkShift;
 use App\Models\DriverWorkShift;
@@ -115,6 +117,12 @@ class WorkShiftService extends Service
         OpenRequest $request
     ): DriverWorkShift
     {
+        $car = Car::find($request->car_id);
+
+        if ($car->hasOwner() and $car->owner->id != $request->courier_id) {
+            throw new AttachCarToNotOwnerException();
+        }
+
         $driverWorkShift = $workShift->drivers()->create([
             'status' => DriverWorkShift::OPEN,
             'start' => $request->start,
@@ -132,6 +140,12 @@ class WorkShiftService extends Service
         UpdateRequest $request
     ): void
     {
+        $car = Car::find($request->car_id);
+
+        if ($car->hasOwner() and $car->owner->id != $driverWorkShift->courier_id) {
+            throw new AttachCarToNotOwnerException();
+        }
+
         $driverWorkShift->update($request->validated());
     }
 

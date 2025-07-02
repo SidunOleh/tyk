@@ -31,4 +31,9 @@ class Car extends Model
     {
         return $this->belongsTo(Courier::class);
     }
+
+    public function hasOwner(): bool
+    {
+        return (bool) $this->owner;
+    }
 }
