@@ -1,4 +1,7 @@
-@include('templates.header', ['title' => 'Про нас'])
+@include('templates.header', [
+    'title' => get_content_value('about_meta_title', 'Про нас'),
+    'description' => get_content_value('about_meta_description'),
+])
 
 <section class="page-hero" style="background-image: url('{{ get_content_value('about_first_img') }}')">
     <div class="wrapper">

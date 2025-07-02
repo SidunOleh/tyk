@@ -13,6 +13,8 @@ class Promotion extends Model
         'slug',
         'subtitle',
         'text',
+        'meta_title',
+        'meta_description',
     ];
 
     public function scopeSearch(Builder $query, string $s): void

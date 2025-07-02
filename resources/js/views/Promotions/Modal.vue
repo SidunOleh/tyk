@@ -63,6 +63,27 @@
                     v-model:content="data.text"></QuillEditor>
             </a-form-item>
 
+            <a-form-item 
+                label="Метазаголовок"
+                has-feedback
+                :validate-status="errors['meta_title'] ? 'error' : ''"
+                :help="errors.meta_title">
+                <a-input
+                    placeholder="Введіть заголовок"
+                    v-model:value="data.meta_title"/>
+            </a-form-item>
+
+            <a-form-item 
+                label="Метаопис"
+                has-feedback
+                :validate-status="errors['meta_description'] ? 'error' : ''"
+                :help="errors.meta_description">
+                <a-textarea
+                    placeholder="Введіть опис"
+                    v-model:value="data.meta_description"/>
+            </a-form-item>
+
+
             <a-button
                 type="primary"
                 :loading="loading"
@@ -99,6 +120,8 @@ export default {
                 slug: '',
                 subtitle: '',
                 text: '',
+                meta_title: '',
+                meta_description: '',
             },
             errors: {},
             loading: false,

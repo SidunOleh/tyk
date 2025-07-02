@@ -1,4 +1,7 @@
-@include('templates.header', ['title' => 'Замовити авто'])
+@include('templates.header', [
+    'title' => get_content_value('order_car_meta_title', 'Замовити авто'),
+    'description' => get_content_value('order_car_meta_description'),
+])
 
 @verbatim
 <section 
