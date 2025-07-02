@@ -24,8 +24,8 @@ class WorkShift extends Model
     ];
 
     protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime',
+        'start' => 'datetime:Y-m-d H:i:s',
+        'end' => 'datetime:Y-m-d H:i:s',
         'food_shipping_count' => 'integer',
         'shipping_count' => 'integer',
         'taxi_count' => 'integer',

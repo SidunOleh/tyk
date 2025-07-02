@@ -48,6 +48,20 @@
             </a-form-item>
 
             <a-form-item 
+                label="Приблизний кінець"
+                has-feedback
+                :validate-status="errors['approximate_end'] ? 'error' : ''"
+                :help="errors.approximate_end">
+                <a-date-picker
+                    style="width: 100%;"
+                    showTime
+                    placeholder="Виберіть час"
+                    format="YYYY-MM-DD HH:mm"
+                    valueFormat="YYYY-MM-DD HH:mm:ss"
+                    v-model:value="data.approximate_end"/>
+            </a-form-item>
+
+            <a-form-item 
                 label="Розмінна каса"
                 :required="true"
                 has-feedback
@@ -92,6 +106,7 @@ export default {
                 courier_id: null,
                 car_id: null,
                 start: null,
+                approximate_end: null,
                 exchange_office: 0,
             },
             errors: {},
@@ -100,7 +115,13 @@ export default {
     },
     computed: {
         courierOptions() {
-            return this.couriers.map(courier => {
+            return this.couriers.filter(courier => {
+                if (this.chosenCar && this.chosenCar.owner) {
+                    return this.chosenCar.owner.id == courier.id
+                } else {
+                    return true
+                }
+            }).map(courier => {
                 return {
                     label: `${courier.first_name} ${courier.last_name}`,
                     value: courier.id,
@@ -108,12 +129,21 @@ export default {
             })
         },
         carOptions() {
-            return this.cars.map(car => {
+            return this.cars.filter(car => {
+                if (! car.owner_id || ! this.data.courier_id) {
+                    return true
+                } else {
+                    return this.data.courier_id == car.owner_id
+                }
+            }).map(car => {
                 return {
-                    label: car.brand,
+                    label: `${car.brand}, ${car.owner ? `авто ${car.owner.first_name} ${car.owner.last_name}` : 'авто компанії'}`,
                     value: car.id,
                 }
             })
+        },
+        chosenCar() {
+            return this.cars.find(car => this.data.car_id == car.id)
         },
     },      
     methods: {

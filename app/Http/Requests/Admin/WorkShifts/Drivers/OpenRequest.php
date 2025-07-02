@@ -22,9 +22,10 @@ class OpenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start' => 'required|date_format:Y-m-d H:i:s',
             'courier_id' => 'required|exists:couriers,id',
             'car_id' => 'required|exists:cars,id',
+            'start' => 'required|date_format:Y-m-d H:i:s',
+            'approximate_end' => 'date_format:Y-m-d H:i:s|nullable',
             'exchange_office' => 'required|numeric|min:0',
         ];
     }

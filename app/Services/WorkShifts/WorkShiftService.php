@@ -118,6 +118,7 @@ class WorkShiftService extends Service
         $driverWorkShift = $workShift->drivers()->create([
             'status' => DriverWorkShift::OPEN,
             'start' => $request->start,
+            'approximate_end' => $request->approximate_end,
             'courier_id' => $request->courier_id,
             'car_id' => $request->car_id,
             'exchange_office' => $request->exchange_office,

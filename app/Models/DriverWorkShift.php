@@ -24,11 +24,12 @@ class DriverWorkShift extends Model
         'shipping_total',
         'taxi_total',
         'additional_costs',
+        'approximate_end',
     ];
 
     protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime',
+        'start' => 'datetime:Y-m-d H:i:s',
+        'end' => 'datetime:Y-m-d H:i:s',
         'exchange_office' => 'float',
         'returned_amount' => 'float',
         'food_shipping_count' => 'integer',
@@ -38,6 +39,7 @@ class DriverWorkShift extends Model
         'shipping_total' => 'float',
         'taxi_total' => 'float',
         'additional_costs' => 'float',
+        'approximate_end' => 'datetime:Y-m-d H:i:s',
     ];
 
     public const OPEN = 'open';

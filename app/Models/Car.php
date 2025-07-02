@@ -15,6 +15,10 @@ class Car extends Model
         'owner_id',
     ];
 
+    protected $with = [
+        'owner',
+    ];
+
     public function scopeSearch(Builder $query, string $s): void
     {
         $query->whereAny([

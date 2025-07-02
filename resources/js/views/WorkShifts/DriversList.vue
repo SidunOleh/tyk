@@ -10,7 +10,7 @@
                     <template #title>
                         {{ `${item.courier.first_name} ${item.courier.last_name}` }}
                         <a-typography-text type="secondary">
-                            {{ formatDate(item.start) }} - {{ item.end ? formatDate(item.end) : 'працює' }}
+                            {{ formatDate(item.start) }} - {{ item.end ? formatDate(item.end) : (item.approximate_end ? `працює до ${formatDate(item.approximate_end)}` : 'працює') }}
                         </a-typography-text>
                     </template>
                 </a-list-item-meta>
