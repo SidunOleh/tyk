@@ -55,6 +55,8 @@ class UpdateRequest extends FormRequest
             'schedule.4.end' => 'required_unless:schedule.4.start,null|date_format:H:i|nullable',
             'schedule.5.end' => 'required_unless:schedule.5.start,null|date_format:H:i|nullable',
             'schedule.6.end' => 'required_unless:schedule.6.start,null|date_format:H:i|nullable',
+            'meta_title' => 'string|nullable',
+            'meta_description' => 'string|nullable',
         ];
     }
 }

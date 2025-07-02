@@ -1,4 +1,7 @@
-@include('templates.header', ['title' => $promotion->title])
+@include('templates.header', [
+    'title' =>  $promotion->meta_title ?? $promotion->name,
+    'description' => $promotion->meta_description,
+])
 
 <section class="page-hero" style="background-image: url('{{ $promotion->image }}')">
     <div class="wrapper">

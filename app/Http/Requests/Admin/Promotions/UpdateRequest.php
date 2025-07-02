@@ -36,6 +36,8 @@ class UpdateRequest extends FormRequest
             ],
             'subtitle' => 'required|string',
             'text' => 'required|string',
+            'meta_title' => 'string|nullable',
+            'meta_description' => 'string|nullable',
         ];
     }
 }

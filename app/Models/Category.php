@@ -32,6 +32,8 @@ class Category extends Model
         'start_hour',
         'end_hour',
         'schedule',
+        'meta_title',
+        'meta_description',
     ];
 
     protected $casts = [

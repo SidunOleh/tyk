@@ -1,4 +1,7 @@
-@include('templates.header')
+@include('templates.header', [
+    'title' => get_content_value('home_meta_title'),
+    'description' => get_content_value('home_meta_description'),
+])
 
 <section class="hero">
     <div class="container">

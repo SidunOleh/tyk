@@ -94,6 +94,18 @@
                             <StepItems :items="data.home_step_items"/>
                         </a-form-item>
                     </a-tab-pane>
+                    <a-tab-pane key="7" tab="SEO">
+                        <a-form-item label="Метазаголовок">
+                            <a-input
+                                placeholder="Введіть заголовок"
+                                v-model:value="data.home_meta_title"/>
+                        </a-form-item>
+                        <a-form-item label="Метаопис">
+                            <a-textarea
+                                placeholder="Введіть опис"
+                                v-model:value="data.home_meta_description"/>
+                        </a-form-item>
+                    </a-tab-pane>
                 </a-tabs>
             </a-collapse-panel>
             <a-collapse-panel key="2" header="Про нас">
@@ -135,6 +147,50 @@
                             <ExampleItems :items="data.about_examples_items"/>
                         </a-form-item>
                     </a-tab-pane>
+                    <a-tab-pane key="4" tab="SEO">
+                        <a-form-item label="Метазаголовок">
+                            <a-input
+                                placeholder="Введіть заголовок"
+                                v-model:value="data.about_meta_title"/>
+                        </a-form-item>
+                        <a-form-item label="Метаопис">
+                            <a-textarea
+                                placeholder="Введіть опис"
+                                v-model:value="data.about_meta_description"/>
+                        </a-form-item>
+                    </a-tab-pane>
+                </a-tabs>
+            </a-collapse-panel>
+            <a-collapse-panel key="3" header="Заклади">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="SEO">
+                        <a-form-item label="Метазаголовок">
+                            <a-input
+                                placeholder="Введіть заголовок"
+                                v-model:value="data.zaklady_meta_title"/>
+                        </a-form-item>
+                        <a-form-item label="Метаопис">
+                            <a-textarea
+                                placeholder="Введіть опис"
+                                v-model:value="data.zaklady_meta_description"/>
+                        </a-form-item>
+                    </a-tab-pane>
+                </a-tabs>
+            </a-collapse-panel>
+            <a-collapse-panel key="4" header="Замовити автомобіль">
+                <a-tabs>
+                    <a-tab-pane key="1" tab="SEO">
+                        <a-form-item label="Метазаголовок">
+                            <a-input
+                                placeholder="Введіть заголовок"
+                                v-model:value="data.order_car_meta_title"/>
+                        </a-form-item>
+                        <a-form-item label="Метаопис">
+                            <a-textarea
+                                placeholder="Введіть опис"
+                                v-model:value="data.order_car_meta_description"/>
+                        </a-form-item>
+                    </a-tab-pane>
                 </a-tabs>
             </a-collapse-panel>
         </a-collapse>
@@ -169,7 +225,7 @@ export default {
     },
     data() {
         return {
-            activeKey: [1],
+            activeKey: [],
             data: {
                 home_first_title: '',
                 home_first_subtitle: '',
@@ -188,6 +244,8 @@ export default {
                 home_app_img: null,
                 home_step_title: '',
                 home_step_items: [],
+                home_meta_title: '',
+                home_meta_description: '',
                 about_first_title: '',
                 about_first_img: null,
                 about_info_title: '',
@@ -195,6 +253,12 @@ export default {
                 about_info_items: [],
                 about_examples_title: '',
                 about_examples_items: [],
+                about_meta_title: '',
+                about_meta_description: '',
+                zaklady_meta_title: '',
+                zaklady_meta_description: '',
+                order_car_meta_title: '',
+                order_car_meta_description: '',
             },
             courierServices: [],
             loading: false,

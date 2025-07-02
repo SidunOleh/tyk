@@ -1,4 +1,7 @@
-@include('templates.header', ['title' => 'Заклади'])
+@include('templates.header', [
+    'title' => get_content_value('zaklady_meta_title', 'Заклади'),
+    'description' => get_content_value('zaklady_meta_description'),
+])
 
 <section class="page-hero" style="background-image: url({{ asset('/assets/img/pizza-img.jpg') }})">
     <div class="wrapper">
