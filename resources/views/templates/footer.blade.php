@@ -76,8 +76,8 @@
                 <div class="download">
                     <p class="title">Завантажити додаток</p>
                     <div class="download-buttons">
-                        <a href="https://apps.apple.com/us/app/%D1%82%D1%83%D0%BA-%D1%82%D1%83%D0%BA/id1548288578#?platform=iphone" class="download-btn"><img src="{{ asset('/assets/img/AppStore.svg') }}" alt="" /></a>
-                        <a href="https://play.google.com/store/apps/details?id=com.tuktuk.tuk_tuk_app" class="download-btn"><img src="{{ asset('/assets/img/GooglePlay.svg') }}" alt="" /></a>
+                        <a href="https://apps.apple.com/ua/app/тук-тук-сервіс-твого-міста/id6745031284?l=uk" class="download-btn"><img src="{{ asset('/assets/img/AppStore.svg') }}" alt="" /></a>
+                        <a href="https://play.google.com/store/apps/details?id=com.tyktyk.tyktyk" class="download-btn"><img src="{{ asset('/assets/img/GooglePlay.svg') }}" alt="" /></a>
                     </div>
                 </div>
             </div>
