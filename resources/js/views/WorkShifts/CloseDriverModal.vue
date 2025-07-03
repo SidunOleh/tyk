@@ -38,17 +38,17 @@
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ data.food_shipping_count }}
+                    {{ stat.food_shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.food_shipping_bonuses) }}
+                    {{ formatPrice(stat.food_shipping_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.food_shipping_total) }}
+                    {{ formatPrice(stat.food_shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
@@ -58,17 +58,17 @@
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ data.shipping_count }}
+                    {{ stat.shipping_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.shipping_bonuses) }}
+                    {{ formatPrice(stat.shipping_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.shipping_total) }}
+                    {{ formatPrice(stat.shipping_total) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
@@ -78,17 +78,17 @@
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ data.taxi_count }}
+                    {{ stat.taxi_count }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.taxi_bonuses) }}
+                    {{ formatPrice(stat.taxi_bonuses) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
                     :hoverable="true">
-                    {{ formatPrice(data.taxi_total) }}
+                    {{ formatPrice(stat.taxi_total) }}
                 </a-card-grid>
                 <a-card-grid 
                     style="width: 25%; text-align: center"
@@ -133,7 +133,7 @@
                 :validate-status="errors['returned_amount'] ? 'error' : ''"
                 :help="errors.returned_amount">
                 <template #label>
-                    Повернута сума. Повинен повернути - <a-typography-text strong style="margin-left: 5px;"> {{ formatPrice(data.to_returned) }}</a-typography-text>
+                    Повернута сума. Повинен повернути - <a-typography-text strong style="margin-left: 5px;"> {{ formatPrice(stat.to_returned) }}</a-typography-text>
                 </template>
 
                 <a-input-number
@@ -173,6 +173,9 @@ export default {
         return {
             data: {
                 end: null,
+                returned_amount: 0,
+            },
+            stat: {
                 food_shipping_count: 0,
                 food_shipping_total: 0,
                 shipping_count: 0,
@@ -180,7 +183,7 @@ export default {
                 taxi_count: 0,
                 taxi_total: 0,
                 additional_costs: 0,
-                returned_amount: 0,
+                to_returned: 0,
             },
             errors: {},
             loading: false,
@@ -188,19 +191,19 @@ export default {
     },     
     computed: {
         totalCount() {
-            return this.data.food_shipping_count 
-                + this.data.shipping_count 
-                + this.data.taxi_count
+            return this.stat.food_shipping_count 
+                + this.stat.shipping_count 
+                + this.stat.taxi_count
         },  
         totalBonuses() {
-            return this.data.food_shipping_bonuses
-                + this.data.shipping_bonuses
-                + this.data.taxi_bonuses
+            return this.stat.food_shipping_bonuses
+                + this.stat.shipping_bonuses
+                + this.stat.taxi_bonuses
         },  
         totalTotal() {
-            return this.data.food_shipping_total 
-                + this.data.shipping_total 
-                + this.data.taxi_total
+            return this.stat.food_shipping_total 
+                + this.stat.shipping_total 
+                + this.stat.taxi_total
         },  
     },  
     methods: {
@@ -210,7 +213,7 @@ export default {
             try {
                 this.loading = true
                 const res = await api.driverWorkShiftStat(this.item.id)
-                this.data = {...this.data, ...res.stat}
+                this.stat = res.stat
             } catch (err) {
                 message.error(err?.response?.data?.message ?? err.message)
             } finally {

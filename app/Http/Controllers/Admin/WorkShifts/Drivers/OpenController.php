@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\WorkShifts\Drivers;
 
+use App\DTO\WorkShifts\Drivers\OpenDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\WorkShifts\Drivers\OpenRequest;
 use App\Models\WorkShift;
@@ -18,7 +19,7 @@ class OpenController extends Controller
 
     public function __invoke(WorkShift $workShift, OpenRequest $request)
     {
-        $this->workShiftService->openDriverWorkShift($workShift, $request);
+        $this->workShiftService->openDriverWorkShift($workShift, OpenDTO::createFromRequest($request));
 
         return response(['message' => 'OK']);
     }

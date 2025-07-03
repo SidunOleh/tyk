@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -44,5 +45,15 @@ class DispatcherWorkShift extends Model
     public function workShift(): BelongsTo
     {
         return $this->belongsTo(WorkShift::class);
+    }
+
+    public function scopeOpen(Builder $query): void
+    {
+        $query->where('status', self::OPEN);
+    }
+
+    public function scopeClose(Builder $query): void
+    {
+        $query->where('status', self::CLOSE);
     }
 }

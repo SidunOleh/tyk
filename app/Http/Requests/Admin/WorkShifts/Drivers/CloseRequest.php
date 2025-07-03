@@ -24,13 +24,6 @@ class CloseRequest extends FormRequest
         return [
             'end' => 'required|date_format:Y-m-d H:i:s',
             'returned_amount' => 'required|numeric|min:0',
-            'food_shipping_count' => 'required|numeric|min:0',
-            'shipping_count' => 'required|numeric|min:0',
-            'taxi_count' => 'required|numeric|min:0',
-            'food_shipping_total' => 'required|numeric|min:0',
-            'shipping_total' => 'required|numeric|min:0',
-            'taxi_total' => 'required|numeric|min:0',
-            'additional_costs' => 'required|numeric|min:0',
         ];
     }
 }

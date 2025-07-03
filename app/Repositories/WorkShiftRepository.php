@@ -2,6 +2,9 @@
 
 namespace App\Repositories;
 
+use App\DTO\WorkShifts\Dispatchers\StatDTO as DispatchersStatDTO;
+use App\DTO\WorkShifts\Drivers\StatDTO as DriversStatDTO;
+use App\DTO\WorkShifts\StatDTO;
 use App\Models\Category;
 use App\Models\DispatcherWorkShift;
 use App\Models\DriverWorkShift;
@@ -11,18 +14,9 @@ use Illuminate\Support\Facades\DB;
 
 class WorkShiftRepository 
 {
-    public function getWorkShiftStat(WorkShift $workShift): array
+    public function getWorkShiftStat(WorkShift $workShift): StatDTO
     {
-        $stat = [];
-        $stat['food_shipping_count'] = 0;
-        $stat['food_shipping_bonuses'] = 0;
-        $stat['food_shipping_total'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['shipping_bonuses'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['taxi_count'] = 0;
-        $stat['taxi_bonuses'] = 0;
-        $stat['taxi_total'] = 0;
+        $dto = new StatDTO();
 
         $start = $workShift->start;
         $end = $driverWorkShift->end ?? now();
@@ -37,19 +31,28 @@ class WorkShiftRepository
             ->whereNull('deleted_at')
             ->groupBy('type')
             ->get();
-        foreach ($data as $item) {
-            $type = $item->type == Order::FOOD_SHIPPING
-                ? 'food_shipping'
-                : ($item->type == Order::SHIPPING 
-                ? 'shipping' 
-                : 'taxi');
 
-            $stat["{$type}_count"] = (int) $item->count;
-            $stat["{$type}_bonuses"] = (int) $item->bonuses;
-            $stat["{$type}_total"] = (float) $item->total;
+        foreach ($data as $item) {
+            if ($item->type == Order::FOOD_SHIPPING) {
+                $dto->foodShippingCount = (int) $item->count;
+                $dto->foodShippingTotal = (float) $item->total;
+                $dto->foodShippingBonuses = (float) $item->bonuses;
+            }
+
+            if ($item->type == Order::SHIPPING) {
+                $dto->shippingCount = (int) $item->count;
+                $dto->shippingTotal = (float) $item->total;
+                $dto->shippingBonuses = (float) $item->bonuses;
+            }
+
+            if ($item->type == Order::TAXI) {
+                $dto->taxiCount = (int) $item->count;
+                $dto->taxiTotal = (float) $item->total;
+                $dto->taxiBonuses = (float) $item->bonuses;
+            }
         }
         
-        return $stat;
+        return $dto;
     }
 
     public function getStatByZaklady(WorkShift $workShift): array
@@ -95,18 +98,9 @@ class WorkShiftRepository
         return $data->toArray();
     }
 
-    public function getDriverWorkShiftStat(DriverWorkShift $driverWorkShift): array
+    public function getDriverWorkShiftStat(DriverWorkShift $driverWorkShift): DriversStatDTO
     {
-        $stat = [];
-        $stat['food_shipping_count'] = 0;
-        $stat['food_shipping_total'] = 0;
-        $stat['food_shipping_bonuses'] = 0;
-        $stat['shipping_count'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['shipping_bonuses'] = 0;
-        $stat['taxi_count'] = 0;
-        $stat['taxi_total'] = 0;
-        $stat['taxi_bonuses'] = 0;
+        $dto = new DriversStatDTO();
 
         $start = $driverWorkShift->start;
         $end = $driverWorkShift->end ?? now();
@@ -123,17 +117,25 @@ class WorkShiftRepository
             ->groupBy('type')
             ->get();
             
-        foreach ($data as $item) {
-            $type = $item->type == Order::FOOD_SHIPPING
-                ? 'food_shipping'
-                : ($item->type == Order::SHIPPING 
-                    ? 'shipping' 
-                    : 'taxi');
-
-            $stat["{$type}_count"] = (int) $item->count;
-            $stat["{$type}_total"] = (float) $item->total;
-            $stat["{$type}_bonuses"] = (float) $item->bonuses;
-        }
+            foreach ($data as $item) {
+                if ($item->type == Order::FOOD_SHIPPING) {
+                    $dto->foodShippingCount = (int) $item->count;
+                    $dto->foodShippingTotal = (float) $item->total;
+                    $dto->foodShippingBonuses = (float) $item->bonuses;
+                }
+    
+                if ($item->type == Order::SHIPPING) {
+                    $dto->shippingCount = (int) $item->count;
+                    $dto->shippingTotal = (float) $item->total;
+                    $dto->shippingBonuses = (float) $item->bonuses;
+                }
+    
+                if ($item->type == Order::TAXI) {
+                    $dto->taxiCount = (int) $item->count;
+                    $dto->taxiTotal = (float) $item->total;
+                    $dto->taxiBonuses = (float) $item->bonuses;
+                }
+            }
         
         $result = DB::table('orders')
             ->select(DB::raw('coalesce(sum(additional_costs), 0) additional_costs'))
@@ -145,10 +147,11 @@ class WorkShiftRepository
             ->whereNot('status', Order::CANCELED)
             ->whereNull('deleted_at')
             ->first();
-        $stat['additional_costs'] = (float) $result->additional_costs;
+        
+        $dto->additionalCosts = (float) $result->additional_costs;
 
         $result = DB::table('orders')
-            ->select(DB::raw("coalesce(sum(if(payment_method = '".Order::CASH."', total, paid_by_cash) - bonuses), 0) + {$driverWorkShift->exchange_office} - {$stat['additional_costs']} to_returned"))
+            ->select(DB::raw("coalesce(sum(if(payment_method = '".Order::CASH."', total, paid_by_cash) - bonuses), 0) + {$driverWorkShift->exchange_office} - {$dto->additionalCosts} to_returned"))
             ->where('courier_id', $driverWorkShift->courier_id)
             ->whereBetween('created_at', [
                 $start->format('Y-m-d H:i:s'), 
@@ -158,23 +161,15 @@ class WorkShiftRepository
             ->whereNot('status', Order::CANCELED)
             ->whereNull('deleted_at')
             ->first();
-        $stat['to_returned'] = $result->to_returned;
+
+        $dto->toReturned = (float) $result->to_returned;
         
-        return $stat;
+        return $dto;
     }
 
-    public function getDispatcherWorkShiftStat(DispatcherWorkShift $dispatcherWorkShift): array
+    public function getDispatcherWorkShiftStat(DispatcherWorkShift $dispatcherWorkShift): DispatchersStatDTO
     {
-        $stat = [];
-        $stat['food_shipping_count'] = 0;
-        $stat['food_shipping_total'] = 0;
-        $stat['food_shipping_bonuses'] = 0;
-        $stat['shipping_count'] = 0;
-        $stat['shipping_total'] = 0;
-        $stat['shipping_bonuses'] = 0;
-        $stat['taxi_count'] = 0;
-        $stat['taxi_total'] = 0;
-        $stat['taxi_bonuses'] = 0;
+        $dto = new DispatchersStatDTO();
 
         $start = $dispatcherWorkShift->start;
         $end = $driverWorkShift->end ?? now();
@@ -191,18 +186,26 @@ class WorkShiftRepository
             ->groupBy('type')
             ->get();
             
-        foreach ($data as $item) {
-            $type = $item->type == Order::FOOD_SHIPPING
-                ? 'food_shipping'
-                : ($item->type == Order::SHIPPING 
-                    ? 'shipping' 
-                    : 'taxi');
-
-            $stat["{$type}_count"] = (int) $item->count;
-            $stat["{$type}_bonuses"] = (int) $item->bonuses;
-            $stat["{$type}_total"] = (float) $item->total;
-        }
+            foreach ($data as $item) {
+                if ($item->type == Order::FOOD_SHIPPING) {
+                    $dto->foodShippingCount = (int) $item->count;
+                    $dto->foodShippingTotal = (float) $item->total;
+                    $dto->foodShippingBonuses = (float) $item->bonuses;
+                }
+    
+                if ($item->type == Order::SHIPPING) {
+                    $dto->shippingCount = (int) $item->count;
+                    $dto->shippingTotal = (float) $item->total;
+                    $dto->shippingBonuses = (float) $item->bonuses;
+                }
+    
+                if ($item->type == Order::TAXI) {
+                    $dto->taxiCount = (int) $item->count;
+                    $dto->taxiTotal = (float) $item->total;
+                    $dto->taxiBonuses = (float) $item->bonuses;
+                }
+            }
         
-        return $stat;
+        return $dto;
     }
 }

@@ -56,12 +56,12 @@ export default {
 
         return res.data
     },
-    async close(id, data) {
+    async close(id) {
         if (!hasRole(['адмін', ])) {
             throw new Error('Заборонено.')
         }
 
-        const res = await axios.post(`/api/work-shifts/${id}/close`, data)
+        const res = await axios.post(`/api/work-shifts/${id}/close`)
 
         return res.data
     },

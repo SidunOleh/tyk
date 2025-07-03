@@ -19,6 +19,6 @@ class GetStatController extends Controller
     {
         $stat = $this->workShiftService->workShiftstat($workShift);
 
-        return response(['stat' => $stat]);
+        return response(['stat' => $stat->toArray()]);
     }
 }

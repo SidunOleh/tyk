@@ -2,15 +2,21 @@
 
 namespace App\Services\WorkShifts;
 
+use App\DTO\WorkShifts\Dispatchers\CloseDTO as DispatchersCloseDTO;
+use App\DTO\WorkShifts\Dispatchers\OpenDTO as DispatchersOpenDTO;
+use App\DTO\WorkShifts\Dispatchers\StatDTO as DispatchersStatDTO;
+use App\DTO\WorkShifts\Drivers\CloseDTO;
+use App\DTO\WorkShifts\Drivers\OpenDTO;
+use App\DTO\WorkShifts\Drivers\StatDTO as DriversStatDTO;
+use App\DTO\WorkShifts\Drivers\UpdateDTO;
+use App\DTO\WorkShifts\StatDTO;
+use App\DTO\WorkShifts\ZakladReports\UpdateDTO as ZakladReportsUpdateDTO;
 use App\Events\DriverWorkShiftClosed;
+use App\Exceptions\AlreadyHasOpenedWorkShiftException;
 use App\Exceptions\AttachCarToNotOwnerException;
-use App\Http\Requests\Admin\WorkShifts\CloseRequest as WorkShiftsCloseRequest;
-use App\Http\Requests\Admin\WorkShifts\Dispatchers\CloseRequest as DispatchersCloseRequest;
-use App\Http\Requests\Admin\WorkShifts\Drivers\CloseRequest;
-use App\Http\Requests\Admin\WorkShifts\Drivers\OpenRequest;
-use App\Http\Requests\Admin\WorkShifts\Drivers\UpdateRequest;
-use App\Http\Requests\Admin\WorkShifts\ZakladReports\UpdateRequest as ZakladReportsUpdateRequest;
-use App\Http\Requests\Admin\WorkShifts\Dispatchers\OpenRequest as DispatchersOpenRequest;
+use App\Exceptions\HasOpenedDispatchersException;
+use App\Exceptions\HasOpenedDriversException;
+use App\Exceptions\WorkShiftIsAlreadyClosedException;
 use App\Models\Car;
 use App\Models\Courier;
 use App\Models\DispatcherWorkShift;
@@ -19,7 +25,6 @@ use App\Models\WorkShift;
 use App\Models\ZakladReport;
 use App\Repositories\WorkShiftRepository;
 use App\Services\Service;
-use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
@@ -69,6 +74,10 @@ class WorkShiftService extends Service
 
     public function open(): WorkShift
     {
+        if (WorkShift::open()->count()) {
+            throw new AlreadyHasOpenedWorkShiftException();
+        }
+
         $workShift = WorkShift::create([
             'start' => now()->format('Y-m-d H:i:s'),
             'status' => WorkShift::OPEN,
@@ -77,25 +86,28 @@ class WorkShiftService extends Service
         return $workShift;
     }
 
-    public function workShiftStat(WorkShift $workShift): array
+    public function workShiftStat(WorkShift $workShift): StatDTO
     {
         return $this->workShiftRepository->getWorkShiftStat($workShift);
     }
 
-    public function close(
-        WorkShift $workShift,
-        WorkShiftsCloseRequest $request
-    ): void
+    public function close(WorkShift $workShift): void
     {
+        if ($workShift->status == WorkShift::CLOSE) {
+            throw new WorkShiftIsAlreadyClosedException();
+        }
+
         if (! $workShift->allDispatchersWorkShiftsClosed()) {
-            throw new Exception('Закрийте зміни диспетчерів.');
+            throw new HasOpenedDispatchersException();
         }
 
         if (! $workShift->allDriversWorkShiftsClosed()) {
-            throw new Exception('Закрийте зміни водіїв.');
+            throw new HasOpenedDriversException();
         }
 
-        $data = $request->validated();
+        $stat = $this->workShiftRepository->getWorkShiftStat($workShift);
+
+        $data = $stat->toArray();
         $data['status'] = WorkShift::CLOSE;
         $data['end'] = now()->format('Y-m-d H:i:s');
 
@@ -114,22 +126,26 @@ class WorkShiftService extends Service
 
     public function openDriverWorkShift(
         WorkShift $workShift, 
-        OpenRequest $request
+        OpenDTO $dto
     ): DriverWorkShift
     {
-        $car = Car::find($request->car_id);
+        if (DriverWorkShift::open()->where('courier_id', $dto->courierId)->count()) {
+            throw new AlreadyHasOpenedWorkShiftException();
+        }
 
-        if ($car->hasOwner() and $car->owner->id != $request->courier_id) {
+        $car = Car::find($dto->carId);
+
+        if ($car->hasOwner() and $car->owner->id != $dto->courierId) {
             throw new AttachCarToNotOwnerException();
         }
 
         $driverWorkShift = $workShift->drivers()->create([
             'status' => DriverWorkShift::OPEN,
-            'start' => $request->start,
-            'approximate_end' => $request->approximate_end,
-            'courier_id' => $request->courier_id,
-            'car_id' => $request->car_id,
-            'exchange_office' => $request->exchange_office,
+            'start' => $dto->start,
+            'approximate_end' => $dto->approximateEnd,
+            'courier_id' => $dto->courierId,
+            'car_id' => $dto->carId,
+            'exchange_office' => $dto->exchangeOffice,
         ]);
 
         return $driverWorkShift;
@@ -137,32 +153,47 @@ class WorkShiftService extends Service
 
     public function updateDriverWorkShift(
         DriverWorkShift $driverWorkShift,
-        UpdateRequest $request
+        UpdateDTO $dto
     ): void
     {
-        $car = Car::find($request->car_id);
+        $car = Car::find($dto->carId);
 
         if ($car->hasOwner() and $car->owner->id != $driverWorkShift->courier_id) {
             throw new AttachCarToNotOwnerException();
         }
 
-        $driverWorkShift->update($request->validated());
+        $driverWorkShift->update([
+            'status' => DriverWorkShift::OPEN,
+            'start' => $dto->start,
+            'approximate_end' => $dto->approximateEnd,
+            'car_id' => $dto->carId,
+            'exchange_office' => $dto->exchangeOffice,
+        ]);
     }
 
     public function driverWorkShiftStat(
         DriverWorkShift $driverWorkShift
-    ): array
+    ): DriversStatDTO
     {
         return $this->workShiftRepository->getDriverWorkShiftStat($driverWorkShift);
     }
 
     public function closeDriverWorkShift(
         DriverWorkShift $driverWorkShift,
-        CloseRequest $request
+        CloseDTO $dto
     ): void
     {
-        $data = $request->validated();
+        if ($driverWorkShift->status == DriverWorkShift::CLOSE) {
+            throw new WorkShiftIsAlreadyClosedException();
+        }
+
+        $data['end'] = $dto->end;
+        $data['returned_amount'] = $dto->returnedAmount;
         $data['status'] = DriverWorkShift::CLOSE;
+
+        $stat = $this->workShiftRepository->getDriverWorkShiftStat($driverWorkShift);
+
+        $data = array_merge($data, $stat->toArray());
 
         $driverWorkShift->update($data);
 
@@ -200,13 +231,17 @@ class WorkShiftService extends Service
 
     public function openDispatcherWorkShift(
         WorkShift $workShift,
-        DispatchersOpenRequest $request
+        DispatchersOpenDTO $dto
     ): DispatcherWorkShift
     {
+        if (DispatcherWorkShift::open()->where('dispatcher_id', $dto->dispatcherId)->count()) {
+            throw new AlreadyHasOpenedWorkShiftException();
+        }
+
         $dispatcherWorkShift = $workShift->dispatchers()->create([
             'status' => DispatcherWorkShift::OPEN,
-            'dispatcher_id' => $request->dispatcher_id,
-            'start' => $request->start,
+            'dispatcher_id' => $dto->dispatcherId,
+            'start' => $dto->start,
         ]);
 
         return $dispatcherWorkShift;
@@ -214,17 +249,21 @@ class WorkShiftService extends Service
 
     public function dispatcherWorkShiftStat(
         DispatcherWorkShift $dispatcherWorkShift
-    ): array
+    ): DispatchersStatDTO
     {
         return $this->workShiftRepository->getDispatcherWorkShiftStat($dispatcherWorkShift);
     }
 
     public function closeDispatcherWorkShift(
         DispatcherWorkShift $dispatcherWorkShift,
-        DispatchersCloseRequest $request
+        DispatchersCloseDTO $dto
     ): void
     {
-        $data = $request->validated();
+        if ($dispatcherWorkShift->status == DispatcherWorkShift::CLOSE) {
+            throw new WorkShiftIsAlreadyClosedException();
+        }
+
+        $data['end'] = $dto->end;
         $data['status'] = DispatcherWorkShift::CLOSE;
 
         $dispatcherWorkShift->update($data);
@@ -232,9 +271,13 @@ class WorkShiftService extends Service
 
     public function updateZakladReport(
         ZakladReport $zakladReport, 
-        ZakladReportsUpdateRequest $request
+        ZakladReportsUpdateDTO $dto
     ): void
     {
-        $zakladReport->update($request->validated());
+        $zakladReport->update([
+            'returned_amount'=> $dto->returnedAmount,
+            'payment_method' => $dto->paymentMethod,
+            'comment' => $dto->comment,
+        ]);
     }    
 }
