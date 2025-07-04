@@ -41,6 +41,7 @@ class Order extends Model
         'history',
         'created_at',
         'callback',
+        'source',
     ];
 
     protected $casts = [
@@ -107,6 +108,12 @@ class Order extends Model
     public const SPEND_BONUS_AMOUNT = 50;
 
     public const DEFAULT_DURATION = 30;
+
+    public const CRM = 'crm';
+
+    public const WEB = 'web';
+
+    public const MOBILE = 'mobile';
 
     protected static function booted(): void
     {

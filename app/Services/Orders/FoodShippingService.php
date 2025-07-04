@@ -63,6 +63,7 @@ class FoodShippingService extends OrderService
             'reviewed' => true,
             'created_at' => $createdAt,
             'callback' => $data['callback'],
+            'source' => Order::CRM,
         ]);
 
         $order->orderItems()->createMany($data['order_items']);
@@ -241,6 +242,7 @@ class FoodShippingService extends OrderService
             'payment_method' => $dto->paymentMethod,
             'details' => $details,
             'callback' => $dto->callback,
+            'source' => $dto->source,
         ]);
 
         $orderItems = [];

@@ -77,6 +77,9 @@
         </a-descriptions-item>    
         <a-descriptions-item label="Нотатки">
             <div v-html="order.notes"></div>
+        </a-descriptions-item>  
+        <a-descriptions-item label="Джерело">
+            {{ formatSource(order.source) }}
         </a-descriptions-item>          
     </a-descriptions>
 </template>
@@ -86,6 +89,7 @@ import {
     formatPrice,
     formatDate,
     orderStatusColor,
+    formatSource,
 } from '../../helpers/helpers'
 
 export default {
@@ -96,6 +100,7 @@ export default {
         formatPrice,
         formatDate,
         orderStatusColor,
+        formatSource,
     },
 }
 </script>

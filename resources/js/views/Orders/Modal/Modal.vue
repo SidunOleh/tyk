@@ -459,7 +459,7 @@ export default {
         'data.client_id': function () {
             if (
                 this.selectedClient 
-                && ! this.selectedClient.orders
+                && ! this.selectedClient?.orders?.length
             ) {
                this.selectedClient.orders = []
 

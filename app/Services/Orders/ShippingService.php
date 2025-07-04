@@ -48,6 +48,7 @@ class ShippingService extends OrderService
             'reviewed' => true,
             'created_at' => $createdAt,
             'callback' => $data['callback'],
+            'source' => Order::CRM,
         ]);
 
         $order->updateAmount();
@@ -133,6 +134,7 @@ class ShippingService extends OrderService
             'shipping_price' => $shippingPrice,
             'details' => $details,
             'callback' => $dto->callback,
+            'source' => $dto->source,
         ]);
 
         $order->updateAmount();

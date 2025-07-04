@@ -144,6 +144,13 @@ function daysInMonth(iMonth, iYear) {
     return new Date(iYear, iMonth, 0).getDate()
 }
 
+function formatSource(source) {
+    return {
+        'web': 'Cайт',
+        'mobile': 'Mобільний додаток',
+        'crm': 'CRM',
+    }[source] ?? ''
+}
 
 export {
     auth,
@@ -159,4 +166,5 @@ export {
     formatPhone,
     copyToClipboard,
     daysInMonth,
+    formatSource,
 }

@@ -5,6 +5,7 @@ namespace App\DTO\Orders;
 use App\DTO\BaseDTO;
 use App\Http\Requests\Mobile\Order\OrderCarRequest;
 use App\Http\Requests\Orders\OrderCarRequest as OrdersOrderCarRequest;
+use App\Models\Order;
 
 class OrderCarDTO extends BaseDTO
 {
@@ -18,7 +19,8 @@ class OrderCarDTO extends BaseDTO
         public ?string $comment,
         public string $paymentMethod,
         public bool $useBonuses,
-        public bool $callback
+        public bool $callback,
+        public string $source
     )
     {
         
@@ -36,7 +38,8 @@ class OrderCarDTO extends BaseDTO
             $request->comment,
             $request->payment_method,
             $request->use_bonuses,
-            $request->callback
+            $request->callback,
+            Order::WEB
         );
     }
 
@@ -52,7 +55,8 @@ class OrderCarDTO extends BaseDTO
             $request->comment,
             $request->payment_method,
             $request->use_bonuses,
-            false
+            false,
+            Order::MOBILE
         );
     }
 }

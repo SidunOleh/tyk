@@ -5,6 +5,7 @@ namespace App\DTO\Orders;
 use App\DTO\BaseDTO;
 use App\Http\Requests\Mobile\Order\CheckoutRequest;
 use App\Http\Requests\Orders\CheckoutRequest as OrdersCheckoutRequest;
+use App\Models\Order;
 
 class CheckoutDTO extends BaseDTO
 {
@@ -18,6 +19,7 @@ class CheckoutDTO extends BaseDTO
         public bool $useBonuses,
         public array $cartItems,
         public bool $callback,
+        public string $source
     )
     {
         
@@ -34,7 +36,8 @@ class CheckoutDTO extends BaseDTO
             $request->payment_method,
             $request->use_bonuses == 'on',
             $cartItems,
-            $request->callback == 'on'
+            $request->callback == 'on',
+            Order::WEB
         );
     }
 
@@ -49,7 +52,8 @@ class CheckoutDTO extends BaseDTO
             $request->payment_method,
             $request->use_bonuses,
             $request->cart_items,
-            false
+            false,
+            Order::MOBILE
         );
     }
 }

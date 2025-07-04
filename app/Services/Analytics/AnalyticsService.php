@@ -210,6 +210,16 @@ class AnalyticsService
             AND deleted_at IS NULL
         ", ['start' => $start, 'end' => $end, 'type' => Order::TAXI, 'status' => Order::CANCELED,])[0]->total;
 
+        $data['source'] = DB::select("
+            SELECT source, COUNT(*) total
+            FROM orders
+            WHERE DATE(created_at) >= DATE(:start) AND DATE(created_at) <= DATE(:end)
+            AND source IS NOT NULL
+            AND status != :canceled
+            AND deleted_at IS NULL
+            GROUP BY source
+        ", ['start' => $start, 'end' => $end, 'canceled' => Order::CANCELED,]);
+
         return $data;
     }
 

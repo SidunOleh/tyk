@@ -33,6 +33,38 @@
             </a-card>
         </a-flex>
 
+        <a-flex 
+            :vertical="true"
+            :gap="10"
+            class="top">
+            <a-typography-text strong>
+                Джерела
+            </a-typography-text>
+            <a-flex 
+                wrap="wrap"
+                :gap="10"
+                :align="'flex-start'">
+                <a-card 
+                    title="CRM" 
+                    style="width: 300px;"
+                    size="small">
+                    {{ fromCrm }}
+                </a-card>
+                <a-card 
+                    title="Сайт" 
+                    style="width: 300px;"
+                    size="small">
+                    {{ fromWeb }}
+                </a-card>
+                <a-card 
+                    title="Mобільний додаток" 
+                    style="width: 300px;"
+                    size="small">
+                    {{ fromMobile }}
+                </a-card>
+            </a-flex>
+        </a-flex>
+
         <div class="chart">
             <canvas 
                 style="width: 100%; height: 300px;"
@@ -142,7 +174,37 @@ export default {
             }
 
             return data
-        }
+        },
+        fromCrm() {
+            let count = 0
+            this.data?.source?.forEach(item => {
+                if (item.source == 'crm') {
+                    count = item.total
+                }
+            })
+
+            return count
+        },
+        fromWeb() {
+            let count = 0
+            this.data?.source?.forEach(item => {
+                if (item.source == 'web') {
+                    count = item.total
+                }
+            })
+
+            return count
+        },
+        fromMobile() {
+            let count = 0
+            this.data?.source?.forEach(item => {
+                if (item.source == 'mobile') {
+                    count = item.total
+                }
+            })
+
+            return count
+        },
     },
     methods: {
         formatPrice,
