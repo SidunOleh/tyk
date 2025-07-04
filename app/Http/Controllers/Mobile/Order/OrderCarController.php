@@ -13,18 +13,7 @@ class OrderCarController extends Controller
     public function __invoke(OrderCarRequest $request)
     {
         $order = OrderService::make($request->service)->orderCar(
-            new OrderCarDTO(
-                $request->service,
-                $request->from,
-                $request->to,
-                $request->date,
-                $request->time,
-                $request->shipping_type,
-                $request->comment,
-                $request->payment_method,
-                $request->use_bonuses,
-                false
-            ), 
+            OrderCarDTO::createFromMobileRequest($request),
             Auth::user()
         );
         

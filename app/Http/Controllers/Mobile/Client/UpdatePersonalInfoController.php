@@ -21,10 +21,7 @@ class UpdatePersonalInfoController extends Controller
     {
         $this->clientService->updatePersonalInfo(
             Auth::user(), 
-            new UpdatePersonalInfoDTO(
-                $request->full_name,
-                $request->phone
-            )
+            new UpdatePersonalInfoDTO($request->full_name, $request->phone)
         );
 
         return response(['message' => 'OK']);

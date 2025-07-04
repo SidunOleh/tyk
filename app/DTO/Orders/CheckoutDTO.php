@@ -2,7 +2,11 @@
 
 namespace App\DTO\Orders;
 
-class CheckoutDTO
+use App\DTO\BaseDTO;
+use App\Http\Requests\Mobile\Order\CheckoutRequest;
+use App\Http\Requests\Orders\CheckoutRequest as OrdersCheckoutRequest;
+
+class CheckoutDTO extends BaseDTO
 {
     public function __construct(
         public string $fullName,
@@ -17,5 +21,35 @@ class CheckoutDTO
     )
     {
         
+    }
+
+    public static function createFromWebRequest(OrdersCheckoutRequest $request, array $cartItems): self
+    {
+        return new self(
+            $request->full_name,
+            $request->phone,
+            $request->address,
+            $request->delivery_time,
+            $request->notes,
+            $request->payment_method,
+            $request->use_bonuses == 'on',
+            $cartItems,
+            $request->callback == 'on'
+        );
+    }
+
+    public static function createFromMobileRequest(CheckoutRequest $request): self
+    {
+        return new self(
+            $request->full_name,
+            $request->phone,
+            $request->address,
+            $request->delivery_time,
+            $request->notes,
+            $request->payment_method,
+            $request->use_bonuses,
+            $request->cart_items,
+            false
+        );
     }
 }

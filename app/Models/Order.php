@@ -272,4 +272,9 @@ class Order extends Model
 
         return true;
     }
+
+    public function orderStages(): HasMany
+    {
+        return $this->hasMany(OrderStage::class);
+    }
 }

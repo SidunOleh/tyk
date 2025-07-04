@@ -15,6 +15,8 @@
 
         <template #expandedRowRender="{ record }">
             <OrderDescription :order="record"/>
+            <br>
+            <OrderStages :order="record"/>
         </template>
 
         <template #title>
@@ -143,11 +145,13 @@ import {
     orderStatusColor,
 } from '../../helpers/helpers'
 import OrderDescription from './OrderDescription.vue'
+import OrderStages from './OrderStages.vue'
 
 export default {
     components: {
         DownOutlined,
         OrderDescription,
+        OrderStages,
     },
     data() {
         return {

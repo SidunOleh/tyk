@@ -252,6 +252,13 @@
                 </a-typography-text>
             </div>
 
+            <OrderStages 
+                v-if="action == 'edit'"
+                style="margin-bottom: 20px;"
+                :order="item" 
+                :open="false"
+                direction="vertical"/>
+
             <a-flex 
                 :gap="5"
                 :justify="'space-between'">
@@ -311,6 +318,7 @@ import {
     copyToClipboard, 
 } from '../../../helpers/helpers'
 import courierServicesApi from '../../../api/courier-services'
+import OrderStages from '../OrderStages.vue'
 
 export default {
     props: [
@@ -327,6 +335,7 @@ export default {
         ShippingDetails,
         TaxiDetails,
         ClientsModal,
+        OrderStages,
     },
     data() {
         return {

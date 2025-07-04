@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\DTO\Clients\UpdatePersonalInfoDTO;
 use App\DTO\Orders\CheckoutDTO;
 use App\Models\Client;
 use App\Models\Order;
@@ -9,12 +10,24 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ZakladAddonAmount;
 use App\Services\Cart\Cart;
+use App\Services\Clients\ClientService;
+use App\Services\Price\PriceService;
+use App\Services\Settings\SettingsService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FoodShippingService extends OrderService
 {
+    public function __construct(
+        protected PriceService $priceService,
+        protected SettingsService $settingsService,
+        private ClientService $clientService
+    )
+    {
+        
+    }
+
     public function create(array $data): Model
     {
         DB::beginTransaction();
@@ -199,12 +212,11 @@ class FoodShippingService extends OrderService
         }
     }
     
-    public function checkout(CheckoutDTO $dto): Order
+    public function checkout(CheckoutDTO $dto, Client $client): Order
     {
         DB::beginTransaction();
 
-        $client = Client::firstOrCreate(['phone' => $dto->phone]);
-        $client->update(['full_name' => $dto->fullName]);
+        $this->clientService->updatePersonalInfo($client, new UpdatePersonalInfoDTO($dto->fullName, $dto->phone));
 
         $delivetyTime = $dto->deliveryTime 
             ? now()->hour((int) explode(':', $dto->deliveryTime)[0])->minute((int) explode(':', $dto->deliveryTime)[1]) 

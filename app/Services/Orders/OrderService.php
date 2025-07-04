@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\Events\CourierChanged;
 use App\Events\OrderStatusChanged;
 use App\Exceptions\UnexpectedOrderTypeException;
 use App\Models\Order;
@@ -46,6 +47,8 @@ abstract class OrderService extends Service
                 'client',
                 'courier',
                 'zakladAddonAmounts',
+                'orderStages',
+                'orderStages.courier',
             ])
             ->orderBy($orderby, $order)
             ->search($s)
@@ -67,6 +70,8 @@ abstract class OrderService extends Service
                 'client',
                 'courier',
                 'zakladAddonAmounts',
+                'orderStages',
+                'orderStages.courier',
             ])
             ->betweenDate($start, $end)
             ->orderBy('created_at', 'DESC')
@@ -85,8 +90,12 @@ abstract class OrderService extends Service
     }
 
     public function changeCourier(Order $order, ?int $courierId): void
-    {
+    {        
+        $prevCourier = $order->courier;
+
         $order->update(['courier_id' => $courierId]);
+
+        CourierChanged::dispatch($order, $prevCourier);
     }
 
     public function changeTime(Order $order, Carbon $time, int $duration): void
@@ -97,7 +106,7 @@ abstract class OrderService extends Service
         ]);
     }
 
-    public function addBonusesForOrder(Order $order): void
+    public function addBonuses(Order $order): void
     {
         $bonuses = 0;
 
@@ -119,7 +128,7 @@ abstract class OrderService extends Service
         DB::commit();
     }
 
-    public function removeBonusesForOrder(Order $order): void
+    public function removeBonuses(Order $order): void
     {
         DB::beginTransaction();
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Mobile\Order\CheckoutRequest;
 use App\Services\Categories\CategoryService;
 use App\Services\Orders\FoodShippingService;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -27,17 +28,8 @@ class CheckoutController extends Controller
         }
 
         $order = $this->orderService->checkout(
-            new CheckoutDTO(
-                $request->full_name,
-                $request->phone,
-                $request->address,
-                $request->delivery_time,
-                $request->notes,
-                $request->payment_method,
-                $request->use_bonuses,
-                $request->cart_items,
-                false
-            )
+            CheckoutDTO::createFromMobileRequest($request),
+            Auth::user()
         );
         
         return response(['id' => $order->id]);

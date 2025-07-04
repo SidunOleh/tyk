@@ -16,11 +16,11 @@
                             name="full_name" 
                             placeholder="Ім’я та прізвище*" 
                             value="{{ $client?->full_name }}"
-                            required />
+                            required/>
                     </div>
                     <div class="form-group input-box">
                         <input 
-                            type="text" 
+                            type="tel" 
                             name="phone" 
                             placeholder="Номер телефону*" 
                             required 

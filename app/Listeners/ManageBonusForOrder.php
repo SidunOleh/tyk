@@ -27,11 +27,11 @@ class ManageBonusForOrder
         $oldStatus = $event->oldStatus;
 
         if ($oldStatus != Order::DONE and $order->status == Order::DONE) {
-            OrderService::make($order->type)->addBonusesForOrder($order);
+            OrderService::make($order->type)->addBonuses($order);
         }
 
         if ($oldStatus == Order::DONE and $order->status != Order::DONE) {
-            OrderService::make($order->type)->removeBonusesForOrder($order);
+            OrderService::make($order->type)->removeBonuses($order);
         }
 
         if ($oldStatus != Order::CANCELED and $order->status == Order::CANCELED) {

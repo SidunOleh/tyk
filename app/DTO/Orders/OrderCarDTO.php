@@ -2,7 +2,11 @@
 
 namespace App\DTO\Orders;
 
-class OrderCarDTO
+use App\DTO\BaseDTO;
+use App\Http\Requests\Mobile\Order\OrderCarRequest;
+use App\Http\Requests\Orders\OrderCarRequest as OrdersOrderCarRequest;
+
+class OrderCarDTO extends BaseDTO
 {
     public function __construct(
         public string $service,
@@ -18,5 +22,37 @@ class OrderCarDTO
     )
     {
         
+    }
+
+    public static function createFromWebRequest(OrdersOrderCarRequest $request): self
+    {
+        return new self(
+            $request->service,
+            $request->from,
+            $request->to,
+            $request->date,
+            $request->time,
+            $request->shipping_type,
+            $request->comment,
+            $request->payment_method,
+            $request->use_bonuses,
+            $request->callback
+        );
+    }
+
+    public static function createFromMobileRequest(OrderCarRequest $request): self
+    {
+        return new self(
+            $request->service,
+            $request->from,
+            $request->to,
+            $request->date,
+            $request->time,
+            $request->shipping_type,
+            $request->comment,
+            $request->payment_method,
+            $request->use_bonuses,
+            false
+        );
     }
 }
