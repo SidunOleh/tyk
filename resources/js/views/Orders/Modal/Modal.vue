@@ -252,12 +252,7 @@
                 </a-typography-text>
             </div>
 
-            <OrderStages 
-                v-if="action == 'edit'"
-                style="margin-bottom: 20px;"
-                :order="item" 
-                :open="false"
-                direction="vertical"/>
+
 
             <a-flex 
                 :gap="5"
